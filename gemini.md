@@ -21,8 +21,8 @@ A comprehensive, **fully responsive** data platform for Cayman Islands picklebal
 * [x] Database Schema Design (Delta Tables).
 * [x] Supabase RPC for Delta logic.
 * [x] Automated Scraper (Singles & Doubles).
-* [ ] **Mobile-First Dashboard:** Build the core ranking view using `shadcn/ui` tables and cards.
-* [ ] **Responsive Navigation:** Implement a mobile drawer/hamburger menu for easy navigation.
+* [x] **Mobile-First Dashboard:** Build the core ranking view using `shadcn/ui` tables and cards.
+* [x] **Responsive Navigation:** Implement a mobile drawer/hamburger menu for easy navigation.
 
 ---
 
