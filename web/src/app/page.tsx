@@ -88,7 +88,23 @@ export default function Dashboard() {
   }
 
   return (
-    <main className="min-h-screen pb-20">
+    <main className="min-h-screen pb-20 relative">
+      {/* Navigation / Brand Bar */}
+      <nav className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-md border-b border-white/5 px-6 py-4">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
+          <motion.div 
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="font-display font-black text-xs tracking-[0.4em] text-white"
+          >
+            DINKDATA<span className="text-volt">.XYZ</span>
+          </motion.div>
+          <div className="flex items-center gap-6">
+            <span className="text-[10px] font-display tracking-widest text-ghost/40 hidden sm:block uppercase">Live Analytics Platform</span>
+          </div>
+        </div>
+      </nav>
+
       {/* Header Section */}
       <header className="relative py-12 px-6 overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_0%,rgba(223,255,0,0.15),transparent_50%)]" />
