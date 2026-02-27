@@ -10,6 +10,7 @@ A comprehensive, **fully responsive** data platform for Cayman Islands picklebal
 * **Database:** Supabase (PostgreSQL) — Project: "sites".
 * **Schema:** `pickleball_ratings`.
 * **Frontend:** Next.js with **Tailwind CSS**.
+* **Style Guide:** Detailed in `web/STYLE_GUIDE.md`.
 * **UI Components:** **shadcn/ui** (Radix UI + Lucide Icons).
 * **Auth:** TBD (Evaluating **Clerk** vs. Supabase Auth).
 * **Deployment:** Vercel.
