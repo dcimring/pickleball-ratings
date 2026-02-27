@@ -307,12 +307,9 @@ export default function Dashboard() {
               transition={{ duration: 0.2 }}
               className="pb-20 min-h-full"
             >
-              {/* Header Section */}
-              <header className="relative pt-6 pb-12 px-6 overflow-hidden text-left">
-                <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_0%,rgba(223,255,0,0.15),transparent_50%)]" />
-                
-                <div className="max-w-6xl mx-auto relative z-10">
-                  <motion.div 
+                          {/* Header Section */}
+                          <header className="relative pt-6 pb-12 px-6 overflow-hidden text-left">
+                            <div className="max-w-6xl mx-auto relative z-10">                  <motion.div 
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="flex flex-col md:flex-row md:items-end justify-between gap-6"
