@@ -37,6 +37,16 @@ This document defines the visual identity and UI patterns for **dinkdash.xyz**.
 - **Max Width**: Use `max-w-6xl` for main content containers to maintain optimal line lengths and centered focus on desktop.
 - **Horizontal Padding**: Use `px-6` for main containers and `px-4` (mobile) / `px-8` (desktop) for data tables.
 
+### **Navigation & Scroll Management (The "Clean Slate" Pattern)**
+To eliminate transition flicker and ensure a premium feel, DinkDash uses an **Internal Scroll** architecture:
+1.  **Fixed Viewport**: The root `<main>` tag is locked (`h-screen overflow-hidden`) to prevent the browser window from scrolling.
+2.  **Scroll Container**: All views live inside a single `ref={scrollRef}` container that handles scrolling (`flex-1 overflow-y-auto`).
+3.  **The "Moment of Zero" Reset**: 
+    - Use `<AnimatePresence mode="wait" onExitComplete={handleViewStable}>`.
+    - The `handleViewStable` function must forcefully reset `scrollRef.current.scrollTop = 0`.
+    - This ensures the previous page fully exits, the scroll is reset while the screen is empty, and the new page enters perfectly at the top.
+4.  **Avoid Smooth Scroll**: Disable `scroll-smooth` on the main container to ensure the "Moment of Zero" reset is instantaneous and doesn't conflict with animations.
+
 ---
 
 ## ✨ UI Components & Effects
