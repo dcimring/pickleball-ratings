@@ -55,12 +55,27 @@ export default function Dashboard() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [tourneyInput, setTourneyInput] = useState('');
   const [tourneyResults, setTourneyResults] = useState<any[]>([]);
+  const [nameInput, setNameInput] = useState('');
+  const [showNameSuggestions, setShowNameSuggestions] = useState(false);
   const [sortConfig, setSortConfig] = useState<{ key: keyof Ranking; direction: 'asc' | 'desc' }>({
     key: 'rank_position',
     direction: 'asc'
   });
 
   const [formState, formAction] = useFormState(submitFeatureRequest, {});
+
+  // Unique names for autocomplete
+  const allUniqueNames = useMemo(() => {
+    const names = new Set([...singles, ...doubles].map(p => p.player_name));
+    return Array.from(names).sort();
+  }, [singles, doubles]);
+
+  const nameSuggestions = useMemo(() => {
+    if (!nameInput.trim()) return [];
+    return allUniqueNames
+      .filter(n => n.toLowerCase().includes(nameInput.toLowerCase()))
+      .slice(0, 5); // Limit to 5 suggestions
+  }, [allUniqueNames, nameInput]);
 
   useEffect(() => {
     if (formState.success) {
@@ -560,14 +575,46 @@ export default function Dashboard() {
                   {/* Honeypot */}
                   <input type="text" name="website" className="hidden" tabIndex={-1} autoComplete="off" />
                   
-                  <div className="space-y-2">
+                  <div className="space-y-2 relative">
                     <label className="block font-display text-[10px] tracking-[0.3em] text-ghost/40 uppercase ml-1">Your Name</label>
                     <input 
                       name="user_name"
                       required
+                      value={nameInput}
+                      onChange={(e) => {
+                        setNameInput(e.target.value);
+                        setShowNameSuggestions(true);
+                      }}
+                      onBlur={() => setTimeout(() => setShowNameSuggestions(false), 200)}
                       placeholder="Enter your name"
                       className="w-full bg-background border border-white/5 rounded-2xl p-4 outline-none focus:border-volt/50 transition-all font-sans text-ghost placeholder:text-ghost/20"
                     />
+                    
+                    {/* Autocomplete Suggestions */}
+                    <AnimatePresence>
+                      {showNameSuggestions && nameSuggestions.length > 0 && (
+                        <motion.div 
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          className="absolute z-20 left-0 right-0 top-full mt-2 bg-surface border border-white/10 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-xl"
+                        >
+                          {nameSuggestions.map((name) => (
+                            <button
+                              key={name}
+                              type="button"
+                              onClick={() => {
+                                setNameInput(name);
+                                setShowNameSuggestions(false);
+                              }}
+                              className="w-full px-6 py-4 text-left hover:bg-white/5 text-ghost/60 hover:text-volt transition-colors font-sans text-sm border-b border-white/5 last:border-0"
+                            >
+                              {name}
+                            </button>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
 
                   <div className="space-y-2">
