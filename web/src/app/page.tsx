@@ -27,6 +27,10 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'doubles' | 'singles'>('doubles');
   const [searchQuery, setSearchQuery] = useState('');
+  const [sortConfig, setSortConfig] = useState<{ key: keyof Ranking; direction: 'asc' | 'desc' }>({
+    key: 'rank_position',
+    direction: 'asc'
+  });
 
   useEffect(() => {
     async function fetchData() {
@@ -66,13 +70,42 @@ export default function Dashboard() {
     fetchData();
   }, []);
 
+  const handleSort = (key: keyof Ranking) => {
+    setSortConfig((current) => ({
+      key,
+      direction: current.key === key && current.direction === 'asc' ? 'desc' : 'asc'
+    }));
+  };
+
   const currentData = activeTab === 'doubles' ? doubles : singles;
   
-  const filteredData = useMemo(() => {
-    return currentData.filter(p => 
-      p.player_name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [currentData, searchQuery]);
+  const sortedAndFilteredData = useMemo(() => {
+    let data = [...currentData];
+    
+    // Filter
+    if (searchQuery) {
+      data = data.filter(p => 
+        p.player_name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    // Sort
+    data.sort((a, b) => {
+      const aValue = a[sortConfig.key];
+      const bValue = b[sortConfig.key];
+
+      if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
+      if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
+      return 0;
+    });
+
+    return data;
+  }, [currentData, searchQuery, sortConfig]);
+
+  const SortIndicator = ({ column }: { column: keyof Ranking }) => {
+    if (sortConfig.key !== column) return <Minus className="w-3 h-3 opacity-20" />;
+    return sortConfig.direction === 'asc' ? <TrendingUp className="w-3 h-3 text-volt" /> : <TrendingDown className="w-3 h-3 text-volt" />;
+  };
 
   if (loading) {
     return (
@@ -170,25 +203,50 @@ export default function Dashboard() {
       <section className="px-6">
         <div className="max-w-6xl mx-auto">
           <div className="bg-surface/50 border border-white/5 rounded-3xl overflow-hidden backdrop-blur-sm">
-            <div className="grid grid-cols-12 gap-4 px-8 py-6 border-b border-white/5 font-display text-[10px] tracking-[0.3em] text-ghost/40">
-              <div className="col-span-2">RANK</div>
-              <div className="col-span-6 md:col-span-5">PLAYER</div>
-              <div className="hidden md:block col-span-2 text-right">ROUNDS</div>
-              <div className="col-span-4 md:col-span-3 text-right">RATING</div>
+            <div className="grid grid-cols-12 gap-2 md:gap-4 px-4 md:px-8 py-6 border-b border-white/5 font-display text-[10px] tracking-[0.3em] text-ghost/40 select-none">
+              <button 
+                onClick={() => handleSort('rank_position')}
+                className="col-span-3 md:col-span-2 flex items-center gap-1 md:gap-2 hover:text-ghost transition-colors group"
+              >
+                RANK <SortIndicator column="rank_position" />
+              </button>
+              <button 
+                onClick={() => handleSort('player_name')}
+                className="col-span-5 md:col-span-5 flex items-center gap-1 md:gap-2 hover:text-ghost transition-colors group"
+              >
+                PLAYER <SortIndicator column="player_name" />
+              </button>
+              <button 
+                onClick={() => handleSort('rounds_played')}
+                className="hidden md:flex col-span-2 items-center justify-end gap-2 hover:text-ghost transition-colors group text-right"
+              >
+                ROUNDS <SortIndicator column="rounds_played" />
+              </button>
+              <button 
+                onClick={() => handleSort('rating')}
+                className="col-span-4 md:col-span-3 flex items-center justify-end gap-1 md:gap-2 hover:text-ghost transition-colors group text-right"
+              >
+                RATING <SortIndicator column="rating" />
+              </button>
             </div>
 
             <div className="min-h-[400px]">
-              <AnimatePresence mode="popLayout">
-                {filteredData.map((player, index) => (
+              <AnimatePresence mode="popLayout" initial={false}>
+                {sortedAndFilteredData.map((player, index) => (
                   <motion.div
+                    layout
                     key={`${activeTab}-${player.player_name}`}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.3, delay: index * 0.02 }}
-                    className="grid grid-cols-12 gap-4 px-8 py-6 hover:bg-white/[0.02] transition-colors items-center group"
+                    transition={{ 
+                      duration: 0.3, 
+                      delay: Math.min(index * 0.01, 0.2),
+                      layout: { duration: 0.4, ease: "easeInOut" } 
+                    }}
+                    className="grid grid-cols-12 gap-2 md:gap-4 px-4 md:px-8 py-6 hover:bg-white/[0.02] transition-colors items-center group"
                   >
-                    <div className="col-span-2 flex items-center gap-3">
+                    <div className="col-span-3 md:col-span-2 flex items-center gap-3">
                       <span className={cn(
                         "font-display text-xl md:text-2xl font-black",
                         index === 0 ? "text-volt" : "text-ghost/20"
@@ -196,7 +254,7 @@ export default function Dashboard() {
                         {player.rank_position}
                       </span>
                     </div>
-                    <div className="col-span-6 md:col-span-5">
+                    <div className="col-span-5 md:col-span-5">
                       <div className="font-sans font-bold text-base md:text-lg text-white group-hover:text-volt transition-colors">
                         {player.player_name}
                       </div>
