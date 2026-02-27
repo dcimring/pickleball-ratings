@@ -6,6 +6,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const orbitron = Orbitron({ subsets: ["latin"], variable: "--font-display" });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://dinkdash.xyz'),
   title: "DinkDash | Your Pickleball Dashboard",
   description: "Real-time rank tracking and analytics for the Cayman Islands Pickleball community.",
   openGraph: {
