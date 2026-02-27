@@ -30,6 +30,15 @@ This document defines the visual identity and UI patterns for **dinkdash.xyz**.
 
 ---
 
+## 📐 Layout & Spacing
+
+### **Vertical Alignment**
+- **Header Top Padding**: All main views must start with `pt-6` relative to the sticky navigation bar. This ensures a consistent "eye-line" when switching between different tools or pages.
+- **Max Width**: Use `max-w-6xl` for main content containers to maintain optimal line lengths and centered focus on desktop.
+- **Horizontal Padding**: Use `px-6` for main containers and `px-4` (mobile) / `px-8` (desktop) for data tables.
+
+---
+
 ## ✨ UI Components & Effects
 
 ### **The "Electric Court" Card**

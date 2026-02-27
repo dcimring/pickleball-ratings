@@ -392,7 +392,7 @@ export default function Dashboard() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="max-w-6xl mx-auto px-6 py-12"
+            className="max-w-6xl mx-auto px-6 pt-6 pb-12"
           >
             <div className="mb-12">
               <div className="flex items-center gap-2 mb-2">
