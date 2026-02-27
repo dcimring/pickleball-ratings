@@ -172,7 +172,8 @@ export default function Dashboard() {
           <div className="bg-surface/50 border border-white/5 rounded-3xl overflow-hidden backdrop-blur-sm">
             <div className="grid grid-cols-12 gap-4 px-8 py-6 border-b border-white/5 font-display text-[10px] tracking-[0.3em] text-ghost/40">
               <div className="col-span-2">RANK</div>
-              <div className="col-span-6 md:col-span-7">PLAYER</div>
+              <div className="col-span-6 md:col-span-5">PLAYER</div>
+              <div className="hidden md:block col-span-2 text-right">ROUNDS</div>
               <div className="col-span-4 md:col-span-3 text-right">RATING</div>
             </div>
 
@@ -195,14 +196,19 @@ export default function Dashboard() {
                         {player.rank_position}
                       </span>
                     </div>
-                    <div className="col-span-6 md:col-span-7">
+                    <div className="col-span-6 md:col-span-5">
                       <div className="font-sans font-bold text-base md:text-lg text-white group-hover:text-volt transition-colors">
                         {player.player_name}
                       </div>
-                      <div className="flex items-center gap-2 mt-1">
+                      <div className="flex items-center gap-2 mt-1 md:hidden">
                         <span className="text-[10px] bg-white/5 px-2 py-0.5 rounded uppercase tracking-wider text-ghost/40">
                           {player.rounds_played} Rounds
                         </span>
+                      </div>
+                    </div>
+                    <div className="hidden md:block col-span-2 text-right">
+                      <div className="font-display text-lg text-white/60 group-hover:text-white transition-colors">
+                        {player.rounds_played}
                       </div>
                     </div>
                     <div className="col-span-4 md:col-span-3 text-right">
