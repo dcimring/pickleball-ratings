@@ -98,10 +98,10 @@ export default function Dashboard() {
             animate={{ opacity: 1, x: 0 }}
             className="font-display font-black text-xs tracking-[0.4em] text-white"
           >
-            DINKDATA<span className="text-volt">.XYZ</span>
+            DINKDASH<span className="text-volt">.XYZ</span>
           </motion.div>
           <div className="flex items-center gap-6">
-            <span className="text-[10px] font-display tracking-widest text-ghost/40 hidden sm:block uppercase">Live Analytics Platform</span>
+            <span className="text-[10px] font-display tracking-widest text-ghost/40 hidden sm:block uppercase">Your Pickleball Dashboard</span>
           </div>
         </div>
       </nav>
