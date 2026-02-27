@@ -16,6 +16,7 @@ type Ranking = {
   player_name: string;
   rank_position: number;
   rating: number;
+  rounds_played: number;
   valid_from: string;
   is_current: boolean;
 };
@@ -201,6 +202,9 @@ export default function Dashboard() {
                       <div className="flex items-center gap-2 mt-1">
                         <span className="text-[10px] bg-white/5 px-2 py-0.5 rounded uppercase tracking-wider text-ghost/40">
                           {activeTab}
+                        </span>
+                        <span className="text-[10px] border border-white/10 px-2 py-0.5 rounded uppercase tracking-wider text-ghost/40">
+                          {player.rounds_played} Rounds
                         </span>
                       </div>
                     </div>

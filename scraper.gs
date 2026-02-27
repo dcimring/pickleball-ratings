@@ -46,8 +46,9 @@ function scrapeAndSync(url, tableName, supabaseUrl, supabaseKey) {
     const response = UrlFetchApp.fetch(url);
     const html = response.getContentText();
     
-    // Regex targets TablePress row structure
-    const rowRegex = /<tr class="row-\d+">[\s\S]*?<td class="column-1">(\d+)<\/td>[\s\S]*?<td class="column-2">([^<]+)<\/td>[\s\S]*?<td class="column-3">([\d\.]+)<\/td>/gi;
+    // Regex targets TablePress row structure with 4 columns:
+    // <td class="column-1">RANK</td><td class="column-2">NAME</td><td class="column-3">RATING</td><td class="column-4">ROUNDS</td>
+    const rowRegex = /<tr class="row-\d+">[\s\S]*?<td class="column-1">(\d+)<\/td>[\s\S]*?<td class="column-2">([^<]+)<\/td>[\s\S]*?<td class="column-3">([\d\.]+)<\/td>[\s\S]*?<td class="column-4">(\d+)<\/td>/gi;
     
     let match;
     let players = [];
@@ -57,14 +58,16 @@ function scrapeAndSync(url, tableName, supabaseUrl, supabaseKey) {
       const rank = parseInt(match[1]);
       const name = match[2].trim();
       const rating = parseFloat(match[3]);
+      const rounds = parseInt(match[4]);
       
-      if (!isNaN(rank) && name && !isNaN(rating)) {
+      if (!isNaN(rank) && name && !isNaN(rating) && !isNaN(rounds)) {
         if (!seenNames[name]) {
           seenNames[name] = true;
           players.push({
             player_name: name,
             rank_position: rank,
-            rating: rating
+            rating: rating,
+            rounds_played: rounds
           });
         } else {
           console.warn(`Skipping duplicate entry for ${name} at rank ${rank}`);
