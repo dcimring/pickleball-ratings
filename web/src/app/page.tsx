@@ -189,14 +189,14 @@ export default function Dashboard() {
                   >
                     <div className="col-span-2 flex items-center gap-3">
                       <span className={cn(
-                        "font-display text-2xl font-black",
+                        "font-display text-xl md:text-2xl font-black",
                         index === 0 ? "text-volt" : "text-ghost/20"
                       )}>
                         {player.rank_position}
                       </span>
                     </div>
                     <div className="col-span-6 md:col-span-7">
-                      <div className="font-sans font-bold text-lg text-white group-hover:text-volt transition-colors">
+                      <div className="font-sans font-bold text-base md:text-lg text-white group-hover:text-volt transition-colors">
                         {player.player_name}
                       </div>
                       <div className="flex items-center gap-2 mt-1">
@@ -206,7 +206,7 @@ export default function Dashboard() {
                       </div>
                     </div>
                     <div className="col-span-4 md:col-span-3 text-right">
-                      <div className="font-display text-xl text-white">
+                      <div className="font-display text-lg md:text-xl text-white">
                         {player.rating.toFixed(3)}
                       </div>
                       <div className="flex items-center justify-end gap-1 text-[10px] text-green-400 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
