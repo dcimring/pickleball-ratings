@@ -123,6 +123,14 @@ export default function Dashboard() {
         doubles: dMatch ? { rank: dMatch.rank_position, rating: dMatch.rating } : null
       };
     });
+
+    // Sort results by Doubles rank (lowest number first), unranked at the end
+    results.sort((a, b) => {
+      const rankA = a.doubles ? a.doubles.rank : Infinity;
+      const rankB = b.doubles ? b.doubles.rank : Infinity;
+      return rankA - rankB;
+    });
+
     setTourneyResults(results);
   };
 
