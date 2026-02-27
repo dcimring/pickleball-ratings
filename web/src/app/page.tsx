@@ -90,7 +90,7 @@ export default function Dashboard() {
   return (
     <main className="min-h-screen pb-20 relative">
       {/* Navigation / Brand Bar */}
-      <nav className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-md border-b border-white/5 px-6 py-4">
+      <nav className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-md border-b border-white/5 px-6 py-3">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <motion.div 
             initial={{ opacity: 0, x: -10 }}
@@ -106,7 +106,7 @@ export default function Dashboard() {
       </nav>
 
       {/* Header Section */}
-      <header className="relative py-12 px-6 overflow-hidden">
+      <header className="relative pt-6 pb-12 px-6 overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_0%,rgba(223,255,0,0.15),transparent_50%)]" />
         
         <div className="max-w-6xl mx-auto relative z-10">
