@@ -199,7 +199,7 @@ export default function Dashboard() {
   return (
     <main className="h-screen flex flex-col overflow-hidden relative">
       {/* Navigation / Brand Bar - Fixed at top */}
-      <nav className="z-50 w-full bg-background/80 backdrop-blur-md border-b border-white/5 px-6 py-3 flex-shrink-0">
+      <nav className="z-50 w-full bg-background/60 backdrop-blur-xl border-b border-white/10 px-6 py-3 flex-shrink-0 shadow-[0_1px_0_0_rgba(223,255,0,0.05)]">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <motion.div 
             initial={{ opacity: 0, x: -10 }}
