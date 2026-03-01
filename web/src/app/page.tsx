@@ -63,6 +63,7 @@ export default function Dashboard() {
   });
 
   const scrollRef = useRef<HTMLDivElement>(null);
+  const searchSectionRef = useRef<HTMLElement>(null);
   const [formState, formAction] = useFormState(submitFeatureRequest, {});
 
   // Unique names for autocomplete
@@ -88,13 +89,6 @@ export default function Dashboard() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  // Reset scroll to top when searching to prevent "blank screen" below short results
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = 0;
-    }
-  }, [searchQuery]);
 
   // Handle scroll reset after animation completes
   const handleViewStable = () => {
@@ -194,6 +188,26 @@ export default function Dashboard() {
 
     return data;
   }, [currentData, searchQuery, sortConfig]);
+
+  // Reset scroll to top of search when results change to keep table visible
+  useEffect(() => {
+    const container = scrollRef.current;
+    const searchSection = searchSectionRef.current;
+    
+    if (searchQuery && container && searchSection) {
+      // The reliable docking point is the height of the header above the search bar
+      const header = searchSection.previousElementSibling as HTMLElement;
+      const dockingPoint = header ? header.offsetHeight : 0;
+      
+      if (container.scrollTop > dockingPoint) {
+        // Small timeout to allow the DOM to update with filtered results
+        const timer = setTimeout(() => {
+          container.scrollTop = dockingPoint;
+        }, 50);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [searchQuery, sortedAndFilteredData.length]);
 
   const SortIndicator = ({ column }: { column: keyof Ranking }) => {
     if (sortConfig.key !== column) return <Minus className="w-3 h-3 opacity-20" />;
@@ -368,7 +382,7 @@ export default function Dashboard() {
               </header>
 
               {/* Search & Stats - Sticky on scroll */}
-              <section className="sticky top-0 z-40 px-6 py-4 mb-4 bg-background/95 backdrop-blur-sm border-b border-white/[0.02] text-left transition-all">
+              <section ref={searchSectionRef} className="sticky top-0 z-40 px-6 py-4 mb-4 bg-background/95 backdrop-blur-sm border-b border-white/[0.02] text-left transition-all">
                 <div className="max-w-6xl mx-auto">
                   <div className="relative group">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-ghost/30 group-focus-within:text-volt transition-colors" />
