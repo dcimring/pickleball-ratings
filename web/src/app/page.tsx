@@ -542,11 +542,18 @@ export default function Dashboard() {
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 {/* Input Section */}
                 <div className="lg:col-span-4 space-y-6">
-                  <div className="bg-surface/50 border border-white/5 rounded-3xl p-6 backdrop-blur-sm text-left">
+                  <div className="bg-surface/50 border border-white/5 rounded-3xl p-6 backdrop-blur-sm text-left scroll-mt-20">
                     <label className="block font-display text-[10px] tracking-[0.3em] text-ghost/40 mb-4 uppercase">Player List</label>
                     <textarea 
                       value={tourneyInput}
                       onChange={(e) => setTourneyInput(e.target.value)}
+                      onFocus={(e) => {
+                        if (window.innerWidth < 768) {
+                          setTimeout(() => {
+                            e.target.closest('.scroll-mt-20')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                          }, 100);
+                        }
+                      }}
                       placeholder="Enter names (one per line)..."
                       className="w-full h-64 bg-background border border-white/5 rounded-2xl p-4 outline-none focus:border-volt/50 transition-all font-sans text-ghost placeholder:text-ghost/20 resize-none"
                     />
@@ -633,7 +640,7 @@ export default function Dashboard() {
                 </p>
               </div>
 
-              <div className="bg-surface/50 border border-white/5 rounded-3xl p-8 backdrop-blur-sm relative overflow-hidden">
+              <div className="bg-surface/50 border border-white/5 rounded-3xl p-8 backdrop-blur-sm relative overflow-hidden scroll-mt-20">
                 {formState.success ? (
                   <motion.div 
                     initial={{ opacity: 0, scale: 0.9 }}
@@ -658,6 +665,13 @@ export default function Dashboard() {
                         onChange={(e) => {
                           setNameInput(e.target.value);
                           setShowNameSuggestions(true);
+                        }}
+                        onFocus={(e) => {
+                          if (window.innerWidth < 768) {
+                            setTimeout(() => {
+                              e.target.closest('.scroll-mt-20')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }, 100);
+                          }
                         }}
                         onBlur={() => setTimeout(() => setShowNameSuggestions(false), 200)}
                         placeholder="Enter your name"
@@ -696,6 +710,13 @@ export default function Dashboard() {
                       <textarea 
                         name="details"
                         required
+                        onFocus={(e) => {
+                          if (window.innerWidth < 768) {
+                            setTimeout(() => {
+                              e.target.closest('.scroll-mt-20')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }, 100);
+                          }
+                        }}
                         placeholder="Describe the feature and how it helps players..."
                         className="w-full h-48 bg-background border border-white/5 rounded-2xl p-4 outline-none focus:border-volt/50 transition-all font-sans text-ghost placeholder:text-ghost/20 resize-none"
                       />
