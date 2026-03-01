@@ -403,11 +403,16 @@ export default function Dashboard() {
                       onFocus={() => {
                         // On mobile, if we are at the top, snap search to docking point instantly
                         if (window.innerWidth < 768 && scrollRef.current && searchSectionRef.current) {
+                          const container = scrollRef.current;
                           const header = searchSectionRef.current.previousElementSibling as HTMLElement;
                           const dockingPoint = header ? header.offsetHeight : 0;
                           
-                          if (scrollRef.current.scrollTop < dockingPoint) {
-                            scrollRef.current.scrollTop = dockingPoint;
+                          if (container.scrollTop < dockingPoint) {
+                            // Using a timeout allows the browser to complete the focus/keyboard opening 
+                            // before we move the element, which prevents the caret (blinking cursor) from disappearing.
+                            setTimeout(() => {
+                              container.scrollTop = dockingPoint;
+                            }, 0);
                           }
                         }
                       }}
