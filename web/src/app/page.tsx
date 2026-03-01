@@ -30,16 +30,8 @@ function SubmitButton() {
     <button 
       type="submit"
       disabled={pending}
-      className="w-full mt-6 bg-volt hover:bg-volt/90 disabled:opacity-50 disabled:hover:bg-volt text-background font-display font-black py-4 rounded-2xl transition-all tracking-widest text-sm flex items-center justify-center gap-2"
+      className="w-full mt-6 bg-volt hover:bg-volt/90 disabled:opacity-50 disabled:hover:bg-volt text-background font-display font-black py-4 rounded-2xl transition-all tracking-widest text-sm flex items-center justify-center"
     >
-      {pending ? (
-        <motion.div 
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-        >
-          <Zap className="w-4 h-4 fill-background" />
-        </motion.div>
-      ) : <Send className="w-4 h-4" />}
       {pending ? "SENDING..." : "SUBMIT FEATURE REQUEST"}
     </button>
   );
