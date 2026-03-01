@@ -340,7 +340,7 @@ export default function Dashboard() {
               className="pb-[80vh] min-h-full"
             >
               {/* Header Section */}
-              <header className="relative pt-6 pb-12 px-6 overflow-hidden text-left">
+              <header className="relative pt-6 pb-6 px-6 overflow-hidden text-left">
                 <div className="max-w-6xl mx-auto relative z-10">
                   <motion.div 
                     initial={{ opacity: 0, y: 20 }}
@@ -382,7 +382,7 @@ export default function Dashboard() {
               </header>
 
               {/* Search & Stats - Sticky on scroll */}
-              <section ref={searchSectionRef} className="sticky top-0 z-40 px-6 py-4 mb-4 bg-background/95 backdrop-blur-sm border-b border-white/[0.02] text-left transition-all">
+              <section ref={searchSectionRef} className="sticky top-0 z-40 px-6 py-4 mb-2 bg-background/95 backdrop-blur-sm border-b border-white/[0.02] text-left transition-all">
                 <div className="max-w-6xl mx-auto">
                   <div className="relative group">
                     <div className="absolute left-4 inset-y-0 flex items-center pointer-events-none">
