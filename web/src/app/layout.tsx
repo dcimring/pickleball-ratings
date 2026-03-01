@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Orbitron } from "next/font/google";
 import "./globals.css";
 
@@ -31,6 +31,14 @@ export const metadata: Metadata = {
     description: "Real-time rank tracking and analytics for the Cayman Islands Pickleball community.",
     images: ["/og-image.png"],
   },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  interactiveWidget: 'resizes-content',
 };
 
 export default function RootLayout({

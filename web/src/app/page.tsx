@@ -78,6 +78,24 @@ export default function Dashboard() {
       .slice(0, 5); // Limit to 5 suggestions
   }, [allUniqueNames, nameInput]);
 
+  // Force window scroll to 0 to prevent iOS panning issues
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY !== 0) {
+        window.scrollTo(0, 0);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Reset scroll to top when searching to prevent "blank screen" below short results
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = 0;
+    }
+  }, [searchQuery]);
+
   // Handle scroll reset after animation completes
   const handleViewStable = () => {
     if (scrollRef.current) {
@@ -197,9 +215,9 @@ export default function Dashboard() {
   }
 
   return (
-    <main className="h-screen flex flex-col overflow-hidden relative">
-      {/* Navigation / Brand Bar - Fixed at top */}
-      <nav className="z-50 w-full bg-background/60 backdrop-blur-xl border-b border-white/10 px-6 py-3 flex-shrink-0 shadow-[0_1px_0_0_rgba(223,255,0,0.05)]">
+    <main className="h-[100dvh] flex flex-col overflow-hidden relative overscroll-none">
+      {/* Navigation / Brand Bar - Part of flex flow */}
+      <nav className="sticky top-0 z-50 w-full bg-background/60 backdrop-blur-xl border-b border-white/10 px-6 py-3 shadow-[0_1px_0_0_rgba(223,255,0,0.05)] flex-shrink-0">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <motion.div 
             initial={{ opacity: 0, x: -10 }}
@@ -305,11 +323,12 @@ export default function Dashboard() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="pb-20 min-h-full"
+              className="pb-[80vh] min-h-full"
             >
-                          {/* Header Section */}
-                          <header className="relative pt-6 pb-12 px-6 overflow-hidden text-left">
-                            <div className="max-w-6xl mx-auto relative z-10">                  <motion.div 
+              {/* Header Section */}
+              <header className="relative pt-6 pb-12 px-6 overflow-hidden text-left">
+                <div className="max-w-6xl mx-auto relative z-10">
+                  <motion.div 
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="flex flex-col md:flex-row md:items-end justify-between gap-6"
@@ -348,8 +367,8 @@ export default function Dashboard() {
                 </div>
               </header>
 
-              {/* Search & Stats */}
-              <section className="px-6 mb-8 text-left">
+              {/* Search & Stats - Sticky on scroll */}
+              <section className="sticky top-0 z-40 px-6 py-4 mb-4 bg-background/95 backdrop-blur-sm border-b border-white/[0.02] text-left transition-all">
                 <div className="max-w-6xl mx-auto">
                   <div className="relative group">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-ghost/30 group-focus-within:text-volt transition-colors" />
