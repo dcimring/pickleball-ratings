@@ -392,6 +392,17 @@ export default function Dashboard() {
                       type="text"
                       placeholder="Search by player name..."
                       value={searchQuery}
+                      onFocus={() => {
+                        // On mobile, if we are at the top, snap search to docking point instantly
+                        if (window.innerWidth < 768 && scrollRef.current && searchSectionRef.current) {
+                          const header = searchSectionRef.current.previousElementSibling as HTMLElement;
+                          const dockingPoint = header ? header.offsetHeight : 0;
+                          
+                          if (scrollRef.current.scrollTop < dockingPoint) {
+                            scrollRef.current.scrollTop = dockingPoint;
+                          }
+                        }
+                      }}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="w-full bg-surface border border-white/5 rounded-2xl py-4 pl-12 pr-12 outline-none focus:border-volt/50 transition-all font-sans text-lg"
                     />
