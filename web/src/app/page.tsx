@@ -403,6 +403,11 @@ export default function Dashboard() {
                           }
                         }
                       }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Escape') {
+                          setSearchQuery('');
+                        }
+                      }}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="w-full bg-surface border border-white/5 rounded-2xl py-4 pl-12 pr-12 outline-none focus:border-volt/50 transition-all font-sans text-lg"
                     />
