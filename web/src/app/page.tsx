@@ -229,9 +229,9 @@ export default function Dashboard() {
   }
 
   return (
-    <main className="h-[100dvh] flex flex-col overflow-hidden relative overscroll-none">
+    <main className="h-[100dvh] w-full w-screen flex flex-col overflow-hidden relative overscroll-none">
       {/* Navigation / Brand Bar - Part of flex flow */}
-      <nav className="sticky top-0 z-50 w-full bg-background/60 backdrop-blur-xl border-b border-white/10 px-6 py-3 shadow-[0_1px_0_0_rgba(223,255,0,0.05)] flex-shrink-0">
+      <nav className="sticky top-0 z-50 w-full bg-background/60 backdrop-blur-xl border-b border-white/10 px-4 md:px-6 py-3 shadow-[0_1px_0_0_rgba(223,255,0,0.05)] flex-shrink-0">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <motion.div 
             initial={{ opacity: 0, x: -10 }}
@@ -337,10 +337,10 @@ export default function Dashboard() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="pb-[80vh] min-h-full"
+              className="pb-[80vh] min-h-full w-full"
             >
               {/* Header Section */}
-              <header className="relative pt-6 pb-12 px-6 overflow-hidden text-left">
+              <header className="relative pt-6 pb-12 px-4 md:px-6 overflow-hidden text-left">
                 <div className="max-w-6xl mx-auto relative z-10">
                   <motion.div 
                     initial={{ opacity: 0, y: 20 }}
@@ -382,7 +382,7 @@ export default function Dashboard() {
               </header>
 
               {/* Search & Stats - Sticky on scroll */}
-              <section ref={searchSectionRef} className="sticky top-0 z-40 px-6 py-4 mb-4 bg-background/95 backdrop-blur-sm border-b border-white/[0.02] text-left transition-all">
+              <section ref={searchSectionRef} className="sticky top-0 z-40 px-4 md:px-6 py-4 mb-4 bg-background/95 backdrop-blur-sm border-b border-white/[0.02] text-left transition-all">
                 <div className="max-w-6xl mx-auto">
                   <div className="relative group">
                     <div className="absolute left-4 inset-y-0 flex items-center pointer-events-none">
@@ -431,10 +431,10 @@ export default function Dashboard() {
               </section>
 
               {/* Table Section */}
-              <section className="px-6 text-left">
+              <section className="px-4 md:px-6 text-left">
                 <div className="max-w-6xl mx-auto">
                   <div className="bg-surface/50 border border-white/5 rounded-3xl overflow-hidden backdrop-blur-sm">
-                    <div className="grid grid-cols-12 gap-2 md:gap-4 px-4 md:px-8 py-6 border-b border-white/5 font-display text-[10px] tracking-[0.3em] text-ghost/40 select-none">
+                    <div className="grid grid-cols-12 gap-2 md:gap-4 px-3 md:px-8 py-6 border-b border-white/5 font-display text-[10px] tracking-[0.3em] text-ghost/40 select-none">
                       <button 
                         onClick={() => handleSort('rank_position')}
                         className="col-span-3 md:col-span-2 flex items-center gap-1 md:gap-2 hover:text-ghost transition-colors group"
@@ -475,7 +475,7 @@ export default function Dashboard() {
                               delay: Math.min(index * 0.01, 0.2),
                               layout: { duration: 0.4, ease: "easeInOut" } 
                             }}
-                            className="grid grid-cols-12 gap-2 md:gap-4 px-4 md:px-8 py-6 hover:bg-white/[0.02] transition-colors items-center group"
+                            className="grid grid-cols-12 gap-2 md:gap-4 px-3 md:px-8 py-6 hover:bg-white/[0.02] transition-colors items-center group"
                           >
                             <div className="col-span-3 md:col-span-2 flex items-center gap-3">
                               <span className={cn(
@@ -524,7 +524,7 @@ export default function Dashboard() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="max-w-6xl mx-auto px-6 pt-6 pb-20 text-left min-h-full"
+              className="max-w-6xl mx-auto px-4 md:px-6 pt-6 pb-20 text-left min-h-full w-full"
             >
               <div className="mb-12">
                 <div className="flex items-center gap-2 mb-2">
@@ -618,7 +618,16 @@ export default function Dashboard() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="max-w-xl mx-auto px-6 pt-6 pb-20 text-left min-h-full"
+              className="max-w-xl mx-auto px-4 md:px-6 pt-6 pb-20 text-left min-h-full w-full"
+>
+old_string:
+            <motion.div
+              key="feature-request-view"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="max-w-xl mx-auto px-4 md:px-6 pt-6 pb-20 text-left min-h-full"
             >
               <div className="mb-12 text-center">
                 <div className="flex items-center justify-center gap-2 mb-2">
