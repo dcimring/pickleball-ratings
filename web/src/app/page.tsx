@@ -64,6 +64,7 @@ export default function Dashboard() {
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const searchSectionRef = useRef<HTMLElement>(null);
+  const resultsSectionRef = useRef<HTMLDivElement>(null);
   const [formState, formAction] = useFormState(submitFeatureRequest, {});
 
   // Unique names for autocomplete
@@ -162,6 +163,13 @@ export default function Dashboard() {
     });
 
     setTourneyResults(results);
+
+    // On mobile, auto-scroll to results after a short delay
+    if (window.innerWidth < 1024) { // Using 1024 to match the LG breakpoint where layout stacks
+      setTimeout(() => {
+        resultsSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
   };
 
   const currentData = activeTab === 'doubles' ? doubles : singles;
@@ -568,7 +576,7 @@ export default function Dashboard() {
                 </div>
 
                 {/* Results Section */}
-                <div className="lg:col-span-8">
+                <div ref={resultsSectionRef} className="lg:col-span-8 scroll-mt-20">
                   <div className="bg-surface/50 border border-white/5 rounded-3xl overflow-hidden backdrop-blur-sm min-h-[400px]">
                     {tourneyResults.length > 0 ? (
                       <div className="divide-y divide-white/5">
