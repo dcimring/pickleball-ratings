@@ -385,7 +385,9 @@ export default function Dashboard() {
               <section ref={searchSectionRef} className="sticky top-0 z-40 px-6 py-4 mb-4 bg-background/95 backdrop-blur-sm border-b border-white/[0.02] text-left transition-all">
                 <div className="max-w-6xl mx-auto">
                   <div className="relative group">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-ghost/30 group-focus-within:text-volt transition-colors" />
+                    <div className="absolute left-4 inset-y-0 flex items-center pointer-events-none">
+                      <Search className="w-5 h-5 text-ghost/30 group-focus-within:text-volt transition-colors" />
+                    </div>
                     <input 
                       type="text"
                       placeholder="Search by player name..."
@@ -395,15 +397,17 @@ export default function Dashboard() {
                     />
                     <AnimatePresence>
                       {searchQuery && (
-                        <motion.button
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          exit={{ opacity: 0, scale: 0.8 }}
-                          onClick={() => setSearchQuery('')}
-                          className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-white/10 rounded-full transition-colors group/clear"
-                        >
-                          <X className="w-5 h-5 text-ghost/30 group-hover/clear:text-volt" />
-                        </motion.button>
+                        <div className="absolute right-2 inset-y-0 flex items-center">
+                          <motion.button
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.8 }}
+                            onClick={() => setSearchQuery('')}
+                            className="w-10 h-10 flex items-center justify-center hover:bg-white/10 rounded-full transition-colors group/clear"
+                          >
+                            <X className="w-5 h-5 text-ghost/60 group-hover/clear:text-volt transition-colors" />
+                          </motion.button>
+                        </div>
                       )}
                     </AnimatePresence>
                   </div>
