@@ -213,7 +213,14 @@ export default function Dashboard() {
         };
       })
       .filter((item): item is NonNullable<typeof item> => item !== null)
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      .sort((a, b) => {
+        // Primary sort: Largest rating increase (ratingDiff) first
+        if (b.ratingDiff !== a.ratingDiff) {
+          return b.ratingDiff - a.ratingDiff;
+        }
+        // Secondary sort: Most recent first
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+      });
   }, [activeTab, singlesHistory, doublesHistory]);
 
   const sortedAndFilteredData = useMemo(() => {
