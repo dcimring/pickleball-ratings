@@ -5,7 +5,7 @@ import { useFormState, useFormStatus } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '@/lib/supabase';
 import { submitFeatureRequest } from './actions';
-import { Search, Trophy, Users, User, Zap, ArrowUpRight, TrendingUp, TrendingDown, Minus, Send, CheckCircle2, MessageSquarePlus, X } from 'lucide-react';
+import { Search, Trophy, Users, User, Zap, ArrowUpRight, TrendingUp, TrendingDown, Minus, Send, CheckCircle2, MessageSquarePlus, X, RefreshCw } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -41,6 +41,7 @@ export default function Dashboard() {
   const [singles, setSingles] = useState<Ranking[]>([]);
   const [doubles, setDoubles] = useState<Ranking[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [activeView, setActiveView] = useState<'rankings' | 'tourney' | 'feature-request'>('rankings');
   const [activeTab, setActiveTab] = useState<'doubles' | 'singles'>('doubles');
   const [searchQuery, setSearchQuery] = useState('');
@@ -58,6 +59,37 @@ export default function Dashboard() {
   const searchSectionRef = useRef<HTMLElement>(null);
   const resultsSectionRef = useRef<HTMLDivElement>(null);
   const [formState, formAction] = useFormState(submitFeatureRequest, {});
+
+  const fetchData = async (isManual = false) => {
+    if (isManual) setRefreshing(true);
+    try {
+      const [singlesRes, doublesRes] = await Promise.all([
+        supabase.schema('pickleball_ratings').from('singles_ratings_deltas').select('*').eq('is_current', true).order('rank_position', { ascending: true }),
+        supabase.schema('pickleball_ratings').from('doubles_ratings_deltas').select('*').eq('is_current', true).order('rank_position', { ascending: true })
+      ]);
+
+      if (singlesRes.data) setSingles(singlesRes.data);
+      if (doublesRes.data) setDoubles(doublesRes.data);
+    } catch (err) {
+      console.error('CRITICAL_FETCH_ERROR:', err);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
+  // Initial fetch and window focus re-validation
+  useEffect(() => {
+    fetchData();
+
+    const handleFocus = () => {
+      // Re-fetch in background on window focus
+      fetchData();
+    };
+
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
+  }, []);
 
   // Unique names for autocomplete
   const allUniqueNames = useMemo(() => {
@@ -98,34 +130,6 @@ export default function Dashboard() {
       return () => clearTimeout(timer);
     }
   }, [formState.success]);
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const [singlesRes, doublesRes] = await Promise.all([
-          supabase.schema('pickleball_ratings').from('singles_ratings_deltas').select('*').eq('is_current', true).order('rank_position', { ascending: true }),
-          supabase.schema('pickleball_ratings').from('doubles_ratings_deltas').select('*').eq('is_current', true).order('rank_position', { ascending: true })
-        ]);
-
-        if (singlesRes.error) {
-          console.error('SUPABASE_SINGLES_ERROR:', singlesRes.error);
-        }
-        
-        if (doublesRes.error) {
-          console.error('SUPABASE_DOUBLES_ERROR:', doublesRes.error);
-        }
-
-        if (singlesRes.data) setSingles(singlesRes.data);
-        if (doublesRes.data) setDoubles(doublesRes.data);
-      } catch (err) {
-        console.error('CRITICAL_FETCH_ERROR:', err);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchData();
-  }, []);
 
   const handleSort = (key: keyof Ranking) => {
     setSortConfig((current) => ({
@@ -271,10 +275,26 @@ export default function Dashboard() {
             >
               SUGGEST FEATURE
             </button>
+            <button 
+              onClick={() => fetchData(true)}
+              disabled={refreshing}
+              className="ml-4 p-2 text-ghost/40 hover:text-volt transition-colors disabled:opacity-50"
+              title="Refresh Data"
+            >
+              <RefreshCw className={cn("w-4 h-4", refreshing ? "animate-spin text-volt" : "")} />
+            </button>
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="md:hidden">
+          {/* Mobile Actions */}
+          <div className="md:hidden flex items-center gap-2">
+            <button 
+              onClick={() => fetchData(true)}
+              disabled={refreshing}
+              className="p-2 text-ghost/40 active:text-volt transition-colors"
+              title="Refresh Data"
+            >
+              <RefreshCw className={cn("w-5 h-5", refreshing ? "animate-spin text-volt" : "")} />
+            </button>
             <button 
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="text-volt p-2"
