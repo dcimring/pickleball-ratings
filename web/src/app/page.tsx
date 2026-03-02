@@ -5,7 +5,7 @@ import { useFormState, useFormStatus } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '@/lib/supabase';
 import { submitFeatureRequest } from './actions';
-import { Search, Trophy, Users, User, Zap, ArrowUpRight, TrendingUp, TrendingDown, Minus, Send, CheckCircle2, MessageSquarePlus, X, RefreshCw, Activity, History } from 'lucide-react';
+import { Search, Trophy, Users, User, Zap, ArrowUpRight, TrendingUp, TrendingDown, Minus, Send, CheckCircle2, MessageSquarePlus, X, RefreshCw, Activity, History, MessageCircle } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -44,7 +44,7 @@ export default function Dashboard() {
   const [doublesHistory, setDoublesHistory] = useState<Ranking[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [activeView, setActiveView] = useState<'rankings' | 'tourney' | 'feature-request' | 'activity'>('rankings');
+  const [activeView, setActiveView] = useState<'rankings' | 'tourney' | 'feature-request' | 'activity' | 'whatsapp'>('rankings');
   const [activeTab, setActiveTab] = useState<'doubles' | 'singles'>('doubles');
   const [searchQuery, setSearchQuery] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -320,6 +320,15 @@ export default function Dashboard() {
               ACTIVITY
             </button>
             <button 
+              onClick={() => setActiveView('whatsapp')}
+              className={cn(
+                "text-[10px] font-display tracking-[0.2em] transition-colors",
+                activeView === 'whatsapp' ? "text-volt" : "text-ghost/40 hover:text-ghost"
+              )}
+            >
+              ALERTS
+            </button>
+            <button 
               onClick={() => setActiveView('tourney')}
               className={cn(
                 "text-[10px] font-display tracking-[0.2em] transition-colors",
@@ -393,6 +402,15 @@ export default function Dashboard() {
                   )}
                 >
                   ACTIVITY
+                </button>
+                <button 
+                  onClick={() => { setActiveView('whatsapp'); setIsMobileMenuOpen(false); }}
+                  className={cn(
+                    "text-left font-display text-sm tracking-widest",
+                    activeView === 'whatsapp' ? "text-volt" : "text-ghost/40"
+                  )}
+                >
+                  ALERTS
                 </button>
                 <button 
                   onClick={() => { setActiveView('tourney'); setIsMobileMenuOpen(false); }}
@@ -735,6 +753,79 @@ export default function Dashboard() {
                     <p className="font-display text-ghost/20 tracking-widest text-sm">NO RECENT CHANGES DETECTED</p>
                   </div>
                 )}
+              </div>
+            </motion.div>
+          ) : activeView === 'whatsapp' ? (
+            <motion.div
+              key="whatsapp-view"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="max-w-2xl mx-auto px-6 pt-6 pb-20 text-center min-h-full"
+            >
+              <div className="mb-12">
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <MessageCircle className="w-5 h-5 text-volt" />
+                  <span className="text-volt font-display tracking-[0.2em] text-sm uppercase">Community</span>
+                </div>
+                <h1 className="text-5xl md:text-7xl font-display font-black tracking-tighter text-white">
+                  REAL-TIME <span className="text-transparent bg-clip-text bg-gradient-to-r from-volt to-white">ALERTS</span>
+                </h1>
+                <p className="mt-4 text-ghost/60 max-w-lg mx-auto font-sans text-lg text-balance">
+                  Join our WhatsApp group to get instant notifications when rankings change or new matches are logged.
+                </p>
+              </div>
+
+              <div className="bg-surface/50 border border-white/5 rounded-3xl p-8 md:p-12 backdrop-blur-sm relative overflow-hidden">
+                {/* Desktop/Tablet View: QR Code */}
+                <div className="hidden md:flex flex-col items-center gap-8">
+                  <div className="bg-white p-4 rounded-2xl">
+                    <img 
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=200x250&data=${encodeURIComponent('https://chat.whatsapp.com/Ct260BAJJ2xGslKvhlR6wJ?mode=hq1tcli')}`}
+                      alt="WhatsApp Group QR Code"
+                      className="w-48 h-48"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-white font-display text-lg font-bold tracking-tight">SCAN TO JOIN</p>
+                    <p className="text-ghost/40 text-sm">Open your phone's camera to scan the code</p>
+                  </div>
+                </div>
+
+                {/* Mobile View: Join Button */}
+                <div className="md:hidden flex flex-col items-center gap-6">
+                  <div className="w-20 h-20 bg-volt/10 rounded-full flex items-center justify-center mb-2">
+                    <MessageCircle className="w-10 h-10 text-volt" />
+                  </div>
+                  <div className="space-y-2">
+                    <h3 className="text-white font-display text-xl font-black">STAY IN THE LOOP</h3>
+                    <p className="text-ghost/60 text-sm">Tap the button below to join the Cayman Pickleball Alerts group.</p>
+                  </div>
+                  <a 
+                    href="https://chat.whatsapp.com/Ct260BAJJ2xGslKvhlR6wJ?mode=hq1tcli"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full bg-volt hover:bg-volt/90 text-background font-display font-black py-4 rounded-2xl transition-all tracking-widest text-sm text-center"
+                  >
+                    JOIN GROUP
+                  </a>
+                </div>
+              </div>
+
+              <div className="mt-12 flex items-center justify-center gap-8 opacity-20">
+                <div className="flex flex-col items-center gap-1">
+                  <Zap className="w-4 h-4" />
+                  <span className="text-[8px] font-display tracking-widest">INSTANT</span>
+                </div>
+                <div className="flex flex-col items-center gap-1">
+                  <Users className="w-4 h-4" />
+                  <span className="text-[8px] font-display tracking-widest">COMMUNITY</span>
+                </div>
+                <div className="flex flex-col items-center gap-1">
+                  <Trophy className="w-4 h-4" />
+                  <span className="text-[8px] font-display tracking-widest">COMPETITIVE</span>
+                </div>
               </div>
             </motion.div>
           ) : activeView === 'tourney' ? (
