@@ -13,12 +13,19 @@ function PlayerProfileContent() {
   const params = useParams();
   const searchParams = useSearchParams();
   const slug = params.slug as string;
-  const initialTab = (searchParams.get('tab') as 'doubles' | 'singles') || 'doubles';
   
-  const [activeTab, setActiveTab] = useState<'doubles' | 'singles'>(initialTab);
+  const [activeTab, setActiveTab] = useState<'doubles' | 'singles'>('doubles');
   const [loading, setLoading] = useState(true);
   const [playerHistory, setPlayerHistory] = useState<{ singles: Ranking[], doubles: Ranking[] }>({ singles: [], doubles: [] });
   const [playerName, setPlayerName] = useState('');
+
+  // Handle initial tab from URL search params
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab === 'singles' || tab === 'doubles') {
+      setActiveTab(tab);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     async function fetchProfile() {
@@ -66,17 +73,7 @@ function PlayerProfileContent() {
 
 export default function PlayerProfilePage() {
   return (
-    <Suspense fallback={
-      <div className="flex flex-col items-center justify-center min-h-[60vh]">
-        <motion.div 
-          animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <Zap className="w-12 h-12 text-volt fill-volt" />
-        </motion.div>
-        <p className="mt-4 font-display text-volt tracking-widest animate-pulse">PREPARING PROFILE...</p>
-      </div>
-    }>
+    <Suspense fallback={null}>
       <PlayerProfileContent />
     </Suspense>
   );
