@@ -12,8 +12,7 @@ export default function TourneyPage() {
   const [tourneyResults, setTourneyResults] = useState<any[]>([]);
 
   const handleTourneyCheck = () => {
-    const names = tourneyInput.split('
-').map(n => n.trim()).filter(n => n.length > 0);
+    const names = tourneyInput.split('\n').map(n => n.trim()).filter(n => n.length > 0);
     const results = names.map(name => {
       const sMatch = singles.find(p => p.player_name.toLowerCase() === name.toLowerCase());
       const dMatch = doubles.find(p => p.player_name.toLowerCase() === name.toLowerCase());
