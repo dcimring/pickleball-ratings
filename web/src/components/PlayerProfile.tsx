@@ -86,46 +86,72 @@ export function PlayerProfile({
           </div>
         ) : (
           <>
-            {['doubles', 'singles'].map((type) => {
-          const data = type === 'doubles' ? playerHistory.doubles : playerHistory.singles;
-          const current = data[data.length - 1];
-          const isActive = activeTab === type;
+            {(['doubles', 'singles'] as const).map((type) => {
+              const data = type === 'doubles' ? playerHistory.doubles : playerHistory.singles;
+              const current = data[data.length - 1];
+              const isActive = activeTab === type;
 
-          return (
-            <div 
-              key={type}
-              className={cn(
-                "bg-surface/50 border rounded-3xl p-8 backdrop-blur-sm transition-all duration-500",
-                isActive ? "border-volt/30 shadow-[0_0_40px_-15px_rgba(223,255,0,0.15)]" : "border-white/5 opacity-50"
-              )}
-            >
+              return (
+                <div 
+                  key={type}
+                  className={cn(
+                    "bg-surface/50 border rounded-3xl p-8 backdrop-blur-sm transition-all duration-500",
+                    isActive ? "border-volt/30 shadow-[0_0_40px_-15px_rgba(223,255,0,0.15)]" : "border-white/5 opacity-50"
+                  )}
+                >
+                  <div className="flex items-center justify-between mb-6">
+                    <span className="font-display text-[10px] tracking-[0.3em] text-ghost/40 uppercase">{type} Rating</span>
+                    {type === 'doubles' ? <Users className="w-4 h-4 text-ghost/20" /> : <User className="w-4 h-4 text-ghost/20" />}
+                  </div>
+                  {current ? (
+                    <div className="space-y-4">
+                      <div className="flex items-end gap-2">
+                        <span className="text-5xl font-display font-black text-white">{current.rating.toFixed(3)}</span>
+                        <span className="text-volt font-display text-sm mb-1 uppercase tracking-widest">Global</span>
+                      </div>
+                      <div className="flex items-center gap-4 text-ghost/40">
+                        <div className="flex flex-col">
+                          <span className="text-[10px] uppercase tracking-widest">Rank</span>
+                          <span className="text-white font-bold">#{current.rank_position}</span>
+                        </div>
+                        <div className="w-px h-8 bg-white/5" />
+                        <div className="flex flex-col">
+                          <span className="text-[10px] uppercase tracking-widest">Rounds</span>
+                          <span className="text-white font-bold">{current.rounds_played}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="h-24 flex items-center justify-center text-ghost/10">
+                      <span className="font-display text-[10px] tracking-widest">UNRANKED</span>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+
+            {/* Total Stats/Activity Card */}
+            <div className="bg-surface/50 border border-white/5 rounded-3xl p-8 backdrop-blur-sm">
               <div className="flex items-center justify-between mb-6">
-                <span className="font-display text-[10px] tracking-[0.3em] text-ghost/40 uppercase">{type} Rating</span>
-                {type === 'doubles' ? <Users className="w-4 h-4 text-ghost/20" /> : <User className="w-4 h-4 text-ghost/20" />}
+                <span className="font-display text-[10px] tracking-[0.3em] text-ghost/40 uppercase">Performance</span>
+                <TrendingUp className="w-4 h-4 text-ghost/20" />
               </div>
-              {current ? (
-                <div className="space-y-4">
-                  <div className="flex items-end gap-2">
-                    <span className="text-5xl font-display font-black text-white">{current.rating.toFixed(3)}</span>
-                    <span className="text-volt font-display text-sm mb-1 uppercase tracking-widest">Global</span>
-                  </div>
-                  <div className="flex items-center gap-4 text-ghost/40">
-                    <div className="flex flex-col">
-                      <span className="text-[10px] uppercase tracking-widest">Rank</span>
-                      <span className="text-white font-bold">#{current.rank_position}</span>
-                    </div>
-                    <div className="w-px h-8 bg-white/5" />
-                    <div className="flex flex-col">
-                      <span className="text-[10px] uppercase tracking-widest">Rounds</span>
-                      <span className="text-white font-bold">{current.rounds_played}</span>
-                    </div>
-                  </div>
+              <div className="space-y-6">
+                <div className="flex flex-col gap-1">
+                  <span className="text-[10px] text-ghost/40 uppercase tracking-widest">Tracking Since</span>
+                  <span className="text-white font-bold">
+                    {playerHistory[activeTab][0]?.valid_from 
+                      ? new Date(playerHistory[activeTab][0].valid_from).toLocaleDateString('en-KY', { month: 'long', year: 'numeric' })
+                      : 'N/A'
+                    }
+                  </span>
                 </div>
-              ) : (
-                <div className="h-24 flex items-center justify-center text-ghost/10">
-                  <span className="font-display text-[10px] tracking-widest">UNRANKED</span>
+                <div className="pt-4 border-t border-white/5">
+                  <p className="text-xs text-ghost/60 leading-relaxed">
+                    Rating is calculated using the Cayman Islands proprietary rating system and official match data.
+                  </p>
                 </div>
-              )}
+              </div>
             </div>
           </>
         )}
