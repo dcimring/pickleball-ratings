@@ -676,40 +676,42 @@ export default function Dashboard() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="max-w-4xl mx-auto px-6 pt-6 pb-20 text-left min-h-full"
+              className="max-w-6xl mx-auto px-6 pt-6 pb-20 text-left min-h-full"
             >
-              <div className="mb-6">
-                <div className="flex items-center gap-2 mb-2">
-                  <Activity className="w-5 h-5 text-volt" />
-                  <span className="text-volt font-display tracking-[0.2em] text-sm uppercase">Live Feed</span>
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <Activity className="w-5 h-5 text-volt" />
+                    <span className="text-volt font-display tracking-[0.2em] text-sm uppercase">Live Feed</span>
+                  </div>
+                  <h1 className="text-5xl md:text-7xl font-display font-black tracking-tighter text-white">
+                    RECENT <span className="text-transparent bg-clip-text bg-gradient-to-r from-volt to-white">ACTIVITY</span>
+                  </h1>
+                  <p className="mt-4 text-ghost/60 max-w-2xl font-sans text-lg text-balance">
+                    Track the latest moves and matches across the Cayman Islands.
+                  </p>
                 </div>
-                <h1 className="text-5xl md:text-7xl font-display font-black tracking-tighter text-white">
-                  RECENT <span className="text-transparent bg-clip-text bg-gradient-to-r from-volt to-white">ACTIVITY</span>
-                </h1>
-                <p className="mt-4 text-ghost/60 max-w-2xl font-sans text-lg text-balance">
-                  Track the latest moves and matches across the Cayman Islands.
-                </p>
-              </div>
 
-              <div className="flex p-1 bg-surface rounded-xl border border-white/5 mb-8 w-fit">
-                <button 
-                  onClick={() => setActiveTab('doubles')}
-                  className={cn(
-                    "flex items-center gap-2 px-6 py-3 rounded-lg font-display text-sm tracking-wider transition-all duration-300",
-                    activeTab === 'doubles' ? "bg-volt text-background" : "text-ghost/50 hover:text-ghost"
-                  )}
-                >
-                  <Users className="w-4 h-4" /> DOUBLES
-                </button>
-                <button 
-                  onClick={() => setActiveTab('singles')}
-                  className={cn(
-                    "flex items-center gap-2 px-6 py-3 rounded-lg font-display text-sm tracking-wider transition-all duration-300",
-                    activeTab === 'singles' ? "bg-volt text-background" : "text-ghost/50 hover:text-ghost"
-                  )}
-                >
-                  <User className="w-4 h-4" /> SINGLES
-                </button>
+                <div className="flex p-1 bg-surface rounded-xl border border-white/5 w-fit h-fit">
+                  <button 
+                    onClick={() => setActiveTab('doubles')}
+                    className={cn(
+                      "flex items-center gap-2 px-6 py-3 rounded-lg font-display text-sm tracking-wider transition-all duration-300",
+                      activeTab === 'doubles' ? "bg-volt text-background" : "text-ghost/50 hover:text-ghost"
+                    )}
+                  >
+                    <Users className="w-4 h-4" /> DOUBLES
+                  </button>
+                  <button 
+                    onClick={() => setActiveTab('singles')}
+                    className={cn(
+                      "flex items-center gap-2 px-6 py-3 rounded-lg font-display text-sm tracking-wider transition-all duration-300",
+                      activeTab === 'singles' ? "bg-volt text-background" : "text-ghost/50 hover:text-ghost"
+                    )}
+                  >
+                    <User className="w-4 h-4" /> SINGLES
+                  </button>
+                </div>
               </div>
 
               {/* Sort Toggles */}
