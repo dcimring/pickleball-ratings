@@ -57,9 +57,7 @@ export default function RootLayout({
           <main className="h-[100dvh] flex flex-col overflow-hidden relative overscroll-none">
             <Navigation />
             <div className="flex-1 overflow-y-auto">
-              <PageTransition>
-                {children}
-              </PageTransition>
+              {children}
             </div>
           </main>
         </DataProvider>
