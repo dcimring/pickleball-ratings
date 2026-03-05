@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { Ranking } from '@/lib/types';
@@ -9,7 +9,7 @@ import { unslugify } from '@/lib/slugify';
 import { motion } from 'framer-motion';
 import { Zap } from 'lucide-react';
 
-export default function PlayerProfilePage() {
+function PlayerProfileContent() {
   const params = useParams();
   const searchParams = useSearchParams();
   const slug = params.slug as string;
@@ -83,5 +83,23 @@ export default function PlayerProfilePage() {
       activeTab={activeTab}
       onTabChange={setActiveTab}
     />
+  );
+}
+
+export default function PlayerProfilePage() {
+  return (
+    <Suspense fallback={
+      <div className="flex flex-col items-center justify-center min-h-[60vh]">
+        <motion.div 
+          animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <Zap className="w-12 h-12 text-volt fill-volt" />
+        </motion.div>
+        <p className="mt-4 font-display text-volt tracking-widest animate-pulse">PREPARING PROFILE...</p>
+      </div>
+    }>
+      <PlayerProfileContent />
+    </Suspense>
   );
 }
