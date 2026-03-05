@@ -247,6 +247,20 @@ export default function Dashboard() {
     return tiers.filter(tier => tier.items.length > 0);
   }, [activeTab, singlesHistory, doublesHistory, activitySort]);
 
+  const pulseStats = useMemo(() => {
+    const thisWeekTier = activityFeed.find(tier => tier.title === 'THIS WEEK');
+    if (!thisWeekTier || thisWeekTier.items.length === 0) return null;
+
+    const items = thisWeekTier.items;
+    const topGainer = [...items].sort((a, b) => b.ratingDiff - a.ratingDiff)[0];
+
+    return {
+      activeCount: items.length,
+      topGainerName: topGainer.player_name,
+      topGainerValue: topGainer.ratingDiff
+    };
+  }, [activityFeed]);
+
   const sortedAndFilteredData = useMemo(() => {
     let data = [...currentData];
     
@@ -722,6 +736,19 @@ export default function Dashboard() {
                   </button>
                 </div>
               </div>
+
+              {/* Daily Pulse */}
+              {pulseStats && (
+                <div className="mb-8 flex items-center gap-3 bg-volt/5 border border-volt/10 rounded-2xl px-6 py-4">
+                  <Zap className="w-4 h-4 text-volt fill-volt animate-pulse" />
+                  <p className="text-[11px] md:text-sm font-display tracking-wider text-ghost/80 uppercase">
+                    <span className="text-white font-black">{pulseStats.activeCount} Players</span> were active this week
+                    <span className="mx-3 text-ghost/20">|</span>
+                    Biggest Gainer: <span className="text-white font-black">{pulseStats.topGainerName}</span> 
+                    <span className="ml-2 text-green-400">+{pulseStats.topGainerValue.toFixed(3)}</span>
+                  </p>
+                </div>
+              )}
 
               <div className="space-y-12">
                 {activityFeed.length > 0 ? (
