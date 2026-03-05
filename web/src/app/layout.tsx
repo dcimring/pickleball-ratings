@@ -4,6 +4,7 @@ import "./globals.css";
 
 import { DataProvider } from "@/context/DataContext";
 import { Navigation } from "@/components/Navigation";
+import { PageTransition } from "@/components/PageTransition";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const orbitron = Orbitron({ subsets: ["latin"], variable: "--font-display" });
@@ -56,7 +57,9 @@ export default function RootLayout({
           <main className="h-[100dvh] flex flex-col overflow-hidden relative overscroll-none">
             <Navigation />
             <div className="flex-1 overflow-y-auto">
-              {children}
+              <PageTransition>
+                {children}
+              </PageTransition>
             </div>
           </main>
         </DataProvider>
