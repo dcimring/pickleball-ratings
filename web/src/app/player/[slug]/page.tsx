@@ -53,35 +53,13 @@ function PlayerProfileContent() {
     }
   }, [slug]);
 
-  if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh]">
-        <motion.div 
-          animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <Zap className="w-12 h-12 text-volt fill-volt" />
-        </motion.div>
-        <p className="mt-4 font-display text-volt tracking-widest animate-pulse">LOADING PLAYER DATA...</p>
-      </div>
-    );
-  }
-
-  if (playerHistory.singles.length === 0 && playerHistory.doubles.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-6">
-        <h2 className="text-3xl font-display font-black text-white mb-4">PLAYER NOT FOUND</h2>
-        <p className="text-ghost/40 max-w-md">We couldn't find any match history for "{playerName}".</p>
-      </div>
-    );
-  }
-
   return (
     <PlayerProfile 
       playerName={playerName}
       playerHistory={playerHistory}
       activeTab={activeTab}
       onTabChange={setActiveTab}
+      loading={loading}
     />
   );
 }

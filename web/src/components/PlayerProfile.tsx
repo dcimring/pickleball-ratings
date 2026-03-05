@@ -12,6 +12,7 @@ interface PlayerProfileProps {
   playerHistory: { singles: Ranking[], doubles: Ranking[] };
   activeTab: 'doubles' | 'singles';
   onTabChange: (tab: 'doubles' | 'singles') => void;
+  loading: boolean;
 }
 
 export function PlayerProfile({
@@ -19,7 +20,10 @@ export function PlayerProfile({
   playerHistory,
   activeTab,
   onTabChange,
+  loading,
 }: PlayerProfileProps) {
+  const hasData = playerHistory.singles.length > 0 || playerHistory.doubles.length > 0;
+
   return (
     <div className="max-w-6xl mx-auto px-6 pt-6 pb-20 text-left min-h-full">
       <Link 
@@ -65,7 +69,24 @@ export function PlayerProfile({
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
         {/* Current Stats Cards */}
-        {['doubles', 'singles'].map((type) => {
+        {loading ? (
+          <>
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-surface/50 border border-white/5 rounded-3xl p-8 backdrop-blur-sm animate-pulse">
+                <div className="h-4 w-24 bg-white/5 rounded mb-6" />
+                <div className="h-12 w-32 bg-white/10 rounded mb-4" />
+                <div className="h-8 w-48 bg-white/5 rounded" />
+              </div>
+            ))}
+          </>
+        ) : !hasData ? (
+          <div className="col-span-full py-20 text-center bg-surface/30 border border-dashed border-white/5 rounded-3xl">
+            <h2 className="text-3xl font-display font-black text-white mb-4 uppercase">Player Not Found</h2>
+            <p className="text-ghost/40 max-w-md mx-auto">We couldn't find any match history for "{playerName}".</p>
+          </div>
+        ) : (
+          <>
+            {['doubles', 'singles'].map((type) => {
           const data = type === 'doubles' ? playerHistory.doubles : playerHistory.singles;
           const current = data[data.length - 1];
           const isActive = activeTab === type;
@@ -106,101 +127,79 @@ export function PlayerProfile({
                 </div>
               )}
             </div>
-          );
-        })}
-
-        {/* Total Stats/Activity Card */}
-        <div className="bg-surface/50 border border-white/5 rounded-3xl p-8 backdrop-blur-sm">
-          <div className="flex items-center justify-between mb-6">
-            <span className="font-display text-[10px] tracking-[0.3em] text-ghost/40 uppercase">Performance</span>
-            <TrendingUp className="w-4 h-4 text-ghost/20" />
-          </div>
-          <div className="space-y-6">
-            <div className="flex flex-col gap-1">
-              <span className="text-[10px] text-ghost/40 uppercase tracking-widest">Tracking Since</span>
-              <span className="text-white font-bold">
-                {playerHistory[activeTab][0]?.valid_from 
-                  ? new Date(playerHistory[activeTab][0].valid_from).toLocaleDateString('en-KY', { month: 'long', year: 'numeric' })
-                  : 'N/A'
-                }
-              </span>
-            </div>
-            <div className="pt-4 border-t border-white/5">
-              <p className="text-xs text-ghost/60 leading-relaxed">
-                Rating is calculated using the Cayman Islands proprietary rating system and official match data.
-              </p>
-            </div>
-          </div>
-        </div>
+          </>
+        )}
       </div>
 
       {/* Performance Chart */}
-      <div className="bg-surface/50 border border-white/5 rounded-3xl p-8 backdrop-blur-sm overflow-hidden">
-        <div className="flex items-center justify-between mb-12">
-          <div className="space-y-1">
-            <h3 className="font-display text-xl font-black text-white tracking-tight uppercase">Rating Trend</h3>
-            <p className="text-[10px] text-ghost/40 tracking-[0.2em] uppercase">Performance history over time</p>
-          </div>
-          <Activity className="w-5 h-5 text-volt/20" />
-        </div>
-
-        <div className="h-[400px] w-full">
-          {playerHistory[activeTab].length >= 2 ? (
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={playerHistory[activeTab]}>
-                <defs>
-                  <linearGradient id="colorRating" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#DFFF00" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#DFFF00" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#ffffff05" vertical={false} />
-                <XAxis 
-                  dataKey="valid_from" 
-                  stroke="#ffffff20" 
-                  fontSize={10}
-                  tickFormatter={(str) => new Date(str).toLocaleDateString('en-KY', { month: 'short', day: 'numeric' })}
-                  axisLine={false}
-                  tickLine={false}
-                />
-                <YAxis 
-                  stroke="#ffffff20" 
-                  fontSize={10}
-                  domain={['auto', 'auto']}
-                  axisLine={false}
-                  tickLine={false}
-                  tickFormatter={(val) => val.toFixed(2)}
-                />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: '#0a0f1a', 
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    borderRadius: '16px',
-                    fontSize: '12px'
-                  }}
-                  itemStyle={{ color: '#DFFF00' }}
-                  labelStyle={{ color: 'rgba(255,255,255,0.4)', marginBottom: '4px' }}
-                  labelFormatter={(label) => new Date(label).toLocaleDateString('en-KY', { month: 'long', day: 'numeric', year: 'numeric' })}
-                />
-                <Area 
-                  type="monotone" 
-                  dataKey="rating" 
-                  stroke="#DFFF00" 
-                  strokeWidth={3}
-                  fillOpacity={1} 
-                  fill="url(#colorRating)" 
-                  animationDuration={1500}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          ) : (
-            <div className="h-full flex flex-col items-center justify-center text-ghost/10 gap-4">
-              <History className="w-12 h-12" />
-              <p className="font-display text-[10px] tracking-[0.3em] uppercase">Need more match data to generate chart</p>
+      {!loading && hasData && (
+        <div className="bg-surface/50 border border-white/5 rounded-3xl p-8 backdrop-blur-sm overflow-hidden">
+          <div className="flex items-center justify-between mb-12">
+            <div className="space-y-1">
+              <h3 className="font-display text-xl font-black text-white tracking-tight uppercase">Rating Trend</h3>
+              <p className="text-[10px] text-ghost/40 tracking-[0.2em] uppercase">Performance history over time</p>
             </div>
-          )}
+            <Activity className="w-5 h-5 text-volt/20" />
+          </div>
+
+          <div className="h-[400px] w-full">
+            {playerHistory[activeTab].length >= 2 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={playerHistory[activeTab]}>
+                  <defs>
+                    <linearGradient id="colorRating" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#DFFF00" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#DFFF00" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#ffffff05" vertical={false} />
+                  <XAxis 
+                    dataKey="valid_from" 
+                    stroke="#ffffff20" 
+                    fontSize={10}
+                    tickFormatter={(str) => new Date(str).toLocaleDateString('en-KY', { month: 'short', day: 'numeric' })}
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <YAxis 
+                    stroke="#ffffff20" 
+                    fontSize={10}
+                    domain={['auto', 'auto']}
+                    axisLine={false}
+                    tickLine={false}
+                    tickFormatter={(val) => val.toFixed(2)}
+                  />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#0a0f1a', 
+                      border: '1px solid rgba(255,255,255,0.1)',
+                      borderRadius: '16px',
+                      fontSize: '12px'
+                    }}
+                    itemStyle={{ color: '#DFFF00' }}
+                    labelStyle={{ color: 'rgba(255,255,255,0.4)', marginBottom: '4px' }}
+                    labelFormatter={(label) => new Date(label).toLocaleDateString('en-KY', { month: 'long', day: 'numeric', year: 'numeric' })}
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="rating" 
+                    stroke="#DFFF00" 
+                    strokeWidth={3}
+                    fillOpacity={1} 
+                    fill="url(#colorRating)" 
+                    animationDuration={500}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full flex flex-col items-center justify-center text-ghost/10 gap-4">
+                <History className="w-12 h-12" />
+                <p className="font-display text-[10px] tracking-[0.3em] uppercase">Need more match data to generate chart</p>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
