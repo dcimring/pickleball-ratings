@@ -10,6 +10,7 @@ interface SuggestFeatureProps {
   nameInput: string;
   onNameInputChange: (val: string) => void;
   nameSuggestions: string[];
+  loading: boolean;
 }
 
 export function SuggestFeature({
@@ -18,6 +19,7 @@ export function SuggestFeature({
   nameInput,
   onNameInputChange,
   nameSuggestions,
+  loading,
 }: SuggestFeatureProps) {
   return (
     <div className="max-w-xl mx-auto px-6 pt-6 pb-20 text-left min-h-full">
@@ -34,8 +36,18 @@ export function SuggestFeature({
         </p>
       </div>
 
-      <div className="bg-surface/50 border border-white/5 rounded-3xl p-8 backdrop-blur-sm relative overflow-hidden scroll-mt-20">
-        {formState.success ? (
+      <div className="bg-surface/50 border border-white/5 rounded-3xl p-8 backdrop-blur-sm relative overflow-hidden scroll-mt-20 min-h-[400px] flex flex-col">
+        {loading ? (
+          <div className="flex-1 flex flex-col items-center justify-center py-20">
+            <motion.div 
+              animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <Zap className="w-12 h-12 text-volt fill-volt" />
+            </motion.div>
+            <p className="mt-4 font-display text-volt tracking-widest animate-pulse text-[10px]">LOADING...</p>
+          </div>
+        ) : formState.success ? (
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}

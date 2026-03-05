@@ -16,6 +16,7 @@ interface ActivityFeedProps {
     topGainerName: string;
     topGainerValue: number;
   } | null;
+  loading: boolean;
 }
 
 export function ActivityFeed({
@@ -25,6 +26,7 @@ export function ActivityFeed({
   activitySort,
   onSortChange,
   pulseStats,
+  loading,
 }: ActivityFeedProps) {
   return (
     <div className="max-w-6xl mx-auto px-6 pt-6 pb-20 text-left min-h-full">
@@ -103,7 +105,17 @@ export function ActivityFeed({
       )}
 
       <div className="space-y-12">
-        {tiers.length > 0 ? (
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-20 bg-surface/30 border border-dashed border-white/5 rounded-3xl">
+            <motion.div 
+              animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <Zap className="w-12 h-12 text-volt fill-volt" />
+            </motion.div>
+            <p className="mt-4 font-display text-volt tracking-widest animate-pulse text-[10px]">LOADING ACTIVITY...</p>
+          </div>
+        ) : tiers.length > 0 ? (
           tiers.map((tier) => (
             <div key={tier.title} className="space-y-6">
               <div className="flex items-center gap-4">
@@ -112,12 +124,10 @@ export function ActivityFeed({
               </div>
               
               <div className="space-y-4">
-                {tier.items.map((item, idx) => (
+                {tier.items.map((item) => (
                   <motion.div 
+                    layout
                     key={`${item.player_name}-${item.date}`}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.05 }}
                     className="bg-surface/50 border border-white/5 rounded-3xl p-6 backdrop-blur-sm"
                   >
                     <div className="flex items-center justify-between mb-4">

@@ -10,6 +10,7 @@ interface TourneyCheckProps {
   onInputChange: (val: string) => void;
   onCheck: () => void;
   results: any[];
+  loading: boolean;
 }
 
 export function TourneyCheck({
@@ -17,6 +18,7 @@ export function TourneyCheck({
   onInputChange,
   onCheck,
   results,
+  loading,
 }: TourneyCheckProps) {
   const resultsSectionRef = useRef<HTMLDivElement>(null);
 
@@ -72,8 +74,18 @@ export function TourneyCheck({
 
         {/* Results Section */}
         <div ref={resultsSectionRef} className="lg:col-span-8 scroll-mt-20">
-          <div className="bg-surface/50 border border-white/5 rounded-3xl overflow-hidden backdrop-blur-sm min-h-[400px]">
-            {results.length > 0 ? (
+          <div className="bg-surface/50 border border-white/5 rounded-3xl overflow-hidden backdrop-blur-sm min-h-[400px] flex flex-col">
+            {loading ? (
+              <div className="flex-1 flex flex-col items-center justify-center py-20">
+                <motion.div 
+                  animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <Zap className="w-12 h-12 text-volt fill-volt" />
+                </motion.div>
+                <p className="mt-4 font-display text-volt tracking-widest animate-pulse text-[10px]">LOADING COURT DATA...</p>
+              </div>
+            ) : results.length > 0 ? (
               <div className="divide-y divide-white/5">
                 <div className="grid grid-cols-12 gap-4 px-8 py-6 font-display text-[10px] tracking-[0.3em] text-ghost/40">
                   <div className="col-span-6">PLAYER</div>
@@ -81,13 +93,10 @@ export function TourneyCheck({
                   <div className="col-span-3 text-right">DOUBLES</div>
                 </div>
                 <AnimatePresence mode="popLayout">
-                  {results.map((result, idx) => (
+                  {results.map((result) => (
                     <motion.div 
-                      key={`tourney-${result.name}-${idx}`}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, scale: 0.95 }}
-                      transition={{ delay: Math.min(idx * 0.05, 0.5) }}
+                      layout
+                      key={`tourney-${result.name}`}
                       className="grid grid-cols-12 gap-4 px-8 py-6 items-center group hover:bg-white/[0.02]"
                     >
                       <div className="col-span-6 font-sans font-bold text-white group-hover:text-volt transition-colors">{result.name}</div>

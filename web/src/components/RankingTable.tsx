@@ -16,6 +16,7 @@ interface RankingTableProps {
   onSearchChange: (query: string) => void;
   sortConfig: { key: keyof Ranking; direction: 'asc' | 'desc' };
   onSort: (key: keyof Ranking) => void;
+  loading: boolean;
 }
 
 export function RankingTable({
@@ -26,6 +27,7 @@ export function RankingTable({
   onSearchChange,
   sortConfig,
   onSort,
+  loading,
 }: RankingTableProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const searchSectionRef = useRef<HTMLElement>(null);
@@ -61,11 +63,7 @@ export function RankingTable({
       {/* Header Section */}
       <header className="relative pt-6 pb-6 px-6 overflow-hidden text-left">
         <div className="max-w-6xl mx-auto relative z-10">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col md:flex-row md:items-end justify-between gap-6"
-          >
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <Zap className="w-5 h-5 text-volt fill-volt" />
@@ -96,7 +94,7 @@ export function RankingTable({
                 <User className="w-4 h-4" /> SINGLES
               </button>
             </div>
-          </motion.div>
+          </div>
         </div>
       </header>
 
@@ -185,61 +183,67 @@ export function RankingTable({
               </button>
             </div>
 
-            <div className="min-h-[400px]">
-              <AnimatePresence mode="popLayout" initial={false}>
-                {sortedAndFilteredData.map((player, index) => (
-                  <motion.div
-                    layout
-                    key={`${activeTab}-${player.player_name}`}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ 
-                      duration: 0.3, 
-                      delay: Math.min(index * 0.01, 0.2),
-                      layout: { duration: 0.4, ease: "easeInOut" } 
-                    }}
-                    className="grid grid-cols-12 gap-2 md:gap-4 px-4 md:px-8 py-6 hover:bg-white/[0.02] transition-colors items-center group"
-                  >
-                    <div className="col-span-3 md:col-span-2 flex items-center gap-3">
-                      <span className={cn(
-                        "font-display text-xl md:text-2xl font-black",
-                        index === 0 ? "text-volt" : "text-ghost/20"
-                      )}>
-                        {player.rank_position}
-                      </span>
-                    </div>
-                    <div className="col-span-5 md:col-span-5">
-                      <Link 
-                        href={`/player/${slugify(player.player_name)}?tab=${activeTab}`}
-                        className="font-sans font-bold text-base md:text-lg text-white hover:text-volt transition-colors text-left"
-                      >
-                        {player.player_name}
-                      </Link>
-                      <div className="flex items-center gap-2 mt-1 md:hidden">
-                        <span className="text-[10px] bg-white/5 px-2 py-0.5 rounded uppercase tracking-wider text-ghost/40">
-                          {player.rounds_played} Rounds
-                        </span>
-                      </div>
-                    </div>
-                    <div className="hidden md:block col-span-2 text-right">
-                      <div className="font-display text-lg text-white/60 group-hover:text-white transition-colors">
-                        {player.rounds_played}
-                      </div>
-                    </div>
-                    <div className="col-span-4 md:col-span-3 text-right">
-                      <div className="font-display text-lg md:text-xl text-white">
-                        {player.rating.toFixed(3)}
-                      </div>
-                      <div className="flex items-center justify-end gap-1 text-[10px] text-green-400 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <TrendingUp className="w-3 h-3" />
-                        STABLE
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </div>
+                                                <div className="min-h-[400px] flex flex-col">
+                                                  {loading ? (
+                                                    <div className="flex-1 flex flex-col items-center justify-center py-20">
+                                                      <motion.div 
+                                                        animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
+                                                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                                                      >
+                                                        <Zap className="w-12 h-12 text-volt fill-volt" />
+                                                      </motion.div>
+                                                      <p className="mt-4 font-display text-volt tracking-widest animate-pulse text-[10px]">LOADING COURT DATA...</p>
+                                                    </div>
+                                                  ) : (
+                                                    sortedAndFilteredData.map((player) => (
+                                                      <motion.div
+                                                        layout
+                                                        key={`${activeTab}-${player.player_name}`}
+                                                        transition={{ 
+                                                          layout: { duration: 0.4, ease: "easeInOut" } 
+                                                        }}
+                                                        className="grid grid-cols-12 gap-2 md:gap-4 px-4 md:px-8 py-6 hover:bg-white/[0.02] transition-colors items-center group"
+                                                      >
+                                                        <div className="col-span-3 md:col-span-2 flex items-center gap-3">
+                                                          <span className={cn(
+                                                            "font-display text-xl md:text-2xl font-black",
+                                                            player.rank_position === 1 ? "text-volt" : "text-ghost/20"
+                                                          )}>
+                                                            {player.rank_position}
+                                                          </span>
+                                                        </div>
+                                                        <div className="col-span-5 md:col-span-5">
+                                                          <Link 
+                                                            href={`/player/${slugify(player.player_name)}?tab=${activeTab}`}
+                                                            className="font-sans font-bold text-base md:text-lg text-white hover:text-volt transition-colors text-left"
+                                                          >
+                                                            {player.player_name}
+                                                          </Link>
+                                                          <div className="flex items-center gap-2 mt-1 md:hidden">
+                                                            <span className="text-[10px] bg-white/5 px-2 py-0.5 rounded uppercase tracking-wider text-ghost/40">
+                                                              {player.rounds_played} Rounds
+                                                            </span>
+                                                          </div>
+                                                        </div>
+                                                        <div className="hidden md:block col-span-2 text-right">
+                                                          <div className="font-display text-lg text-white/60 group-hover:text-white transition-colors">
+                                                            {player.rounds_played}
+                                                          </div>
+                                                        </div>
+                                                        <div className="col-span-4 md:col-span-3 text-right">
+                                                          <div className="font-display text-lg md:text-xl text-white">
+                                                            {player.rating.toFixed(3)}
+                                                          </div>
+                                                          <div className="flex items-center justify-end gap-1 text-[10px] text-green-400 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                            <TrendingUp className="w-3 h-3" />
+                                                            STABLE
+                                                          </div>
+                                                        </div>
+                                                      </motion.div>
+                                                    ))
+                                                  )}
+                                                </div>
+                                    
           </div>
         </div>
       </section>

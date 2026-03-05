@@ -34,26 +34,13 @@ export default function TourneyPage() {
     setTourneyResults(results);
   };
 
-  if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh]">
-        <motion.div 
-          animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <Zap className="w-12 h-12 text-volt fill-volt" />
-        </motion.div>
-        <p className="mt-4 font-display text-volt tracking-widest animate-pulse">LOADING COURT DATA...</p>
-      </div>
-    );
-  }
-
   return (
     <TourneyCheck 
       input={tourneyInput}
       onInputChange={setTourneyInput}
       onCheck={handleTourneyCheck}
       results={tourneyResults}
+      loading={loading}
     />
   );
 }
