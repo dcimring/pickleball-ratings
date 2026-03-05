@@ -2,7 +2,7 @@
 
 import { useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Trophy, Users, Minus } from 'lucide-react';
+import { Trophy, Users, Minus, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface TourneyCheckProps {
