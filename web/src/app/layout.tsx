@@ -4,7 +4,6 @@ import "./globals.css";
 
 import { DataProvider } from "@/context/DataContext";
 import { Navigation } from "@/components/Navigation";
-import { PageTransition } from "@/components/PageTransition";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const orbitron = Orbitron({ subsets: ["latin"], variable: "--font-display" });
