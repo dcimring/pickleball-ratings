@@ -2,6 +2,9 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Orbitron } from "next/font/google";
 import "./globals.css";
 
+import { DataProvider } from "@/context/DataContext";
+import { Navigation } from "@/components/Navigation";
+
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const orbitron = Orbitron({ subsets: ["latin"], variable: "--font-display" });
 
@@ -49,7 +52,14 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${orbitron.variable}`}>
       <body className="font-sans antialiased text-ghost bg-background overflow-x-hidden">
-        {children}
+        <DataProvider>
+          <main className="h-[100dvh] flex flex-col overflow-hidden relative overscroll-none">
+            <Navigation />
+            <div className="flex-1 overflow-y-auto">
+              {children}
+            </div>
+          </main>
+        </DataProvider>
       </body>
     </html>
   );
