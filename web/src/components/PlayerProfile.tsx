@@ -1,7 +1,7 @@
 "use client";
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import { Users, User, Zap, ArrowUpRight, TrendingUp, Activity, History, ArrowLeft } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Ranking } from '@/lib/types';
@@ -22,7 +22,14 @@ export function PlayerProfile({
   onTabChange,
   loading,
 }: PlayerProfileProps) {
+  const [showChart, setShowChart] = useState(false);
   const hasData = playerHistory.singles.length > 0 || playerHistory.doubles.length > 0;
+
+  // Performance-first: Defer the heavy chart rendering until the transition fade-in is complete (0.4s)
+  useEffect(() => {
+    const timer = setTimeout(() => setShowChart(true), 500);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div className="max-w-6xl mx-auto px-6 pt-6 pb-20 text-left min-h-full">
@@ -169,7 +176,11 @@ export function PlayerProfile({
           </div>
 
           <div className="h-[400px] w-full">
-            {playerHistory[activeTab].length >= 2 ? (
+            {!showChart ? (
+              <div className="h-full w-full flex items-center justify-center">
+                <div className="w-full h-full bg-white/5 rounded-2xl animate-pulse" />
+              </div>
+            ) : playerHistory[activeTab].length >= 2 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={playerHistory[activeTab]}>
                   <defs>
