@@ -5,7 +5,8 @@ import { useFormState, useFormStatus } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '@/lib/supabase';
 import { submitFeatureRequest } from './actions';
-import { Search, Trophy, Users, User, Zap, ArrowUpRight, TrendingUp, TrendingDown, Minus, Send, CheckCircle2, MessageSquarePlus, X, RefreshCw, Activity, History, MessageCircle } from 'lucide-react';
+import { Search, Trophy, Users, User, Zap, ArrowUpRight, TrendingUp, TrendingDown, Minus, Send, CheckCircle2, MessageSquarePlus, X, RefreshCw, Activity, History, MessageCircle, ArrowLeft } from 'lucide-react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -44,8 +45,10 @@ export default function Dashboard() {
   const [doublesHistory, setDoublesHistory] = useState<Ranking[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [activeView, setActiveView] = useState<'rankings' | 'tourney' | 'feature-request' | 'activity' | 'whatsapp'>('rankings');
+  const [activeView, setActiveView] = useState<'rankings' | 'tourney' | 'feature-request' | 'activity' | 'whatsapp' | 'profile'>('rankings');
   const [activeTab, setActiveTab] = useState<'doubles' | 'singles'>('doubles');
+  const [selectedPlayer, setSelectedPlayer] = useState<string | null>(null);
+  const [playerHistory, setPlayerHistory] = useState<{ singles: Ranking[], doubles: Ranking[] }>({ singles: [], doubles: [] });
   const [activitySort, setActivitySort] = useState<'rating' | 'date'>('rating');
   const [searchQuery, setSearchQuery] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -82,6 +85,27 @@ export default function Dashboard() {
     } finally {
       setLoading(false);
       setRefreshing(false);
+    }
+  };
+
+  const fetchPlayerProfile = async (playerName: string) => {
+    setLoading(true);
+    try {
+      const [singlesRes, doublesRes] = await Promise.all([
+        supabase.schema('pickleball_ratings').from('singles_ratings_deltas').select('*').eq('player_name', playerName).order('valid_from', { ascending: true }),
+        supabase.schema('pickleball_ratings').from('doubles_ratings_deltas').select('*').eq('player_name', playerName).order('valid_from', { ascending: true })
+      ]);
+
+      setPlayerHistory({
+        singles: singlesRes.data || [],
+        doubles: doublesRes.data || []
+      });
+      setSelectedPlayer(playerName);
+      setActiveView('profile');
+    } catch (err) {
+      console.error('PROFILE_FETCH_ERROR:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -638,9 +662,12 @@ export default function Dashboard() {
                               </span>
                             </div>
                             <div className="col-span-5 md:col-span-5">
-                              <div className="font-sans font-bold text-base md:text-lg text-white group-hover:text-volt transition-colors">
+                              <button 
+                                onClick={() => fetchPlayerProfile(player.player_name)}
+                                className="font-sans font-bold text-base md:text-lg text-white hover:text-volt transition-colors text-left"
+                              >
                                 {player.player_name}
-                              </div>
+                              </button>
                               <div className="flex items-center gap-2 mt-1 md:hidden">
                                 <span className="text-[10px] bg-white/5 px-2 py-0.5 rounded uppercase tracking-wider text-ghost/40">
                                   {player.rounds_played} Rounds
@@ -914,6 +941,195 @@ export default function Dashboard() {
                 <div className="flex flex-col items-center gap-1">
                   <Trophy className="w-4 h-4" />
                   <span className="text-[8px] font-display tracking-widest">COMPETITIVE</span>
+                </div>
+              </div>
+            </motion.div>
+          ) : activeView === 'profile' && selectedPlayer ? (
+            <motion.div
+              key="profile-view"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+              className="max-w-6xl mx-auto px-6 pt-6 pb-20 text-left min-h-full"
+            >
+              <button 
+                onClick={() => setActiveView('rankings')}
+                className="flex items-center gap-2 text-ghost/40 hover:text-volt transition-colors mb-8 group"
+              >
+                <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+                <span className="font-display text-[10px] tracking-[0.2em] uppercase">Back to Rankings</span>
+              </button>
+
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <User className="w-5 h-5 text-volt" />
+                    <span className="text-volt font-display tracking-[0.2em] text-sm uppercase">Player Profile</span>
+                  </div>
+                  <h1 className="text-5xl md:text-7xl font-display font-black tracking-tighter text-white uppercase">
+                    {selectedPlayer}
+                  </h1>
+                </div>
+
+                <div className="flex p-1 bg-surface rounded-xl border border-white/5 w-fit h-fit">
+                  <button 
+                    onClick={() => setActiveTab('doubles')}
+                    className={cn(
+                      "flex items-center gap-2 px-6 py-3 rounded-lg font-display text-sm tracking-wider transition-all duration-300",
+                      activeTab === 'doubles' ? "bg-volt text-background" : "text-ghost/50 hover:text-ghost"
+                    )}
+                  >
+                    <Users className="w-4 h-4" /> DOUBLES
+                  </button>
+                  <button 
+                    onClick={() => setActiveTab('singles')}
+                    className={cn(
+                      "flex items-center gap-2 px-6 py-3 rounded-lg font-display text-sm tracking-wider transition-all duration-300",
+                      activeTab === 'singles' ? "bg-volt text-background" : "text-ghost/50 hover:text-ghost"
+                    )}
+                  >
+                    <User className="w-4 h-4" /> SINGLES
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                {/* Current Stats Cards */}
+                {['doubles', 'singles'].map((type) => {
+                  const data = type === 'doubles' ? playerHistory.doubles : playerHistory.singles;
+                  const current = data[data.length - 1];
+                  const isActive = activeTab === type;
+
+                  return (
+                    <div 
+                      key={type}
+                      className={cn(
+                        "bg-surface/50 border rounded-3xl p-8 backdrop-blur-sm transition-all duration-500",
+                        isActive ? "border-volt/30 shadow-[0_0_40px_-15px_rgba(223,255,0,0.15)]" : "border-white/5 opacity-50"
+                      )}
+                    >
+                      <div className="flex items-center justify-between mb-6">
+                        <span className="font-display text-[10px] tracking-[0.3em] text-ghost/40 uppercase">{type} Rating</span>
+                        {type === 'doubles' ? <Users className="w-4 h-4 text-ghost/20" /> : <User className="w-4 h-4 text-ghost/20" />}
+                      </div>
+                      {current ? (
+                        <div className="space-y-4">
+                          <div className="flex items-end gap-2">
+                            <span className="text-5xl font-display font-black text-white">{current.rating.toFixed(3)}</span>
+                            <span className="text-volt font-display text-sm mb-1 uppercase tracking-widest">Global</span>
+                          </div>
+                          <div className="flex items-center gap-4 text-ghost/40">
+                            <div className="flex flex-col">
+                              <span className="text-[10px] uppercase tracking-widest">Rank</span>
+                              <span className="text-white font-bold">#{current.rank_position}</span>
+                            </div>
+                            <div className="w-px h-8 bg-white/5" />
+                            <div className="flex flex-col">
+                              <span className="text-[10px] uppercase tracking-widest">Rounds</span>
+                              <span className="text-white font-bold">{current.rounds_played}</span>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="h-24 flex items-center justify-center text-ghost/10">
+                          <span className="font-display text-[10px] tracking-widest">UNRANKED</span>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+
+                {/* Total Stats/Activity Card */}
+                <div className="bg-surface/50 border border-white/5 rounded-3xl p-8 backdrop-blur-sm">
+                  <div className="flex items-center justify-between mb-6">
+                    <span className="font-display text-[10px] tracking-[0.3em] text-ghost/40 uppercase">Performance</span>
+                    <TrendingUp className="w-4 h-4 text-ghost/20" />
+                  </div>
+                  <div className="space-y-6">
+                    <div className="flex flex-col gap-1">
+                      <span className="text-[10px] text-ghost/40 uppercase tracking-widest">Tracking Since</span>
+                      <span className="text-white font-bold">
+                        {playerHistory[activeTab][0]?.valid_from 
+                          ? new Date(playerHistory[activeTab][0].valid_from).toLocaleDateString('en-KY', { month: 'long', year: 'numeric' })
+                          : 'N/A'
+                        }
+                      </span>
+                    </div>
+                    <div className="pt-4 border-t border-white/5">
+                      <p className="text-xs text-ghost/60 leading-relaxed">
+                        Rating is calculated using the Cayman Islands proprietary rating system and official match data.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Performance Chart */}
+              <div className="bg-surface/50 border border-white/5 rounded-3xl p-8 backdrop-blur-sm overflow-hidden">
+                <div className="flex items-center justify-between mb-12">
+                  <div className="space-y-1">
+                    <h3 className="font-display text-xl font-black text-white tracking-tight uppercase">Rating Trend</h3>
+                    <p className="text-[10px] text-ghost/40 tracking-[0.2em] uppercase">Performance history over time</p>
+                  </div>
+                  <Activity className="w-5 h-5 text-volt/20" />
+                </div>
+
+                <div className="h-[400px] w-full">
+                  {playerHistory[activeTab].length >= 2 ? (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={playerHistory[activeTab]}>
+                        <defs>
+                          <linearGradient id="colorRating" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#DFFF00" stopOpacity={0.3}/>
+                            <stop offset="95%" stopColor="#DFFF00" stopOpacity={0}/>
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#ffffff05" vertical={false} />
+                        <XAxis 
+                          dataKey="valid_from" 
+                          stroke="#ffffff20" 
+                          fontSize={10}
+                          tickFormatter={(str) => new Date(str).toLocaleDateString('en-KY', { month: 'short', day: 'numeric' })}
+                          axisLine={false}
+                          tickLine={false}
+                        />
+                        <YAxis 
+                          stroke="#ffffff20" 
+                          fontSize={10}
+                          domain={['auto', 'auto']}
+                          axisLine={false}
+                          tickLine={false}
+                          tickFormatter={(val) => val.toFixed(2)}
+                        />
+                        <Tooltip 
+                          contentStyle={{ 
+                            backgroundColor: '#0a0f1a', 
+                            border: '1px solid rgba(255,255,255,0.1)',
+                            borderRadius: '16px',
+                            fontSize: '12px'
+                          }}
+                          itemStyle={{ color: '#DFFF00' }}
+                          labelStyle={{ color: 'rgba(255,255,255,0.4)', marginBottom: '4px' }}
+                          labelFormatter={(label) => new Date(label).toLocaleDateString('en-KY', { month: 'long', day: 'numeric', year: 'numeric' })}
+                        />
+                        <Area 
+                          type="monotone" 
+                          dataKey="rating" 
+                          stroke="#DFFF00" 
+                          strokeWidth={3}
+                          fillOpacity={1} 
+                          fill="url(#colorRating)" 
+                          animationDuration={1500}
+                        />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="h-full flex flex-col items-center justify-center text-ghost/10 gap-4">
+                      <History className="w-12 h-12" />
+                      <p className="font-display text-[10px] tracking-[0.3em] uppercase">Need more match data to generate chart</p>
+                    </div>
+                  )}
                 </div>
               </div>
             </motion.div>
