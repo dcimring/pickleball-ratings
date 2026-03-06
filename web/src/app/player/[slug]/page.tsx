@@ -1,80 +1,50 @@
-"use client";
+import { Suspense } from 'react';
+import { Metadata } from 'next';
+import { getPlayerData } from '@/lib/metadata-api';
+import { PlayerProfileClient } from './PlayerProfileClient';
 
-import { useEffect, useState, Suspense } from 'react';
-import { useParams, useSearchParams } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
-import { Ranking } from '@/lib/types';
-import { PlayerProfile } from '@/components/PlayerProfile';
-import { unslugify } from '@/lib/slugify';
-import { motion } from 'framer-motion';
-import { Zap } from 'lucide-react';
+interface Props {
+  params: Promise<{ slug: string }>;
+}
 
-function PlayerProfileContent() {
-  const params = useParams();
-  const searchParams = useSearchParams();
-  const slug = params.slug as string;
-  
-  const [activeTab, setActiveTab] = useState<'doubles' | 'singles'>('doubles');
-  const [loading, setLoading] = useState(true);
-  const [playerHistory, setPlayerHistory] = useState<{ singles: Ranking[], doubles: Ranking[] }>({ singles: [], doubles: [] });
-  const [playerName, setPlayerName] = useState('');
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const player = await getPlayerData(slug);
 
-  // Handle initial tab from URL search params
-  useEffect(() => {
-    const tab = searchParams.get('tab');
-    if (tab === 'singles' || tab === 'doubles') {
-      setActiveTab(tab);
+  if (!player) {
+    return {
+      title: 'Player Profile | DinkDash',
+      description: 'View player statistics and rankings on the Cayman Islands pickleball data platform.'
+    };
+  }
+
+  const rating = player.latestDoubles?.rating || player.latestSingles?.rating || 0;
+  const formattedRating = rating.toFixed(3);
+  const playerName = player.name;
+
+  return {
+    title: `${playerName} | ${formattedRating} Rating | DinkDash`,
+    description: `Check out ${playerName}'s latest ratings, global rankings, and performance history on the official Cayman Islands pickleball hub.`,
+    openGraph: {
+      title: `${playerName} | ${formattedRating} Rating | DinkDash`,
+      description: `Check out ${playerName}'s latest pickleball stats and rankings on the Cayman Islands data platform.`,
+      url: `https://dinkdash.xyz/player/${slug}`,
+      siteName: 'DinkDash',
+      locale: 'en_US',
+      type: 'profile',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${playerName} | ${formattedRating} Rating | DinkDash`,
+      description: `Performance history and real-time rankings for ${playerName} on the Cayman Islands hub.`,
     }
-  }, [searchParams]);
-
-  useEffect(() => {
-    async function fetchProfile() {
-      const name = unslugify(slug);
-      setPlayerName(name);
-      setLoading(true);
-      
-      try {
-        // Query using ILIKE to be case-insensitive and handle slug mismatches
-        const [singlesRes, doublesRes] = await Promise.all([
-          supabase.schema('pickleball_ratings').from('singles_ratings_deltas').select('*').ilike('player_name', name).order('valid_from', { ascending: true }),
-          supabase.schema('pickleball_ratings').from('doubles_ratings_deltas').select('*').ilike('player_name', name).order('valid_from', { ascending: true })
-        ]);
-
-        // If exact name from unslugify didn't work, maybe try the first record's name
-        const actualName = singlesRes.data?.[0]?.player_name || doublesRes.data?.[0]?.player_name || name;
-        setPlayerName(actualName);
-
-        setPlayerHistory({
-          singles: singlesRes.data || [],
-          doubles: doublesRes.data || []
-        });
-      } catch (err) {
-        console.error('PROFILE_FETCH_ERROR:', err);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    if (slug) {
-      fetchProfile();
-    }
-  }, [slug]);
-
-  return (
-    <PlayerProfile 
-      playerName={playerName}
-      playerHistory={playerHistory}
-      activeTab={activeTab}
-      onTabChange={setActiveTab}
-      loading={loading}
-    />
-  );
+  };
 }
 
 export default function PlayerProfilePage() {
   return (
     <Suspense fallback={null}>
-      <PlayerProfileContent />
+      <PlayerProfileClient />
     </Suspense>
   );
 }
