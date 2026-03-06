@@ -1,9 +1,11 @@
 "use client";
 
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Users, User, Zap, ArrowUpRight, Activity, History } from 'lucide-react';
 import { ActivityTier } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import { slugify } from '@/lib/slugify';
 
 interface ActivityFeedProps {
   tiers: ActivityTier[];
@@ -98,7 +100,7 @@ export function ActivityFeed({
           <p className="text-[11px] md:text-sm font-display tracking-wider text-ghost/80 uppercase">
             <span className="text-white font-black">{pulseStats.activeCount} Players</span> were active this week
             <span className="mx-3 text-ghost/20">|</span>
-            Biggest Gainer: <span className="text-white font-black">{pulseStats.topGainerName}</span> 
+            Biggest Gainer: <Link href={`/player/${slugify(pulseStats.topGainerName)}?tab=${activeTab}&from=activity`} className="text-white font-black hover:text-volt transition-colors">{pulseStats.topGainerName}</Link> 
             <span className="ml-2 text-green-400">+{pulseStats.topGainerValue.toFixed(3)}</span>
           </p>
         </div>
@@ -131,7 +133,11 @@ export function ActivityFeed({
                     className="bg-surface/50 border border-white/5 rounded-3xl p-6 backdrop-blur-sm"
                   >
                     <div className="flex items-center justify-between mb-4">
-                      <h3 className="font-display text-xl font-black text-white">{item.player_name}</h3>
+                      <h3 className="font-display text-xl font-black text-white">
+                        <Link href={`/player/${slugify(item.player_name)}?tab=${activeTab}&from=activity`} className="hover:text-volt transition-colors">
+                          {item.player_name}
+                        </Link>
+                      </h3>
                       <span className="text-[10px] font-display text-ghost/20 uppercase tracking-[0.2em]">
                         {new Date(item.date).toLocaleDateString('en-KY', { month: 'short', day: 'numeric' })}
                       </span>

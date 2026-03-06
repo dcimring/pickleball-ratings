@@ -17,6 +17,10 @@ export function PlayerProfileClient() {
   const [playerHistory, setPlayerHistory] = useState<{ singles: Ranking[], doubles: Ranking[] }>({ singles: [], doubles: [] });
   const [playerName, setPlayerName] = useState('');
 
+  const isFromActivity = searchParams.get('from') === 'activity';
+  const backUrl = isFromActivity ? '/activity' : '/';
+  const backLabel = isFromActivity ? 'Back to Activity' : 'Back to Rankings';
+
   // Handle initial tab from URL search params
   useEffect(() => {
     const tab = searchParams.get('tab');
@@ -63,6 +67,8 @@ export function PlayerProfileClient() {
       activeTab={activeTab}
       onTabChange={setActiveTab}
       loading={loading}
+      backUrl={backUrl}
+      backLabel={backLabel}
     />
   );
 }

@@ -14,6 +14,8 @@ interface PlayerProfileProps {
   activeTab: 'doubles' | 'singles';
   onTabChange: (tab: 'doubles' | 'singles') => void;
   loading: boolean;
+  backUrl?: string;
+  backLabel?: string;
 }
 
 export function PlayerProfile({
@@ -22,6 +24,8 @@ export function PlayerProfile({
   activeTab,
   onTabChange,
   loading,
+  backUrl = "/",
+  backLabel = "Back to Rankings",
 }: PlayerProfileProps) {
   const [showChart, setShowChart] = useState(false);
   const hasData = playerHistory.singles.length > 0 || playerHistory.doubles.length > 0;
@@ -35,11 +39,11 @@ export function PlayerProfile({
   return (
     <div className="max-w-6xl mx-auto px-6 pt-6 pb-20 text-left min-h-full">
       <Link 
-        href="/"
+        href={backUrl}
         className="flex items-center gap-2 text-ghost/40 hover:text-volt transition-colors mb-8 group w-fit"
       >
         <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-        <span className="font-display text-[10px] tracking-[0.2em] uppercase">Back to Rankings</span>
+        <span className="font-display text-[10px] tracking-[0.2em] uppercase">{backLabel}</span>
       </Link>
 
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
