@@ -6,6 +6,7 @@ import { Users, User, Zap, ArrowUpRight, TrendingUp, Activity, History, ArrowLef
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Ranking } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import { ShareButton } from './ShareButton';
 
 interface PlayerProfileProps {
   playerName: string;
@@ -42,15 +43,20 @@ export function PlayerProfile({
       </Link>
 
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-        <div>
-          <div className="flex items-center gap-2 mb-2">
-            <User className="w-5 h-5 text-volt" />
-            <span className="text-volt font-display tracking-[0.2em] text-sm uppercase">Player Profile</span>
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-2">
+              <User className="w-5 h-5 text-volt" />
+              <span className="text-volt font-display tracking-[0.2em] text-sm uppercase">Player Profile</span>
+            </div>
+            <div className="flex flex-wrap items-center gap-6">
+              <h1 className="text-5xl md:text-7xl font-display font-black tracking-tighter text-white uppercase">
+                {playerName}
+              </h1>
+              <div className="pt-2">
+                <ShareButton name={playerName} />
+              </div>
+            </div>
           </div>
-          <h1 className="text-5xl md:text-7xl font-display font-black tracking-tighter text-white uppercase">
-            {playerName}
-          </h1>
-        </div>
 
         <div className="flex p-1 bg-surface rounded-xl border border-white/5 w-fit h-fit">
           <button 
