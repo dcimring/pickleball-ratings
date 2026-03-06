@@ -14,7 +14,7 @@ export function ShareButton({ name }: ShareButtonProps) {
   const handleShare = async () => {
     const shareData = {
       title: `${name} | DinkDash Rating`,
-      text: `Check out ${name}'s latest pickleball stats and rankings on DinkDash!`,
+      text: `DinkDash Profile: ${name}`,
       url: window.location.href,
     };
 
