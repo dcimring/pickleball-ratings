@@ -48,13 +48,11 @@ export function PlayerProfile({
               <User className="w-5 h-5 text-volt" />
               <span className="text-volt font-display tracking-[0.2em] text-sm uppercase">Player Profile</span>
             </div>
-            <div className="flex flex-wrap items-center gap-6">
+            <div className="flex flex-col items-start gap-4">
               <h1 className="text-5xl md:text-7xl font-display font-black tracking-tighter text-white uppercase">
                 {playerName}
               </h1>
-              <div className="pt-2">
-                <ShareButton name={playerName} />
-              </div>
+              <ShareButton name={playerName} />
             </div>
           </div>
 
