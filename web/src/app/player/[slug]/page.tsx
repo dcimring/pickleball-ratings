@@ -32,11 +32,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       siteName: 'DinkDash',
       locale: 'en_US',
       type: 'profile',
+      images: [
+        {
+          url: `/player/${slug}/opengraph-image`,
+          width: 1200,
+          height: 630,
+          alt: `${playerName} Pickleball Rating`,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       title: `${playerName} | ${formattedRating} Rating | DinkDash`,
       description: `Performance history and real-time rankings for ${playerName} on the Cayman Islands hub.`,
+      images: [`/player/${slug}/opengraph-image`],
     }
   };
 }
