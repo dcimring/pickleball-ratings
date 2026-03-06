@@ -1,49 +1,15 @@
-"use client";
+import { Metadata } from 'next';
+import { SuggestClient } from './SuggestClient';
 
-import { useState, useEffect, useMemo } from 'react';
-import { useFormState } from 'react-dom';
-import { useRouter } from 'next/navigation';
-import { useData } from '@/context/DataContext';
-import { SuggestFeature } from '@/components/SuggestFeature';
-import { submitFeatureRequest } from '../actions';
-import { motion } from 'framer-motion';
-import { Zap } from 'lucide-react';
+export const metadata: Metadata = {
+  title: "Suggest a Feature | DinkDash",
+  description: "Have an idea to improve the Cayman Islands pickleball dashboard? Let us know what features or data you'd like to see next.",
+  openGraph: {
+    title: "Suggest a Feature | DinkDash",
+    description: "Help us shape the future of Cayman pickleball analytics.",
+  }
+};
 
 export default function SuggestPage() {
-  const router = useRouter();
-  const { singles, doubles, loading } = useData();
-  const [nameInput, setNameInput] = useState('');
-  const [formState, formAction] = useFormState(submitFeatureRequest, {});
-
-  const allUniqueNames = useMemo(() => {
-    const names = new Set([...singles, ...doubles].map(p => p.player_name));
-    return Array.from(names).sort();
-  }, [singles, doubles]);
-
-  const nameSuggestions = useMemo(() => {
-    if (!nameInput.trim()) return [];
-    return allUniqueNames
-      .filter(n => n.toLowerCase().includes(nameInput.toLowerCase()))
-      .slice(0, 5);
-  }, [allUniqueNames, nameInput]);
-
-  useEffect(() => {
-    if (formState.success) {
-      const timer = setTimeout(() => {
-        router.push('/');
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [formState.success, router]);
-
-  return (
-    <SuggestFeature 
-      formAction={formAction}
-      formState={formState}
-      nameInput={nameInput}
-      onNameInputChange={setNameInput}
-      nameSuggestions={nameSuggestions}
-      loading={loading}
-    />
-  );
+  return <SuggestClient />;
 }
