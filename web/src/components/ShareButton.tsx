@@ -32,8 +32,28 @@ export function ShareButton({ name }: ShareButtonProps) {
   };
 
   const copyToClipboard = async () => {
+    const url = window.location.href;
     try {
-      await navigator.clipboard.writeText(window.location.href);
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(url);
+      } else {
+        // Fallback for non-secure contexts or older browsers
+        const textArea = document.createElement("textarea");
+        textArea.value = url;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-999999px";
+        textArea.style.top = "-999999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+          document.execCommand('copy');
+          textArea.remove();
+        } catch (err) {
+          textArea.remove();
+          throw new Error('Fallback copy failed');
+        }
+      }
       setStatus('copied');
       setTimeout(() => setStatus('idle'), 2000);
     } catch (err) {
@@ -46,20 +66,20 @@ export function ShareButton({ name }: ShareButtonProps) {
   return (
     <button
       onClick={handleShare}
-      className="group flex items-center gap-2 py-1 px-0 border-b border-white/10 hover:border-volt transition-all duration-300"
+      className="group flex items-center gap-2 py-2 px-0 border-b border-border hover:border-primary transition-all duration-300"
     >
       <div className="relative">
         {status === 'copied' ? (
-          <Check className="w-3 h-3 text-volt animate-in zoom-in duration-300" />
+          <Check className="w-3.5 h-3.5 text-primary animate-in zoom-in duration-300" />
         ) : (
-          <Share2 className="w-3 h-3 text-ghost/40 group-hover:text-volt transition-colors" />
+          <Share2 className="w-3.5 h-3.5 text-muted-foreground/40 group-hover:text-primary transition-colors" />
         )}
       </div>
       <span className={cn(
-        "font-display text-[10px] tracking-[0.2em] uppercase transition-colors",
-        status === 'copied' ? "text-volt" : "text-ghost/40 group-hover:text-white"
+        "font-display text-[10px] font-bold tracking-[0.2em] uppercase transition-colors",
+        status === 'copied' ? "text-primary" : "text-muted-foreground/60 group-hover:text-foreground"
       )}>
-        {status === 'copied' ? 'LINK COPIED' : 'SHARE PROFILE'}
+        {status === 'copied' ? 'Link Copied' : 'Share Profile'}
       </span>
     </button>
   );
