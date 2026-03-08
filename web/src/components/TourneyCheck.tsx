@@ -23,7 +23,7 @@ export function TourneyCheck({
   const resultsSectionRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="max-w-6xl mx-auto px-6 pt-6 pb-20 text-left min-h-full">
+    <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-20 text-left min-h-full">
       <div className="mb-12">
         <div className="flex items-center gap-2 mb-3">
           <Trophy className="w-5 h-5 text-primary" />
@@ -41,29 +41,17 @@ export function TourneyCheck({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
         {/* Input Section */}
         <div className="lg:col-span-4 space-y-8">
-          <div className="bg-secondary/30 border border-border rounded-3xl p-8 backdrop-blur-sm text-left scroll-mt-20">
+          <div className="bg-secondary/30 border border-border rounded-3xl p-8 backdrop-blur-sm text-left">
             <label className="block font-display text-[10px] font-bold tracking-[0.4em] text-muted-foreground mb-6 uppercase opacity-50">Player List</label>
             <textarea 
               value={input}
               onChange={(e) => onInputChange(e.target.value)}
-              onFocus={(e) => {
-                if (window.innerWidth < 768) {
-                  setTimeout(() => {
-                    e.target.closest('.scroll-mt-20')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  }, 100);
-                }
-              }}
               placeholder="Enter names (one per line)..."
               className="w-full h-72 bg-background border border-border rounded-2xl p-5 outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all font-sans text-foreground placeholder:text-muted-foreground/30 font-medium resize-none"
             />
             <button 
               onClick={() => {
                 onCheck();
-                if (window.innerWidth < 1024) {
-                  setTimeout(() => {
-                    resultsSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  }, 100);
-                }
               }}
               disabled={!input.trim()}
               className="w-full mt-8 bg-primary hover:opacity-90 disabled:opacity-50 text-primary-foreground font-display font-bold py-5 rounded-2xl transition-all tracking-[0.2em] text-sm shadow-lg shadow-primary/20"
@@ -74,7 +62,7 @@ export function TourneyCheck({
         </div>
 
         {/* Results Section */}
-        <div ref={resultsSectionRef} className="lg:col-span-8 scroll-mt-20">
+        <div ref={resultsSectionRef} className="lg:col-span-8">
           <div className="bg-secondary/30 border border-border rounded-3xl overflow-hidden backdrop-blur-sm min-h-[500px] flex flex-col">
             {loading ? (
               <div className="flex-1 flex flex-col items-center justify-center py-20">

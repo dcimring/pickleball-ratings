@@ -8,7 +8,7 @@ export function Alerts() {
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x250&data=${encodeURIComponent(groupUrl)}`;
 
   return (
-    <div className="max-w-2xl mx-auto px-6 pt-6 pb-20 text-center min-h-full">
+    <div className="max-w-2xl mx-auto px-6 pt-24 md:pt-32 pb-20 text-center min-h-full">
       <div className="mb-12">
         <div className="flex items-center justify-center gap-2 mb-3">
           <MessageCircle className="w-5 h-5 text-primary" />

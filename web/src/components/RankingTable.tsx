@@ -110,18 +110,6 @@ export function RankingTable({
               type="text"
               placeholder="Search by player name..."
               value={searchQuery}
-              onFocus={() => {
-                if (window.innerWidth < 768 && searchSectionRef.current) {
-                  const header = searchSectionRef.current.previousElementSibling as HTMLElement;
-                  const dockingPoint = header ? header.offsetHeight : 0;
-                  const container = searchSectionRef.current.closest('.overflow-y-auto');
-                  if (container && container.scrollTop < dockingPoint) {
-                    setTimeout(() => {
-                      container.scrollTop = dockingPoint;
-                    }, 0);
-                  }
-                }
-              }}
               onKeyDown={(e) => {
                 if (e.key === 'Escape') {
                   onSearchChange('');

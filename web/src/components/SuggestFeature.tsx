@@ -22,7 +22,7 @@ export function SuggestFeature({
   loading,
 }: SuggestFeatureProps) {
   return (
-    <div className="max-w-xl mx-auto px-6 pt-6 pb-20 text-left min-h-full">
+    <div className="max-w-xl mx-auto px-6 pt-24 md:pt-32 pb-20 text-left min-h-full">
       <div className="mb-12 text-center">
         <div className="flex items-center justify-center gap-2 mb-3">
           <MessageSquarePlus className="w-5 h-5 text-primary" />
@@ -37,7 +37,7 @@ export function SuggestFeature({
         </p>
       </div>
 
-      <div className="bg-secondary/30 border border-border rounded-3xl p-8 backdrop-blur-sm relative overflow-hidden scroll-mt-20 min-h-[400px] flex flex-col">
+      <div className="bg-secondary/30 border border-border rounded-3xl p-8 backdrop-blur-sm relative overflow-hidden min-h-[400px] flex flex-col">
         {loading ? (
           <div className="flex-1 flex flex-col items-center justify-center py-20">
             <motion.div 
@@ -70,13 +70,6 @@ export function SuggestFeature({
                 required
                 value={nameInput}
                 onChange={(e) => onNameInputChange(e.target.value)}
-                onFocus={(e) => {
-                  if (window.innerWidth < 768) {
-                    setTimeout(() => {
-                      e.target.closest('.scroll-mt-20')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }, 100);
-                  }
-                }}
                 placeholder="Enter your name"
                 className="w-full bg-background border border-border rounded-2xl p-5 outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all font-sans text-foreground placeholder:text-muted-foreground/30 font-medium"
               />
@@ -110,17 +103,11 @@ export function SuggestFeature({
               <textarea 
                 name="details"
                 required
-                onFocus={(e) => {
-                  if (window.innerWidth < 768) {
-                    setTimeout(() => {
-                      e.target.closest('.scroll-mt-20')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }, 100);
-                  }
-                }}
                 placeholder="Describe the feature and how it helps players..."
                 className="w-full h-56 bg-background border border-border rounded-2xl p-5 outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all font-sans text-foreground placeholder:text-muted-foreground/30 resize-none font-medium"
               />
             </div>
+
 
             {formState.error && (
               <p className="text-red-400 text-xs font-sans font-bold text-center">{formState.error}</p>

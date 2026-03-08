@@ -1,4 +1,4 @@
-## 🎯 Project Vision
+# 🎯 Project Vision: DinkDash.xyz
 
 A comprehensive, **fully responsive** data platform for Cayman Islands pickleball players. The hub provides performance history, real-time rank tracking, and community features, optimized for use on the court (mobile) or at home (desktop).
 
@@ -6,42 +6,54 @@ A comprehensive, **fully responsive** data platform for Cayman Islands picklebal
 
 ## 🛠 Tech Stack
 
-* **Scraper:** Google Apps Script (GAS) using Delta Logic.
-* **Database:** Supabase (PostgreSQL) — Project: "sites".
-* **Schema:** `pickleball_ratings`.
-* **Frontend:** Next.js with **Tailwind CSS**.
-* **Style Guide:** Detailed in `web/STYLE_GUIDE.md`.
-* **UI Components:** **shadcn/ui** (Radix UI + Lucide Icons).
-* **Auth:** TBD (Evaluating **Clerk** vs. Supabase Auth).
-* **Deployment:** Vercel.
+*   **Frontend:** Next.js (App Router) with **Tailwind CSS**.
+*   **Design System:** Custom **DINK Design System** (OKLCH color palette, Space Grotesk typography).
+*   **Icons:** **Lucide React**.
+*   **Animations:** **Framer Motion**.
+*   **Database:** Supabase (PostgreSQL).
+*   **Scraper:** Google Apps Script (GAS) using Delta Logic.
+*   **Deployment:** Vercel.
 
 ---
 
-## 📍 Phase 1: The Foundation (Current)
+## 📐 Architecture & Standards
 
-* [x] Database Schema Design (Delta Tables).
-* [x] Supabase RPC for Delta logic.
-* [x] Automated Scraper (Singles & Doubles).
-* [x] **Mobile-First Dashboard:** Build the core ranking view using `shadcn/ui` tables and cards.
-* [x] **Responsive Navigation:** Implement a mobile drawer/hamburger menu for easy navigation.
+### 1. Design System (DINK)
+*   **Colors:** OKLCH-based theme defined in `globals.css` using semantic tokens (`primary`, `secondary`, `muted`, `border`).
+*   **Typography:** 
+    *   **Headings:** `Space Grotesk` (Vibrant primary color, no gradients).
+    *   **Body:** `Inter`.
+*   **Spacing & Radius:** Standardized `0.5rem` (`3xl`) border radius for an app-like feel.
+
+### 2. Components
+*   **Navigation:** Fixed `backdrop-blur-md` header with semantic navigation items.
+*   **Ranking Engine:** Real-time filtering and sorting of player data via `RankingTable.tsx`.
+*   **Mobile Experience:** Large tap targets, high-contrast UI, and sticky search bars for court-side use.
+
+### 3. Data Flow
+*   The system utilizes a **Delta logic** approach via Supabase RPC to track historical changes and performance trends over time.
 
 ---
 
-## 🚀 Future Feature Ideas
+## 📍 Project Phases
 
-### 1. Mobile-Optimized Analytics
+### Phase 1: The Foundation (Completed)
+*   [x] Database Schema Design (Delta Tables).
+*   [x] Automated Scraper (Singles & Doubles).
+*   [x] **DINK Design System Migration:** Full transition to OKLCH and Space Grotesk.
+*   [x] **Core Rankings:** Real-time dashboard for singles and doubles.
+*   [x] **Activity Feed:** Historical tracking of rating changes.
+*   [x] **Advanced Tools:** Tournament check and player profile deep-dives.
 
-* **Court-Side View:** High-contrast, large-tap-target interface designed for quick checking between matches.
-* **Performance Trends:** "Sparkline" charts in the main list to show 7-day trends at a glance.
-* **Comparison Tool:** Select two players to see a side-by-side "Matchup" breakdown on mobile.
+### Phase 2: Engagement (Current)
+*   [ ] **Community Alerts:** Integration of WhatsApp/Telegram notification bridges.
+*   [ ] **Feature Roadmap:** Implementing top-requested community tools.
+*   [ ] **Authentication:** Evaluating Clerk vs. Supabase for player-owned profiles.
 
-### 2. Alerts & Notifications
+---
 
-* **Push Notifications:** Use Web Push or IM (WhatsApp/Telegram) to alert users of rank changes.
-* **Daily Digest:** A summary email of the biggest movers in the Cayman rankings.
-
-### 3. Community & Logistics
-
-* **Match Arranger:** Integrate with Clerk/Auth to allow players to set "Home Courts" and find partners.
-* **Tournament Integration:** Pull in local Cayman tournament dates with "Add to Calendar" functionality.
-
+## 🚀 Technical Mandates for Gemini CLI
+1.  **Style Preservation:** Strictly adhere to the **DINK Design System** (`DESIGN_SYSTEM.md`). Use semantic Tailwind tokens (`primary`, `secondary`, etc.) rather than hardcoded hex values.
+2.  **Surgical Changes:** Keep all modifications as simple and focused as possible.
+3.  **Documentation:** Maintain this file and the design system guide as the project evolves.
+4.  **Verification:** Always run `npm run dev` to verify visual changes across breakpoints before finality.

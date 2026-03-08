@@ -31,7 +31,7 @@ export function ActivityFeed({
   loading,
 }: ActivityFeedProps) {
   return (
-    <div className="max-w-6xl mx-auto px-6 pt-6 pb-20 text-left min-h-full">
+    <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-20 text-left min-h-full">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
         <div>
           <div className="flex items-center gap-2 mb-3">

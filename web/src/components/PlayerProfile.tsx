@@ -37,7 +37,7 @@ export function PlayerProfile({
   }, []);
 
   return (
-    <div className="max-w-6xl mx-auto px-6 pt-6 pb-20 text-left min-h-full">
+    <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-20 text-left min-h-full">
       <Link 
         href={backUrl}
         className="flex items-center gap-2 text-muted-foreground/50 hover:text-primary transition-colors mb-8 group w-fit"
