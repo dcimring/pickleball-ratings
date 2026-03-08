@@ -189,7 +189,7 @@ export function PlayerProfile({
                 <div className="w-full h-full bg-secondary/50 rounded-3xl animate-pulse" />
               </div>
             ) : playerHistory[activeTab].length >= 2 ? (
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                 <AreaChart data={playerHistory[activeTab]}>
                   <defs>
                     <linearGradient id="colorRating" x1="0" y1="0" x2="0" y2="1">
