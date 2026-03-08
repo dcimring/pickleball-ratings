@@ -183,7 +183,7 @@ export function PlayerProfile({
             <Activity className="w-6 h-6 text-primary/30" />
           </div>
 
-          <div className="h-[450px] w-full">
+          <div className="h-[450px] min-h-[450px] w-full">
             {!showChart ? (
               <div className="h-full w-full flex items-center justify-center">
                 <div className="w-full h-full bg-secondary/50 rounded-3xl animate-pulse" />
