@@ -31,8 +31,11 @@ export function Navigation() {
       <div className="max-w-7xl mx-auto w-full flex items-center justify-between">
         <Link 
           href="/"
-          className="font-display font-bold text-lg tracking-tight text-foreground cursor-pointer flex items-center gap-2"
+          className="font-display font-bold text-lg tracking-tight text-foreground cursor-pointer flex items-center gap-3 group"
         >
+          <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+            <span className="text-primary-foreground font-black text-sm leading-none pt-0.5">D</span>
+          </div>
           DINKDASH<span className="text-primary">.XYZ</span>
         </Link>
 
