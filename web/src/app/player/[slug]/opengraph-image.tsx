@@ -13,6 +13,14 @@ export const size = {
 
 export const contentType = 'image/png';
 
+// Brand Colors (Hex equivalents of OKLCH for Satori compatibility)
+const COLORS = {
+  background: '#141414', // oklch(0.08 0 0)
+  primary: '#afff3d',    // oklch(0.85 0.2 130)
+  foreground: '#f2f2f2',  // oklch(0.95 0.01 85)
+  muted: '#a3a3a3',      // oklch(0.65 0 0)
+};
+
 export default async function Image({ params }: { params: { slug: string } }) {
   const { slug } = params;
   const player = await getPlayerData(slug);
@@ -22,13 +30,13 @@ export default async function Image({ params }: { params: { slug: string } }) {
       (
         <div
           style={{
-            background: '#020617',
+            background: COLORS.background,
             width: '100%',
             height: '100%',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: '#DFFF00',
+            color: COLORS.primary,
             fontFamily: 'sans-serif',
           }}
         >
@@ -41,8 +49,8 @@ export default async function Image({ params }: { params: { slug: string } }) {
     );
   }
 
-  const rating = player.latestDoubles?.rating || player.latestSingles?.rating || 0;
-  const formattedRating = rating.toFixed(3);
+  const doublesRating = player.latestDoubles?.rating.toFixed(3) || 'N/A';
+  const singlesRating = player.latestSingles?.rating.toFixed(3) || 'N/A';
   const rank = player.latestDoubles?.rank_position || player.latestSingles?.rank_position || 'N/A';
 
   return new ImageResponse(
@@ -55,52 +63,70 @@ export default async function Image({ params }: { params: { slug: string } }) {
           flexDirection: 'column',
           alignItems: 'flex-start',
           justifyContent: 'center',
-          backgroundColor: '#020617',
-          backgroundImage: 'radial-gradient(circle at 50% 50%, #0a0f1a 0%, #020617 100%)',
+          backgroundColor: COLORS.background,
           padding: '80px',
+          fontFamily: 'sans-serif',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
-          <div style={{ background: '#DFFF00', width: '24px', height: '24px', borderRadius: '4px' }} />
-          <span style={{ color: '#DFFF00', fontSize: '24px', fontWeight: 'bold', letterSpacing: '0.2em' }}>
+        {/* Top Branding Section */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '40px' }}>
+          <div 
+            style={{ 
+              width: '48px', 
+              height: '48px', 
+              borderRadius: '50%', 
+              backgroundColor: COLORS.primary, 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center' 
+            }}
+          >
+            <span style={{ color: COLORS.background, fontSize: '24px', fontWeight: '900' }}>D</span>
+          </div>
+          <span style={{ color: COLORS.primary, fontSize: '24px', fontWeight: '800', letterSpacing: '0.1em' }}>
             PLAYER PROFILE
           </span>
         </div>
         
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+        {/* Player Name */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0', marginBottom: '60px' }}>
           <h1
             style={{
-              fontSize: '100px',
+              fontSize: '110px',
               fontWeight: '900',
-              color: 'white',
+              color: COLORS.foreground,
               margin: '0',
               textTransform: 'uppercase',
-              lineHeight: '1.1',
+              letterSpacing: '-0.04em',
+              lineHeight: '0.9',
             }}
           >
             {player.name}
           </h1>
         </div>
 
-        <div style={{ display: 'flex', gap: '60px', marginTop: '60px' }}>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '20px', letterSpacing: '0.3em', marginBottom: '10px' }}>
-              DOUBLES RATING
+        {/* Stats Section */}
+        <div style={{ display: 'flex', gap: '80px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <span style={{ color: COLORS.muted, fontSize: '20px', fontWeight: '700', letterSpacing: '0.3em', textTransform: 'uppercase' }}>
+              Doubles Rating
             </span>
-            <span style={{ color: '#DFFF00', fontSize: '72px', fontWeight: 'bold' }}>
-              {player.latestDoubles?.rating.toFixed(3) || 'N/A'}
+            <span style={{ color: COLORS.primary, fontSize: '80px', fontWeight: '900', lineHeight: '1' }}>
+              {doublesRating}
             </span>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '20px', letterSpacing: '0.3em', marginBottom: '10px' }}>
-              GLOBAL RANK
+          
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <span style={{ color: COLORS.muted, fontSize: '20px', fontWeight: '700', letterSpacing: '0.3em', textTransform: 'uppercase' }}>
+              Global Rank
             </span>
-            <span style={{ color: 'white', fontSize: '72px', fontWeight: 'bold' }}>
+            <span style={{ color: COLORS.foreground, fontSize: '80px', fontWeight: '900', lineHeight: '1' }}>
               #{rank}
             </span>
           </div>
         </div>
 
+        {/* Footer Branding */}
         <div 
           style={{ 
             position: 'absolute', 
@@ -108,13 +134,24 @@ export default async function Image({ params }: { params: { slug: string } }) {
             right: '80px', 
             display: 'flex', 
             alignItems: 'center', 
-            gap: '10px',
-            opacity: 0.5
+            gap: '8px',
           }}
         >
-          <span style={{ color: 'white', fontSize: '24px', fontWeight: 'bold' }}>dinkdash</span>
-          <span style={{ color: '#DFFF00', fontSize: '24px' }}>.xyz</span>
+          <span style={{ color: COLORS.foreground, fontSize: '28px', fontWeight: '800' }}>dinkdash</span>
+          <span style={{ color: COLORS.primary, fontSize: '28px', fontWeight: '800' }}>.xyz</span>
         </div>
+
+        {/* Decorative Element */}
+        <div 
+          style={{
+            position: 'absolute',
+            top: '0',
+            right: '0',
+            width: '400px',
+            height: '400px',
+            background: `radial-gradient(circle at 100% 0%, ${COLORS.primary}20 0%, transparent 70%)`,
+          }}
+        />
       </div>
     ),
     {
