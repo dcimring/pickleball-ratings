@@ -51,9 +51,9 @@ export default function RankingsPage() {
           animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
         >
-          <Zap className="w-12 h-12 text-volt fill-volt" />
+          <Zap className="w-12 h-12 text-primary fill-primary" />
         </motion.div>
-        <p className="mt-4 font-display text-volt tracking-widest animate-pulse">PREPARING RANKINGS...</p>
+        <p className="mt-4 font-display text-primary font-bold tracking-widest animate-pulse">PREPARING RANKINGS...</p>
       </div>
     }>
       <RankingsContent />

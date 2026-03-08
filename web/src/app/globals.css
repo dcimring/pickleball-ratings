@@ -2,10 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 248, 250, 252;
-  --background-start-rgb: 2, 6, 23;
-  --background-end-rgb: 2, 6, 23;
+@layer base {
+  :root {
+    --background: 0.08 0 0;
+    --foreground: 0.95 0.01 85;
+    
+    --primary: 0.85 0.2 130;
+    --primary-foreground: 0.08 0 0;
+    
+    --secondary: 0.18 0 0;
+    --secondary-foreground: 0.95 0.01 85;
+    
+    --muted: 0.2 0 0;
+    --muted-foreground: 0.65 0 0;
+    
+    --accent: 0.85 0.2 130;
+    --accent-foreground: 0.08 0 0;
+    
+    --border: 0.25 0 0;
+    --input: 0.25 0 0;
+    --ring: 0.85 0.2 130;
+    
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    color-scheme: dark;
+  }
 }
 
 html,
@@ -13,13 +42,6 @@ body {
   height: 100%;
   width: 100%;
   overflow-x: hidden;
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background: rgb(var(--background-start-rgb));
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 @layer utilities {
@@ -47,14 +69,14 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #020617;
+  background: oklch(var(--background));
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: oklch(var(--secondary));
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #DFFF00;
+  background: oklch(var(--primary));
 }

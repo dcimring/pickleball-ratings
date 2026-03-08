@@ -1,12 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Orbitron } from "next/font/google";
+import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
 import { DataProvider } from "@/context/DataContext";
 import { Navigation } from "@/components/Navigation";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
-const orbitron = Orbitron({ subsets: ["latin"], variable: "--font-display" });
+const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-display" });
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://dinkdash.xyz'),
@@ -50,8 +50,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${orbitron.variable}`}>
-      <body className="font-sans antialiased text-ghost bg-background overflow-x-hidden">
+    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`}>
+      <body className="font-sans antialiased text-foreground bg-background overflow-x-hidden">
         <DataProvider>
           <main className="h-[100dvh] flex flex-col overflow-hidden relative overscroll-none">
             <Navigation />
