@@ -100,7 +100,7 @@ export function RankingTable({
       </header>
 
       {/* Search & Stats - Sticky on scroll */}
-      <section ref={searchSectionRef} className="sticky top-16 md:top-20 z-40 px-6 py-4 mb-2 bg-background/95 backdrop-blur-md border-b border-border text-left transition-all">
+      <section ref={searchSectionRef} className="sticky top-16 md:top-20 z-40 px-6 py-4 mb-2 bg-background/95 backdrop-blur-md text-left transition-all">
         <div className="max-w-6xl mx-auto">
           <div className="relative group">
             <div className="absolute left-4 inset-y-0 flex items-center pointer-events-none">
