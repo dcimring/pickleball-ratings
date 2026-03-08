@@ -59,7 +59,7 @@ export function RankingTable({
   }, [data, searchQuery, sortConfig]);
 
   return (
-    <div className="pb-[80vh] min-h-full">
+    <div className="pb-20 min-h-full">
       {/* Header Section */}
       <header className="relative pt-24 pb-4 px-6 overflow-hidden text-left">
         <div className="max-w-6xl mx-auto relative z-10">
