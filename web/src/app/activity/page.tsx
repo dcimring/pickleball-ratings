@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { Metadata } from 'next';
 import { ActivityClient } from './ActivityClient';
 
@@ -11,5 +12,9 @@ export const metadata: Metadata = {
 };
 
 export default function ActivityPage() {
-  return <ActivityClient />;
+  return (
+    <Suspense fallback={null}>
+      <ActivityClient />
+    </Suspense>
+  );
 }
