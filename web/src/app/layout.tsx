@@ -4,6 +4,7 @@ import "./globals.css";
 
 import { DataProvider } from "@/context/DataContext";
 import { Navigation } from "@/components/Navigation";
+import { UpdatePrompt } from "@/components/UpdatePrompt";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-display" });
@@ -57,6 +58,7 @@ export default function RootLayout({
             <div className="flex-1 overflow-y-auto">
               {children}
             </div>
+            <UpdatePrompt />
           </main>
         </DataProvider>
       </body>
