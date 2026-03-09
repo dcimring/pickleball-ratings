@@ -32,7 +32,7 @@ export function ActivityFeed({
 }: ActivityFeedProps) {
   return (
     <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-20 text-left min-h-full">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
         <div>
           <div className="flex items-center gap-2 mb-3">
             <Activity className="w-5 h-5 text-primary" />
@@ -70,33 +70,64 @@ export function ActivityFeed({
       </div>
 
       {/* Sort Toggles */}
-      <div className="flex items-center gap-4 mb-8 text-[10px] font-display font-bold tracking-widest text-muted-foreground">
-        <span className="uppercase">Sort by:</span>
-        <div className="flex gap-2">
-          <button 
-            onClick={() => onSortChange('date')}
-            className={cn(
-              "px-4 py-2 rounded-full border transition-all font-bold",
-              activitySort === 'date' ? "bg-primary/10 border-primary/20 text-primary" : "border-border hover:border-primary/20"
-            )}
-          >
-            LATEST
-          </button>
-          <button 
-            onClick={() => onSortChange('rating')}
-            className={cn(
-              "px-4 py-2 rounded-full border transition-all font-bold",
-              activitySort === 'rating' ? "bg-primary/10 border-primary/20 text-primary" : "border-border hover:border-primary/20"
-            )}
-          >
-            BIGGEST MOVERS
-          </button>
+      <div className="flex flex-col gap-4 mb-6">
+        <div className="flex items-center gap-4 text-[10px] font-display font-bold tracking-widest text-muted-foreground">
+          <span className="uppercase opacity-50">Sort by:</span>
+          <div className="flex gap-2">
+            <button 
+              onClick={() => onSortChange('date')}
+              className={cn(
+                "px-4 py-2 rounded-full border transition-all font-bold",
+                activitySort === 'date' ? "bg-primary/10 border-primary/20 text-primary" : "border-border hover:border-primary/20"
+              )}
+            >
+              LATEST
+            </button>
+            <button 
+              onClick={() => onSortChange('rating')}
+              className={cn(
+                "px-4 py-2 rounded-full border transition-all font-bold",
+                activitySort === 'rating' ? "bg-primary/10 border-primary/20 text-primary" : "border-border hover:border-primary/20"
+              )}
+            >
+              BIGGEST MOVERS
+            </button>
+          </div>
         </div>
+
+        {/* Jump Links */}
+        {!loading && tiers.length > 0 && (
+          <div className="flex flex-wrap items-center gap-6 text-[10px] font-display font-bold tracking-widest">
+            {tiers.map((tier) => (
+              <button
+                key={tier.title}
+                onClick={() => {
+                  const element = document.getElementById(`tier-${tier.title.replace(/\s+/g, '-').toLowerCase()}`);
+                  if (element) {
+                    const container = element.closest('.overflow-y-auto');
+                    if (container) {
+                      const offset = 100;
+                      const elementTop = element.offsetTop;
+                      container.scrollTo({
+                        top: elementTop - offset,
+                        behavior: 'smooth'
+                      });
+                    }
+                  }
+                }}
+                className="text-muted-foreground/60 hover:text-primary transition-colors uppercase relative group py-1"
+              >
+                {tier.title}
+                <span className="absolute bottom-0 left-0 w-0 h-px bg-primary transition-all duration-300 group-hover:w-full" />
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Daily Pulse */}
       {pulseStats && (
-        <div className="mb-12 flex items-center gap-3 bg-primary/5 border border-primary/10 rounded-2xl px-6 py-5">
+        <div className="mb-8 flex items-center gap-3 bg-primary/5 border border-primary/10 rounded-2xl px-6 py-5">
           <Zap className="w-4 h-4 text-primary fill-primary animate-pulse" />
           <p className="text-[11px] md:text-sm font-display font-bold tracking-wider text-muted-foreground uppercase">
             <span className="text-foreground font-black">{pulseStats.activeCount} Players</span> were active this week
@@ -120,7 +151,7 @@ export function ActivityFeed({
           </div>
         ) : tiers.length > 0 ? (
           tiers.map((tier) => (
-            <div key={tier.title} className="space-y-8">
+            <div key={tier.title} id={`tier-${tier.title.replace(/\s+/g, '-').toLowerCase()}`} className="space-y-8 scroll-mt-24">
               <div className="flex items-center gap-4">
                 <h2 className="font-display text-[10px] font-bold tracking-[0.4em] text-primary whitespace-nowrap uppercase">{tier.title}</h2>
                 <div className="h-px w-full bg-gradient-to-r from-primary/20 to-transparent" />
