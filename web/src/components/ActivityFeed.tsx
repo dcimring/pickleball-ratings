@@ -115,10 +115,9 @@ export function ActivityFeed({
                     }
                   }
                 }}
-                className="text-muted-foreground/60 hover:text-primary transition-colors uppercase relative group py-1"
+                className="text-muted-foreground/60 hover:text-primary transition-all uppercase py-1 border-b border-border hover:border-primary"
               >
                 {tier.title}
-                <span className="absolute bottom-0 left-0 w-0 h-px bg-primary transition-all duration-300 group-hover:w-full" />
               </button>
             ))}
           </div>
