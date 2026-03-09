@@ -18,7 +18,13 @@ export function PlayerProfileClient() {
   const [playerName, setPlayerName] = useState('');
 
   const isFromActivity = searchParams.get('from') === 'activity';
-  const backUrl = isFromActivity ? '/activity' : '/';
+  const sort = searchParams.get('sort');
+  const tab = searchParams.get('tab');
+  
+  const backUrl = isFromActivity 
+    ? `/activity?tab=${tab || 'doubles'}${sort ? `&sort=${sort}` : ''}`
+    : `/?tab=${tab || 'doubles'}`;
+  
   const backLabel = isFromActivity ? 'Back to Activity' : 'Back to Rankings';
 
   // Handle initial tab from URL search params

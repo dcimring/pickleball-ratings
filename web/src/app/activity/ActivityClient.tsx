@@ -1,14 +1,29 @@
 "use client";
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useData } from '@/context/DataContext';
 import { ActivityFeed } from '@/components/ActivityFeed';
 import { Ranking, ActivityItem, ActivityTier } from '@/lib/types';
 
 export function ActivityClient() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  
+  const initialTab = (searchParams.get('tab') as 'doubles' | 'singles') || 'doubles';
+  const initialSort = (searchParams.get('sort') as 'rating' | 'date') || 'rating';
+
   const { singlesHistory, doublesHistory, loading } = useData();
-  const [activeTab, setActiveTab] = useState<'doubles' | 'singles'>('doubles');
-  const [activitySort, setActivitySort] = useState<'rating' | 'date'>('rating');
+  const [activeTab, setActiveTab] = useState<'doubles' | 'singles'>(initialTab);
+  const [activitySort, setActivitySort] = useState<'rating' | 'date'>(initialSort);
+
+  // Update URL when state changes
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('tab', activeTab);
+    params.set('sort', activitySort);
+    router.replace(`/activity?${params.toString()}`, { scroll: false });
+  }, [activeTab, activitySort, router, searchParams]);
 
   const activityFeed = useMemo(() => {
     const history = activeTab === 'doubles' ? doublesHistory : singlesHistory;
@@ -47,7 +62,7 @@ export function ActivityClient() {
 
     allChanges.sort((a, b) => {
       if (activitySort === 'rating') {
-        if (b.ratingDiff !== a.ratingDiff) return b.ratingDiff - a.ratingDiff;
+        if (Math.abs(b.ratingDiff) !== Math.abs(a.ratingDiff)) return Math.abs(b.ratingDiff) - Math.abs(a.ratingDiff);
         return new Date(b.date).getTime() - new Date(a.date).getTime();
       } else {
         return new Date(b.date).getTime() - new Date(a.date).getTime();

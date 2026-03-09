@@ -101,7 +101,7 @@ export function ActivityFeed({
           <p className="text-[11px] md:text-sm font-display font-bold tracking-wider text-muted-foreground uppercase">
             <span className="text-foreground font-black">{pulseStats.activeCount} Players</span> were active this week
             <span className="mx-3 text-border">|</span>
-            Biggest Gainer: <Link href={`/player/${slugify(pulseStats.topGainerName)}?tab=${activeTab}&from=activity`} className="text-foreground font-black hover:text-primary transition-colors underline decoration-primary/30 underline-offset-4">{pulseStats.topGainerName}</Link> 
+            Biggest Gainer: <Link href={`/player/${slugify(pulseStats.topGainerName)}?tab=${activeTab}&sort=${activitySort}&from=activity`} className="text-foreground font-black hover:text-primary transition-colors underline decoration-primary/30 underline-offset-4">{pulseStats.topGainerName}</Link> 
             <span className="ml-2 text-primary">+{pulseStats.topGainerValue.toFixed(3)}</span>
           </p>
         </div>
@@ -135,7 +135,7 @@ export function ActivityFeed({
                   >
                     <div className="flex items-center justify-between mb-6">
                       <h3 className="font-display text-2xl font-bold tracking-tight text-foreground">
-                        <Link href={`/player/${slugify(item.player_name)}?tab=${activeTab}&from=activity`} className="hover:text-primary transition-colors">
+                        <Link href={`/player/${slugify(item.player_name)}?tab=${activeTab}&sort=${activitySort}&from=activity`} className="hover:text-primary transition-colors">
                           {item.player_name}
                         </Link>
                       </h3>
