@@ -53,7 +53,12 @@ A comprehensive, **fully responsive** data platform for Cayman Islands picklebal
 ---
 
 ## 🚀 Technical Mandates for Gemini CLI
-1.  **Style Preservation:** Strictly adhere to the **DINK Design System** (`DESIGN_SYSTEM.md`). Use semantic Tailwind tokens (`primary`, `secondary`, etc.) rather than hardcoded hex values.
-2.  **Surgical Changes:** Keep all modifications as simple and focused as possible.
-3.  **Documentation:** Maintain this file and the design system guide as the project evolves.
-4.  **Verification:** Always run `npm run dev` to verify visual changes across breakpoints before finality.
+1.  **Git Workflow:**
+    *   **Development:** All work happens on the `staging` branch.
+    *   **Commits:** Commit changes to `staging` frequently as requested.
+    *   **Production/Main:** Never merge `staging` into `main` or push `main` to GitHub until explicitly asked.
+    *   **Deployment:** Merging into `main` and pushing to GitHub triggers the production deployment on Vercel.
+2.  **Style Preservation:** Strictly adhere to the **DINK Design System** (`DESIGN_SYSTEM.md`). Use semantic Tailwind tokens (`primary`, `secondary`, etc.) rather than hardcoded hex values.
+3.  **Surgical Changes:** Keep all modifications as simple and focused as possible.
+4.  **Documentation:** Maintain this file and the design system guide as the project evolves.
+5.  **Verification:** Always run `npm run dev` to verify visual changes across breakpoints before finality.
