@@ -19,11 +19,15 @@ A comprehensive, **fully responsive** data platform for Cayman Islands picklebal
 ## 📐 Architecture & Standards
 
 ### 1. Design System (DINK)
-*   **Colors:** OKLCH-based theme defined in `globals.css` using semantic tokens (`primary`, `secondary`, `muted`, `border`).
+*   **Colors:** OKLCH-based theme defined in `globals.css` using semantic tokens.
+    *   **Background (Primary Base):** `#144EC3` (Tonal Blue)
+    *   **Secondary (Surface Accent):** `#1C5ED9` (Lighter Blue)
+    *   **Foreground (Typography):** `#FDFFFC` (White)
+    *   **Primary (Action Color):** `#238145` (Success Green)
 *   **Typography:** 
-    *   **Headings:** `Space Grotesk` (Vibrant primary color, no gradients).
-    *   **Body:** `Inter`.
-*   **Spacing & Radius:** Standardized `0.5rem` (`3xl`) border radius for an app-like feel.
+    *   **All Text:** `Space Grotesk` (Geometric, modern, and tech-forward).
+    *   **Headings:** Bold weight, `tracking-tighter`.
+*   **Spacing & Radius:** Standardized `1rem` (`2xl`/`3xl`) border radius for an app-like feel.
 
 ### 2. Components
 *   **Navigation:** Fixed `backdrop-blur-md` header with semantic navigation items.

@@ -37,6 +37,12 @@ const config: Config = {
           DEFAULT: "oklch(var(--accent) / <alpha-value>)",
           foreground: "oklch(var(--accent-foreground) / <alpha-value>)",
         },
+        dinkdash: {
+          blue: '#144EC3',      // Base Background
+          surface: '#1C5ED9',   // Card Surface
+          white: '#FDFFFC',     // Text
+          green: '#238145',     // Actions
+        },
         // Legacy colors kept for compatibility during transition
         volt: "oklch(var(--primary))",
         surface: "oklch(var(--secondary))",

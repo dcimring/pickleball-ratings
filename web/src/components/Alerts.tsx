@@ -2,10 +2,11 @@
 
 import { motion } from 'framer-motion';
 import { MessageCircle, Zap, Users, Trophy } from 'lucide-react';
+import Image from 'next/image';
 
 export function Alerts() {
   const groupUrl = 'https://chat.whatsapp.com/Ct260BAJJ2xGslKvhlR6wJ?mode=hq1tcli';
-  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x250&data=${encodeURIComponent(groupUrl)}`;
+  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=224x224&data=${encodeURIComponent(groupUrl)}`;
 
   return (
     <div className="max-w-2xl mx-auto px-6 pt-24 md:pt-32 pb-20 text-center min-h-full">
@@ -27,15 +28,18 @@ export function Alerts() {
         {/* Desktop/Tablet View: QR Code */}
         <div className="hidden md:flex flex-col items-center gap-10">
           <div className="bg-white p-6 rounded-3xl shadow-2xl shadow-primary/10">
-            <img 
+            <Image 
               src={qrCodeUrl}
               alt="WhatsApp Group QR Code"
+              width={224}
+              height={224}
               className="w-56 h-56"
+              unoptimized
             />
           </div>
           <div className="space-y-3">
             <p className="text-foreground font-display text-2xl font-bold tracking-tight uppercase">Scan to Join</p>
-            <p className="text-muted-foreground font-medium">Open your phone's camera to scan the code</p>
+            <p className="text-muted-foreground font-medium">Open your phone&apos;s camera to scan the code</p>
           </div>
         </div>
 

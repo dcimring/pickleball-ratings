@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Space_Grotesk } from "next/font/google";
+import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
 import { DataProvider } from "@/context/DataContext";
@@ -7,8 +7,8 @@ import { Navigation } from "@/components/Navigation";
 import { UpdatePrompt } from "@/components/UpdatePrompt";
 import { ScrollToTop } from "@/components/ScrollToTop";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
-const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-display" });
+const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-sans" });
+const spaceGroteskDisplay = Space_Grotesk({ subsets: ["latin"], variable: "--font-display" });
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://dinkdash.xyz'),
@@ -51,7 +51,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`}>
+    <html lang="en" className={`${spaceGrotesk.variable} ${spaceGroteskDisplay.variable}`}>
       <body className="font-sans antialiased text-foreground bg-background overflow-x-hidden">
         <DataProvider>
           <main className="h-[100dvh] flex flex-col overflow-hidden relative overscroll-none">

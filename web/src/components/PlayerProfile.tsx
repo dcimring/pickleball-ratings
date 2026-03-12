@@ -97,7 +97,7 @@ export function PlayerProfile({
         ) : !hasData ? (
           <div className="col-span-full py-24 text-center bg-secondary/20 border border-dashed border-border rounded-3xl">
             <h2 className="text-4xl font-display font-bold tracking-tight text-foreground mb-4 uppercase">Player Not Found</h2>
-            <p className="text-muted-foreground max-w-md mx-auto">We couldn't find any match history for "{playerName}".</p>
+            <p className="text-muted-foreground max-w-md mx-auto">We couldn&apos;t find any match history for &quot;{playerName}&quot;.</p>
           </div>
         ) : (
           <>
@@ -227,14 +227,14 @@ export function PlayerProfile({
                       fontWeight: 'bold',
                       boxShadow: '0 20px 50px rgba(0,0,0,0.5)'
                     }}
-                    itemStyle={{ color: 'oklch(var(--primary))' }}
+                    itemStyle={{ color: 'oklch(var(--foreground))' }}
                     labelStyle={{ color: 'oklch(var(--muted-foreground))', marginBottom: '4px', opacity: 0.5 }}
                     labelFormatter={(label) => new Date(label).toLocaleDateString('en-KY', { month: 'long', day: 'numeric', year: 'numeric' })}
                   />
                   <Area 
                     type="monotone" 
                     dataKey="rating" 
-                    stroke="oklch(var(--primary))" 
+                    stroke="oklch(var(--foreground))" 
                     strokeWidth={4}
                     fillOpacity={1} 
                     fill="url(#colorRating)" 

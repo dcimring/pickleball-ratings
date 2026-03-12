@@ -15,10 +15,10 @@ export const contentType = 'image/png';
 
 // Brand Colors (Hex equivalents of OKLCH for Satori compatibility)
 const COLORS = {
-  background: '#141414', // oklch(0.08 0 0)
-  primary: '#afff3d',    // oklch(0.85 0.2 130)
-  foreground: '#f2f2f2',  // oklch(0.95 0.01 85)
-  muted: '#a3a3a3',      // oklch(0.65 0 0)
+  background: '#144EC3', // Tonal Blue Base
+  primary: '#238145',    // Action Green
+  foreground: '#FDFFFC', // White
+  muted: '#FDFFFC80',    // White (50% opacity)
 };
 
 export default async function Image({ params }: { params: { slug: string } }) {
