@@ -66,7 +66,7 @@ export function ShareButton({ name }: ShareButtonProps) {
   return (
     <button
       onClick={handleShare}
-      className="group flex items-center gap-2 py-2 px-0 border-b border-border hover:border-primary transition-all duration-300"
+      className="group flex items-center gap-2 py-2 px-0 border-b border-border/10 hover:border-primary transition-all duration-300"
     >
       <div className="relative">
         {status === 'copied' ? (

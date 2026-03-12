@@ -24,7 +24,7 @@ export function Alerts() {
         </p>
       </div>
 
-      <div className="bg-secondary/30 border border-border rounded-3xl p-8 md:p-16 backdrop-blur-sm relative overflow-hidden">
+      <div className="bg-secondary/30 border border-border/10 rounded-3xl p-8 md:p-16 backdrop-blur-sm relative overflow-hidden">
         {/* Desktop/Tablet View: QR Code */}
         <div className="hidden md:flex flex-col items-center gap-10">
           <div className="bg-white p-6 rounded-3xl shadow-2xl shadow-primary/10">

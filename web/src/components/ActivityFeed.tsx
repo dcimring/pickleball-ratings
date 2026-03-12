@@ -47,7 +47,7 @@ export function ActivityFeed({
           </p>
         </div>
 
-        <div className="flex p-1 bg-secondary rounded-xl border border-border w-fit h-fit">
+        <div className="flex p-1 bg-secondary rounded-xl border border-border/10 w-fit h-fit">
           <button 
             onClick={() => onTabChange('doubles')}
             className={cn(
@@ -78,7 +78,7 @@ export function ActivityFeed({
               onClick={() => onSortChange('date')}
               className={cn(
                 "px-4 py-2 rounded-full border transition-all font-bold",
-                activitySort === 'date' ? "bg-primary/10 border-primary/20 text-primary" : "border-border hover:border-primary/20"
+                activitySort === 'date' ? "bg-primary/10 border-primary/20 text-primary" : "border-border/10 hover:border-primary/20"
               )}
             >
               LATEST
@@ -87,7 +87,7 @@ export function ActivityFeed({
               onClick={() => onSortChange('rating')}
               className={cn(
                 "px-4 py-2 rounded-full border transition-all font-bold",
-                activitySort === 'rating' ? "bg-primary/10 border-primary/20 text-primary" : "border-border hover:border-primary/20"
+                activitySort === 'rating' ? "bg-primary/10 border-primary/20 text-primary" : "border-border/10 hover:border-primary/20"
               )}
             >
               BIGGEST MOVERS
@@ -115,7 +115,7 @@ export function ActivityFeed({
                     }
                   }
                 }}
-                className="text-muted-foreground/60 hover:text-primary transition-all uppercase py-1 border-b border-border hover:border-primary"
+                className="text-muted-foreground/60 hover:text-primary transition-all uppercase py-1 border-b border-border/10 hover:border-primary"
               >
                 {tier.title}
               </button>
@@ -139,7 +139,7 @@ export function ActivityFeed({
 
       <div className="space-y-16">
         {loading ? (
-          <div className="flex-1 flex flex-col items-center justify-center py-20 bg-secondary/30 border border-dashed border-border rounded-3xl">
+          <div className="flex-1 flex flex-col items-center justify-center py-20 bg-secondary/30 border border-dashed border-border/10 rounded-3xl">
             <motion.div 
               animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
@@ -161,7 +161,7 @@ export function ActivityFeed({
                   <motion.div 
                     layout
                     key={`${item.player_name}-${item.date}`}
-                    className="bg-secondary/30 border border-border rounded-3xl p-8 backdrop-blur-sm hover:bg-secondary/50 transition-colors group"
+                    className="bg-secondary/30 border border-border/10 rounded-3xl p-8 backdrop-blur-sm hover:bg-secondary/50 transition-colors group"
                   >
                     <div className="flex items-center justify-between mb-6">
                       <h3 className="font-display text-2xl font-bold tracking-tight text-foreground">
@@ -234,7 +234,7 @@ export function ActivityFeed({
             </div>
           ))
         ) : (
-          <div className="flex flex-col items-center justify-center py-20 bg-secondary/30 border border-dashed border-border rounded-3xl">
+          <div className="flex flex-col items-center justify-center py-20 bg-secondary/30 border border-dashed border-border/10 rounded-3xl">
             <History className="w-12 h-12 text-muted-foreground/20 mb-4" />
             <p className="font-display font-bold text-muted-foreground/30 tracking-widest text-sm uppercase">No recent changes detected</p>
           </div>

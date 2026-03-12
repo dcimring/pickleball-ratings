@@ -27,7 +27,7 @@ export function Navigation() {
   };
 
   return (
-    <nav className="fixed top-0 z-50 w-full h-16 md:h-20 bg-background/80 backdrop-blur-md border-b border-border px-4 sm:px-6 lg:px-8 flex items-center justify-between transition-all duration-200">
+    <nav className="fixed top-0 z-50 w-full h-16 md:h-20 bg-background/80 backdrop-blur-md border-b border-border/10 px-4 sm:px-6 lg:px-8 flex items-center justify-between transition-all duration-200">
       <div className="max-w-7xl mx-auto w-full flex items-center justify-between">
         <Link 
           href="/"
@@ -89,7 +89,7 @@ export function Navigation() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="absolute top-16 left-0 w-full bg-background border-b border-border md:hidden z-40"
+            className="absolute top-16 left-0 w-full bg-background border-b border-border/10 md:hidden z-40"
           >
             <div className="flex flex-col p-6 gap-4">
               {navItems.map((item) => (
@@ -105,8 +105,8 @@ export function Navigation() {
                   {item.label}
                 </Link>
               ))}
-              <div className="pt-4 mt-2 border-t border-border flex flex-col gap-3">
-                <button className="w-full py-3 px-4 rounded-lg border border-border text-foreground font-medium text-sm hover:bg-secondary transition-colors">
+              <div className="pt-4 mt-2 border-t border-border/10 flex flex-col gap-3">
+                <button className="w-full py-3 px-4 rounded-lg border border-border/10 text-foreground font-medium text-sm hover:bg-secondary transition-colors">
                   Log In
                 </button>
                 <button className="w-full py-3 px-4 rounded-lg bg-primary text-primary-foreground font-medium text-sm hover:opacity-90 transition-opacity">

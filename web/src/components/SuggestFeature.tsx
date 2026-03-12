@@ -37,7 +37,7 @@ export function SuggestFeature({
         </p>
       </div>
 
-      <div className="bg-secondary/30 border border-border rounded-3xl p-8 backdrop-blur-sm relative overflow-hidden min-h-[400px] flex flex-col">
+      <div className="bg-secondary/30 border border-border/10 rounded-3xl p-8 backdrop-blur-sm relative overflow-hidden min-h-[400px] flex flex-col">
         {loading ? (
           <div className="flex-1 flex flex-col items-center justify-center py-20">
             <motion.div 
@@ -71,7 +71,7 @@ export function SuggestFeature({
                 value={nameInput}
                 onChange={(e) => onNameInputChange(e.target.value)}
                 placeholder="Enter your name"
-                className="w-full bg-background border border-border rounded-2xl p-5 outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all font-sans text-foreground placeholder:text-muted-foreground/30 font-medium"
+                className="w-full bg-background border border-border/10 rounded-2xl p-5 outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all font-sans text-foreground placeholder:text-muted-foreground/30 font-medium"
               />
               
               {/* Autocomplete Suggestions */}
@@ -81,14 +81,14 @@ export function SuggestFeature({
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="absolute z-20 left-0 right-0 top-full mt-2 bg-secondary border border-border rounded-2xl overflow-hidden shadow-2xl backdrop-blur-xl"
+                    className="absolute z-20 left-0 right-0 top-full mt-2 bg-secondary border border-border/10 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-xl"
                   >
                     {nameSuggestions.map((name) => (
                       <button
                         key={name}
                         type="button"
                         onClick={() => onNameInputChange(name)}
-                        className="w-full px-6 py-4 text-left hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors font-sans text-sm font-bold border-b border-border last:border-0"
+                        className="w-full px-6 py-4 text-left hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors font-sans text-sm font-bold border-b border-border/10 last:border-0"
                       >
                         {name}
                       </button>
@@ -104,7 +104,7 @@ export function SuggestFeature({
                 name="details"
                 required
                 placeholder="Describe the feature and how it helps players..."
-                className="w-full h-56 bg-background border border-border rounded-2xl p-5 outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all font-sans text-foreground placeholder:text-muted-foreground/30 resize-none font-medium"
+                className="w-full h-56 bg-background border border-border/10 rounded-2xl p-5 outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all font-sans text-foreground placeholder:text-muted-foreground/30 resize-none font-medium"
               />
             </div>
 

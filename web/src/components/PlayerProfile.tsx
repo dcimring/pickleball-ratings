@@ -60,7 +60,7 @@ export function PlayerProfile({
             </div>
           </div>
 
-        <div className="flex p-1 bg-secondary rounded-xl border border-border w-fit h-fit">
+        <div className="flex p-1 bg-secondary rounded-xl border border-border/10 w-fit h-fit">
           <button 
             onClick={() => onTabChange('doubles')}
             className={cn(
@@ -87,7 +87,7 @@ export function PlayerProfile({
         {loading ? (
           <>
             {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-secondary/30 border border-border rounded-3xl p-8 backdrop-blur-sm animate-pulse">
+              <div key={i} className="bg-secondary/30 border border-border/10 rounded-3xl p-8 backdrop-blur-sm animate-pulse">
                 <div className="h-4 w-24 bg-border/20 rounded mb-6" />
                 <div className="h-12 w-32 bg-border/40 rounded mb-4" />
                 <div className="h-8 w-48 bg-border/20 rounded" />
@@ -95,7 +95,7 @@ export function PlayerProfile({
             ))}
           </>
         ) : !hasData ? (
-          <div className="col-span-full py-24 text-center bg-secondary/20 border border-dashed border-border rounded-3xl">
+          <div className="col-span-full py-24 text-center bg-secondary/20 border border-dashed border-border/10 rounded-3xl">
             <h2 className="text-4xl font-display font-bold tracking-tight text-foreground mb-4 uppercase">Player Not Found</h2>
             <p className="text-muted-foreground max-w-md mx-auto">We couldn&apos;t find any match history for &quot;{playerName}&quot;.</p>
           </div>
@@ -146,7 +146,7 @@ export function PlayerProfile({
             })}
 
             {/* Total Stats/Activity Card */}
-            <div className="bg-secondary/30 border border-border rounded-3xl p-8 backdrop-blur-sm">
+            <div className="bg-secondary/30 border border-border/10 rounded-3xl p-8 backdrop-blur-sm">
               <div className="flex items-center justify-between mb-8">
                 <span className="font-display text-[10px] font-bold tracking-[0.4em] text-muted-foreground uppercase">Performance</span>
                 <TrendingUp className="w-4 h-4 text-muted-foreground/30" />
@@ -174,7 +174,7 @@ export function PlayerProfile({
 
       {/* Performance Chart */}
       {!loading && hasData && (
-        <div className="bg-secondary/30 border border-border rounded-3xl p-10 backdrop-blur-sm overflow-hidden">
+        <div className="bg-secondary/30 border border-border/10 rounded-3xl p-10 backdrop-blur-sm overflow-hidden">
           <div className="flex items-center justify-between mb-16">
             <div className="space-y-2">
               <h3 className="font-display text-2xl font-bold tracking-tight text-foreground uppercase">Rating Trend</h3>

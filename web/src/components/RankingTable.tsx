@@ -75,7 +75,7 @@ export function RankingTable({
               </h1>
             </div>
 
-            <div className="flex p-1 bg-secondary rounded-xl border border-border">
+            <div className="flex p-1 bg-secondary rounded-xl border border-border/10">
               <button 
                 onClick={() => onTabChange('doubles')}
                 className={cn(
@@ -116,7 +116,7 @@ export function RankingTable({
                 }
               }}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="w-full bg-secondary border border-border rounded-2xl py-4 pl-12 pr-12 outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all font-sans text-base text-foreground placeholder:text-muted-foreground/50"
+              className="w-full bg-secondary border border-border/10 rounded-2xl py-4 pl-12 pr-12 outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all font-sans text-base text-foreground placeholder:text-muted-foreground/50"
             />
             <AnimatePresence>
               {searchQuery && (
@@ -140,8 +140,8 @@ export function RankingTable({
       {/* Table Section */}
       <section className="px-6 text-left">
         <div className="max-w-6xl mx-auto">
-          <div className="bg-secondary/30 border border-border rounded-3xl overflow-hidden backdrop-blur-sm">
-            <div className="grid grid-cols-12 gap-2 md:gap-4 px-4 md:px-8 py-6 border-b border-border font-display text-[10px] font-bold tracking-[0.3em] text-muted-foreground select-none uppercase">
+          <div className="bg-secondary/30 border border-border/10 rounded-3xl overflow-hidden backdrop-blur-sm">
+            <div className="grid grid-cols-12 gap-2 md:gap-4 px-4 md:px-8 py-6 border-b border-border/10 font-display text-[10px] font-bold tracking-[0.3em] text-muted-foreground select-none uppercase">
               <button 
                 onClick={() => onSort('rank_position')}
                 className="col-span-3 md:col-span-2 flex items-center gap-1 md:gap-2 hover:text-foreground transition-colors group"

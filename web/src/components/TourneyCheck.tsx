@@ -41,13 +41,13 @@ export function TourneyCheck({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
         {/* Input Section */}
         <div className="lg:col-span-4 space-y-8">
-          <div className="bg-secondary/30 border border-border rounded-3xl p-8 backdrop-blur-sm text-left">
+          <div className="bg-secondary/30 border border-border/10 rounded-3xl p-8 backdrop-blur-sm text-left">
             <label className="block font-display text-[10px] font-bold tracking-[0.4em] text-muted-foreground mb-6 uppercase opacity-50">Player List</label>
             <textarea 
               value={input}
               onChange={(e) => onInputChange(e.target.value)}
               placeholder="Enter names (one per line)..."
-              className="w-full h-72 bg-background border border-border rounded-2xl p-5 outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all font-sans text-foreground placeholder:text-muted-foreground/30 font-medium resize-none"
+              className="w-full h-72 bg-background border border-border/10 rounded-2xl p-5 outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all font-sans text-foreground placeholder:text-muted-foreground/30 font-medium resize-none"
             />
             <button 
               onClick={() => {
@@ -63,7 +63,7 @@ export function TourneyCheck({
 
         {/* Results Section */}
         <div ref={resultsSectionRef} className="lg:col-span-8">
-          <div className="bg-secondary/30 border border-border rounded-3xl overflow-hidden backdrop-blur-sm min-h-[500px] flex flex-col">
+          <div className="bg-secondary/30 border border-border/10 rounded-3xl overflow-hidden backdrop-blur-sm min-h-[500px] flex flex-col">
             {loading ? (
               <div className="flex-1 flex flex-col items-center justify-center py-20">
                 <motion.div 
