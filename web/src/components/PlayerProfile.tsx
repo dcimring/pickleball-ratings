@@ -111,7 +111,7 @@ export function PlayerProfile({
                   key={type}
                   className={cn(
                     "bg-secondary/30 border rounded-3xl p-8 backdrop-blur-sm transition-all duration-500",
-                    isActive ? "border-primary/40 shadow-[0_0_50px_-15px_oklch(var(--primary)/0.2)]" : "border-border/50 opacity-40 scale-[0.98]"
+                    isActive ? "border-primary/40 shadow-[0_0_50px_-15px_oklch(var(--primary)/0.2)]" : "border-border/10 opacity-40 scale-[0.98]"
                   )}
                 >
                   <div className="flex items-center justify-between mb-8">
@@ -161,7 +161,7 @@ export function PlayerProfile({
                     }
                   </span>
                 </div>
-                <div className="pt-6 border-t border-border/50">
+                <div className="pt-6 border-t border-border/10">
                   <p className="text-xs text-muted-foreground leading-relaxed font-medium">
                     Rating is calculated using the Cayman Islands proprietary rating system and official match data.
                   </p>

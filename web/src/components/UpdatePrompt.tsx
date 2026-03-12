@@ -61,7 +61,7 @@ export function UpdatePrompt() {
           exit={{ y: 100, opacity: 0, x: '-50%' }}
           className="fixed bottom-8 left-1/2 z-[100] w-[90%] max-w-sm"
         >
-          <div className="bg-primary text-primary-foreground p-4 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex items-center justify-between gap-4 border border-white/20">
+          <div className="bg-primary text-primary-foreground p-4 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex items-center justify-between gap-4 border border-white/10">
             <div className="flex items-center gap-3">
               <div className="bg-primary-foreground/10 p-2 rounded-xl">
                 <Zap className="w-5 h-5 fill-current" />

@@ -20,10 +20,10 @@ A comprehensive, **fully responsive** data platform for Cayman Islands picklebal
 
 ### 1. Design System (DINK)
 *   **Colors:** OKLCH-based theme defined in `globals.css` using semantic tokens.
-    *   **Background (Primary Base):** `#144EC3` (Tonal Blue)
-    *   **Secondary (Surface Accent):** `#1C5ED9` (Lighter Blue)
+    *   **Background (Primary Base):** `#063890` (Royal Athletic)
+    *   **Secondary (Surface Accent):** `#0D4AB5` (Stadium Blue)
     *   **Foreground (Typography):** `#FDFFFC` (White)
-    *   **Primary (Action Color):** `#238145` (Success Green)
+    *   **Primary (Action Color):** `#238145` (Action Green)
 *   **Typography:** 
     *   **All Text:** `Space Grotesk` (Geometric, modern, and tech-forward).
     *   **Headings:** Bold weight, `tracking-tighter`.

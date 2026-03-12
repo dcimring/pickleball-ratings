@@ -38,10 +38,10 @@ const config: Config = {
           foreground: "oklch(var(--accent-foreground) / <alpha-value>)",
         },
         dinkdash: {
-          blue: '#144EC3',      // Base Background
-          surface: '#1C5ED9',   // Card Surface
+          blue: '#063890',      // Royal Athletic Background
+          surface: '#0D4AB5',   // Stadium Blue Surface
           white: '#FDFFFC',     // Text
-          green: '#238145',     // Actions
+          green: '#238145',     // Action Green
         },
         // Legacy colors kept for compatibility during transition
         volt: "oklch(var(--primary))",

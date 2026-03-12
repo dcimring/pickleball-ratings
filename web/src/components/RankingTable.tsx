@@ -187,11 +187,11 @@ export function RankingTable({
                     transition={{ 
                       layout: { duration: 0.4, ease: "easeInOut" } 
                     }}
-                    className="grid grid-cols-12 gap-2 md:gap-4 px-4 md:px-8 py-6 hover:bg-primary/[0.02] transition-colors items-center group border-b border-border/50 last:border-0"
+                    className="grid grid-cols-12 gap-2 md:gap-4 px-4 md:px-8 py-6 hover:bg-primary/[0.02] transition-colors items-center group border-b border-border/10 last:border-0"
                   >
                     <div className="col-span-3 md:col-span-2 flex items-center gap-3">
                       <span className={cn(
-                        "font-display text-xl md:text-3xl font-bold tracking-tighter",
+                        "font-display text-xl md:text-3xl font-bold tracking-tighter tabular-nums",
                         player.rank_position === 1 ? "text-primary" : "text-muted-foreground/30"
                       )}>
                         {player.rank_position}
@@ -216,7 +216,7 @@ export function RankingTable({
                       </div>
                     </div>
                     <div className="col-span-4 md:col-span-3 text-right">
-                      <div className="font-display font-bold text-lg md:text-2xl text-foreground">
+                      <div className="font-display font-bold text-lg md:text-2xl text-foreground tabular-nums">
                         {player.rating.toFixed(3)}
                       </div>
                       <div className="flex items-center justify-end gap-1 text-[10px] font-bold text-primary mt-1 opacity-0 group-hover:opacity-100 transition-opacity">

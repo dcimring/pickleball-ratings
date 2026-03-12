@@ -15,7 +15,7 @@ export const contentType = 'image/png';
 
 // Brand Colors (Hex equivalents of OKLCH for Satori compatibility)
 const COLORS = {
-  background: '#144EC3', // Tonal Blue Base
+  background: '#063890', // Royal Athletic Base
   primary: '#238145',    // Action Green
   foreground: '#FDFFFC', // White
   muted: '#FDFFFC80',    // White (50% opacity)
