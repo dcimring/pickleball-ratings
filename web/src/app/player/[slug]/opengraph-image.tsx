@@ -148,50 +148,43 @@ export default async function Image({ params }: { params: { slug: string } }) {
           </h1>
         </div>
 
-        {/* Stats Section */}
-        <div style={{ display: 'flex', gap: '80px', zIndex: 10 }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <span style={{ color: COLORS.muted, fontSize: '22px', fontWeight: '700', letterSpacing: '0.3em', textTransform: 'uppercase' }}>
-              Rating
-            </span>
-            <span style={{ color: COLORS.primary, fontSize: '100px', fontWeight: '900', lineHeight: '1', fontVariantNumeric: 'tabular-nums' }}>
-              {doublesRating}
-            </span>
-          </div>
-          
-          <div 
-            style={{ 
-              width: '1px', 
-              height: '110px', 
-              backgroundColor: COLORS.ghost, 
-              marginTop: '25px' 
-            }} 
-          />
+        {/* Bottom Horizon: Stats & Branding aligned to the same baseline */}
+        <div style={{ display: 'flex', width: '100%', alignItems: 'flex-end', justifyContent: 'space-between', zIndex: 10 }}>
+          {/* Stats Section */}
+          <div style={{ display: 'flex', gap: '80px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <span style={{ color: COLORS.muted, fontSize: '22px', fontWeight: '700', letterSpacing: '0.3em', textTransform: 'uppercase' }}>
+                Rating
+              </span>
+              <span style={{ color: COLORS.primary, fontSize: '100px', fontWeight: '900', lineHeight: '1', fontVariantNumeric: 'tabular-nums' }}>
+                {doublesRating}
+              </span>
+            </div>
+            
+            <div 
+              style={{ 
+                width: '1px', 
+                height: '110px', 
+                backgroundColor: COLORS.ghost, 
+                marginTop: '25px' 
+              }} 
+            />
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <span style={{ color: COLORS.muted, fontSize: '22px', fontWeight: '700', letterSpacing: '0.3em', textTransform: 'uppercase' }}>
-              Official Rank
-            </span>
-            <span style={{ color: COLORS.foreground, fontSize: '100px', fontWeight: '900', lineHeight: '1', fontVariantNumeric: 'tabular-nums' }}>
-              #{rank}
-            </span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <span style={{ color: COLORS.muted, fontSize: '22px', fontWeight: '700', letterSpacing: '0.3em', textTransform: 'uppercase' }}>
+                Official Rank
+              </span>
+              <span style={{ color: COLORS.foreground, fontSize: '100px', fontWeight: '900', lineHeight: '1', fontVariantNumeric: 'tabular-nums' }}>
+                #{rank}
+              </span>
+            </div>
           </div>
-        </div>
 
-        {/* Footer Branding */}
-        <div 
-          style={{ 
-            position: 'absolute', 
-            bottom: '50px', 
-            right: '80px', 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '4px',
-            zIndex: 10,
-          }}
-        >
-          <span style={{ color: COLORS.foreground, fontSize: '38px', fontWeight: '900', letterSpacing: '-0.02em' }}>dinkdash</span>
-          <span style={{ color: COLORS.primary, fontSize: '38px', fontWeight: '900' }}>.xyz</span>
+          {/* Footer Branding */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px', paddingBottom: '5px' }}>
+            <span style={{ color: COLORS.foreground, fontSize: '38px', fontWeight: '900', letterSpacing: '-0.02em' }}>dinkdash</span>
+            <span style={{ color: COLORS.primary, fontSize: '38px', fontWeight: '900' }}>.xyz</span>
+          </div>
         </div>
       </div>
     ),
