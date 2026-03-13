@@ -4,21 +4,21 @@
 
 @layer base {
   :root {
-    /* Background - Royal Athletic (#063890) */
-    --background: 0.34 0.16 264;
+    /* Background - Primary Base (#1247b1) */
+    --background: 0.38 0.18 268;
     /* Foreground - High-legibility White (#FDFFFC) */
     --foreground: 0.99 0.01 130;
     
-    /* Action Color - Success/CTA (#238145) */
-    --primary: 0.52 0.17 155;
+    /* Action Color - Action Green (#47b112) */
+    --primary: 0.66 0.20 142;
     --primary-foreground: 0.99 0.01 130;
     
-    /* Surface Accent - Stadium Blue (#0D4AB5) */
-    --secondary: 0.42 0.18 266;
+    /* Surface Accent - Surface (#144ec3) */
+    --secondary: 0.42 0.20 268;
     --secondary-foreground: 0.99 0.01 130;
     
     /* Muted/Background variant */
-    --muted: 0.30 0.14 264;
+    --muted: 0.32 0.16 268;
     --muted-foreground: 0.99 0.01 130 / 0.5;
     
     /* Accent */

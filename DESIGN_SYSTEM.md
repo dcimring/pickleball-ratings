@@ -7,11 +7,11 @@ The project uses a tonal layering approach with a midnight blue base and a high-
 
 | Variable | OKLCH Value | Hex Code | Description |
 | :--- | :--- | :--- | :--- |
-| `background` | `0.34 0.16 264` | `#063890` | **Primary Base Background** |
+| `background` | `0.38 0.18 268` | `#1247b1` | **Primary Base Background** |
 | `foreground` | `0.99 0.01 130` | `#FDFFFC` | **Typography/Icons** (High-legibility White) |
-| `primary` | `0.52 0.17 155` | `#238145` | **Action Green** (Success/CTA/Trends) |
-| `secondary` | `0.42 0.18 266` | `#0D4AB5` | **Surface Accent** (Stadium Blue) |
-| `muted` | `0.30 0.14 264` | `#042663` | Muted/Background variant |
+| `primary` | `0.66 0.20 142` | `#47b112` | **Action Green** (Success/CTA/Trends) |
+| `secondary` | `0.42 0.20 268` | `#144ec3` | **Surface Accent** |
+| `muted` | `0.32 0.16 268` | `#0f3b94` | Muted/Background variant |
 | `muted-foreground` | `0.99 0.01 130 / 0.5` | `rgba(253, 255, 252, 0.5)` | Inactive text/icons |
 | `border` | `0.99 0.01 130 / 0.1` | `rgba(253, 255, 252, 0.1)` | Subtle separator color |
 

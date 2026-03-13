@@ -15,8 +15,8 @@ export const contentType = 'image/png';
 
 // Brand Colors (Athletic Royal Scheme)
 const COLORS = {
-  background: '#063890', // Royal Athletic Base
-  primary: '#238145',    // Action Green
+  background: '#1247b1', // Primary Base
+  primary: '#47b112',    // Action Green
   foreground: '#FDFFFC', // White
   muted: '#FDFFFC80',    // White (50% opacity)
   ghost: 'rgba(253, 255, 252, 0.1)', // Ghost Border
