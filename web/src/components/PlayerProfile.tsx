@@ -200,7 +200,7 @@ export function PlayerProfile({
                   <CartesianGrid strokeDasharray="3 3" stroke="oklch(var(--border) / 0.1)" vertical={false} />
                   <XAxis 
                     dataKey="valid_from" 
-                    stroke="oklch(var(--muted-foreground) / 0.3)" 
+                    stroke="oklch(var(--foreground) / 0.6)" 
                     fontSize={10}
                     fontWeight={700}
                     tickFormatter={(str) => new Date(str).toLocaleDateString('en-KY', { month: 'short', day: 'numeric' })}
@@ -209,7 +209,7 @@ export function PlayerProfile({
                     dy={10}
                   />
                   <YAxis 
-                    stroke="oklch(var(--muted-foreground) / 0.3)" 
+                    stroke="oklch(var(--foreground) / 0.6)" 
                     fontSize={10}
                     fontWeight={700}
                     domain={['auto', 'auto']}
