@@ -170,7 +170,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <span style={{ color: COLORS.muted, fontSize: '18px', fontWeight: '700', letterSpacing: '0.3em', textTransform: 'uppercase' }}>
-              Global Rank
+              Official Rank
             </span>
             <span style={{ color: COLORS.foreground, fontSize: '84px', fontWeight: '900', lineHeight: '1', fontVariantNumeric: 'tabular-nums' }}>
               #{rank}

@@ -122,7 +122,7 @@ export function PlayerProfile({
                     <div className="space-y-6">
                       <div className="flex items-end gap-3">
                         <span className="text-6xl font-display font-bold tracking-tighter text-foreground leading-none">{current.rating.toFixed(3)}</span>
-                        <span className="text-primary font-display font-bold text-[10px] mb-1 uppercase tracking-[0.2em]">Global</span>
+                        <span className="text-primary font-display font-bold text-[10px] mb-1 uppercase tracking-[0.2em]">Official</span>
                       </div>
                       <div className="flex items-center gap-6 text-muted-foreground">
                         <div className="flex flex-col gap-1">
