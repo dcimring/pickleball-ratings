@@ -53,6 +53,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${spaceGrotesk.variable} ${spaceGroteskDisplay.variable}`}>
       <body className="font-sans antialiased text-foreground bg-background overflow-x-hidden">
+        {/* Championship Depth Background Mesh */}
+        <div className="fixed inset-0 -z-10 bg-mesh-glow pointer-events-none" />
+
         <DataProvider>
           <main className="h-[100dvh] flex flex-col overflow-hidden relative overscroll-none">
             <Navigation />

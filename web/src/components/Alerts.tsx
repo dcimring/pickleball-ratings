@@ -15,8 +15,8 @@ export function Alerts() {
           <MessageCircle className="w-5 h-5 text-primary" />
           <span className="text-primary font-display font-bold tracking-widest text-sm uppercase">Community</span>
         </div>
-        <h1 className="text-5xl md:text-8xl font-display font-bold tracking-tighter text-foreground leading-[0.9]">
-          REAL-TIME <br />
+        <h1 className="text-5xl md:text-8xl font-display font-bold tracking-tighter text-foreground leading-[0.9] uppercase text-shadow-premium">
+          COMMUNITY <br />
           <span className="text-primary">ALERTS</span>
         </h1>
         <p className="mt-6 text-muted-foreground max-w-lg mx-auto font-sans text-lg text-balance">

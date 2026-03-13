@@ -69,7 +69,7 @@ export function RankingTable({
                 <Zap className="w-5 h-5 text-primary fill-primary" />
                 <span className="text-primary font-display font-bold tracking-widest text-sm uppercase">Cayman Islands</span>
               </div>
-              <h1 className="text-5xl md:text-8xl font-display font-bold tracking-tighter text-foreground leading-[0.9]">
+              <h1 className="text-5xl md:text-8xl font-display font-bold tracking-tighter text-foreground leading-[0.9] text-shadow-premium">
                 PICKLEBALL <br />
                 <span className="text-primary">RANKINGS</span>
               </h1>
@@ -100,8 +100,8 @@ export function RankingTable({
       </header>
 
       {/* Search & Stats - Sticky on scroll */}
-      <section ref={searchSectionRef} className="sticky top-16 md:top-20 z-40 px-6 py-4 mb-0 bg-background/95 backdrop-blur-md text-left transition-all">
-        <div className="max-w-6xl mx-auto">
+      <section ref={searchSectionRef} className="sticky top-16 md:top-20 z-40 px-6 py-4 mb-0 bg-transparent backdrop-blur-md text-left transition-all overflow-hidden">
+        <div className="max-w-6xl mx-auto relative z-10">
           <div className="relative group">
             <div className="absolute left-4 inset-y-0 flex items-center pointer-events-none">
               <Search className="w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />

@@ -74,8 +74,23 @@ body {
     text-wrap: balance;
   }
 
+  /* Championship Depth: Max intensity tonal mesh for global visibility */
+  .bg-mesh-glow {
+    background: 
+      radial-gradient(circle at 0% 0%, oklch(0.60 0.22 268 / 0.4) 0%, transparent 70%),
+      radial-gradient(circle at 100% 0%, oklch(0.65 0.20 260 / 0.35) 0%, transparent 60%),
+      radial-gradient(circle at 100% 100%, oklch(0.50 0.25 268 / 0.5) 0%, transparent 70%),
+      radial-gradient(circle at 0% 100%, oklch(0.38 0.18 268) 0%, transparent 80%);
+    background-color: oklch(var(--background));
+  }
+
   .animate-fade-in {
     animation: fadeIn 0.4s ease-out forwards;
+  }
+
+  /* Premium Shadow: Adds depth and legibility to large headings */
+  .text-shadow-premium {
+    filter: drop-shadow(0 4px 12px oklch(0 0 0 / 0.3));
   }
 }
 

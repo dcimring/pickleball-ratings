@@ -38,8 +38,8 @@ export function ActivityFeed({
             <Activity className="w-5 h-5 text-primary" />
             <span className="text-primary font-display font-bold tracking-widest text-sm uppercase">Live Feed</span>
           </div>
-          <h1 className="text-5xl md:text-8xl font-display font-bold tracking-tighter text-foreground leading-[0.9]">
-            RECENT <br />
+          <h1 className="text-5xl md:text-8xl font-display font-bold tracking-tighter text-foreground leading-[0.9] uppercase text-shadow-premium">
+            COURT <br />
             <span className="text-primary">ACTIVITY</span>
           </h1>
           <p className="mt-6 text-muted-foreground max-w-2xl font-sans text-lg text-balance">
@@ -161,7 +161,7 @@ export function ActivityFeed({
                   <motion.div 
                     layout
                     key={`${item.player_name}-${item.date}`}
-                    className="bg-secondary/30 border border-border/10 rounded-3xl p-8 backdrop-blur-sm hover:bg-secondary/50 transition-colors group"
+                    className="bg-secondary/30 border border-border/10 rounded-3xl p-8 hover:bg-secondary/50 transition-colors group"
                   >
                     <div className="flex items-center justify-between mb-6">
                       <h3 className="font-display text-2xl font-bold tracking-tight text-foreground">

@@ -28,7 +28,7 @@ export function SuggestFeature({
           <MessageSquarePlus className="w-5 h-5 text-primary" />
           <span className="text-primary font-display font-bold tracking-widest text-sm uppercase">Roadmap</span>
         </div>
-        <h1 className="text-5xl md:text-8xl font-display font-bold tracking-tighter text-foreground leading-[0.9] uppercase">
+        <h1 className="text-5xl md:text-8xl font-display font-bold tracking-tighter text-foreground leading-[0.9] uppercase text-shadow-premium">
           SUGGEST A <br />
           <span className="text-primary">FEATURE</span>
         </h1>
