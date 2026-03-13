@@ -110,7 +110,7 @@ export function SuggestFeature({
 
 
             {formState.error && (
-              <p className="text-red-400 text-xs font-sans font-bold text-center">{formState.error}</p>
+              <p className="text-destructive text-xs font-sans font-bold text-center">{formState.error}</p>
             )}
 
             <button 

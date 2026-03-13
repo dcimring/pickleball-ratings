@@ -13,7 +13,9 @@ The project uses a tonal layering approach with a midnight blue base and a high-
 | `secondary` | `0.42 0.20 268` | `#144ec3` | **Surface Accent** |
 | `muted` | `0.32 0.16 268` | `#0f3b94` | Muted/Background variant |
 | `muted-foreground` | `0.99 0.01 130 / 0.5` | `rgba(253, 255, 252, 0.5)` | Inactive text/icons |
-| `border` | `0.99 0.01 130 / 0.1` | `rgba(253, 255, 252, 0.1)` | Subtle separator color |
+| `destructive` | `0.60 0.20 25` | - | **Error/Negative Trend** |
+| `border` | `0.99 0.01 264 / 0.1` | `rgba(253, 255, 252, 0.1)` | Subtle separator color |
+| `ghost` | `0.99 0.01 264` | - | Very light blue/white |
 
 ## 2. Typography
 The site uses **Space Grotesk** for all textual content to maintain a tech-forward, modern aesthetic.

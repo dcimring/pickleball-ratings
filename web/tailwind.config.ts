@@ -37,6 +37,13 @@ const config: Config = {
           DEFAULT: "oklch(var(--accent) / <alpha-value>)",
           foreground: "oklch(var(--accent-foreground) / <alpha-value>)",
         },
+        destructive: {
+          DEFAULT: "oklch(var(--destructive) / <alpha-value>)",
+          foreground: "oklch(var(--destructive-foreground) / <alpha-value>)",
+        },
+        ghost: {
+          DEFAULT: "oklch(var(--ghost) / <alpha-value>)",
+        },
         dinkdash: {
           blue: '#1247b1',      // Primary Base
           surface: '#144ec3',   // Surface Accent

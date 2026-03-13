@@ -185,7 +185,7 @@ export function ActivityFeed({
                             <span className="text-foreground font-bold text-lg">{item.current.rating.toFixed(3)}</span>
                             <span className={cn(
                               "text-[10px] font-bold px-2 py-1 rounded",
-                              item.ratingDiff > 0 ? "bg-primary/10 text-primary" : "bg-red-500/10 text-red-400"
+                              item.ratingDiff > 0 ? "bg-primary/10 text-primary" : "bg-destructive/10 text-destructive"
                             )}>
                               {item.ratingDiff > 0 ? '+' : ''}{item.ratingDiff.toFixed(3)}
                             </span>
@@ -218,7 +218,7 @@ export function ActivityFeed({
                           <span className={cn(
                             "text-[10px] font-bold px-2 py-1 rounded uppercase",
                             item.rankDiff > 0 ? "bg-primary/10 text-primary" : 
-                            item.rankDiff < 0 ? "bg-red-500/10 text-red-400" : 
+                            item.rankDiff < 0 ? "bg-destructive/10 text-destructive" : 
                             "bg-secondary text-muted-foreground/40"
                           )}>
                             {item.rankDiff > 0 ? `Up ${item.rankDiff}` : 

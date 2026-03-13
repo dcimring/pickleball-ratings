@@ -30,6 +30,13 @@
     --input: 0.99 0.01 264;
     --ring: 0.88 0.20 168;
     
+    /* Destructive/Error - Red Accent */
+    --destructive: 0.60 0.20 25;
+    --destructive-foreground: 0.99 0.01 130;
+
+    /* Ghost - Blue-tinted white for subtle UI elements */
+    --ghost: 0.99 0.01 264;
+
     /* Corner Radius - 16px */
     --radius: 1rem;
   }
