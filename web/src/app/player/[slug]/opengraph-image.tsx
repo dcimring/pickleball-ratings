@@ -13,12 +13,13 @@ export const size = {
 
 export const contentType = 'image/png';
 
-// Brand Colors (Hex equivalents of OKLCH for Satori compatibility)
+// Brand Colors (Athletic Royal Scheme)
 const COLORS = {
   background: '#063890', // Royal Athletic Base
   primary: '#238145',    // Action Green
   foreground: '#FDFFFC', // White
   muted: '#FDFFFC80',    // White (50% opacity)
+  ghost: 'rgba(253, 255, 252, 0.1)', // Ghost Border
 };
 
 export default async function Image({ params }: { params: { slug: string } }) {
@@ -40,7 +41,9 @@ export default async function Image({ params }: { params: { slug: string } }) {
             fontFamily: 'sans-serif',
           }}
         >
-          <h1>DinkDash | Player Profile</h1>
+          <h1 style={{ fontSize: '64px', fontWeight: '900', letterSpacing: '-0.02em' }}>
+            DINKDASH | PROFILE
+          </h1>
         </div>
       ),
       {
@@ -66,30 +69,70 @@ export default async function Image({ params }: { params: { slug: string } }) {
           backgroundColor: COLORS.background,
           padding: '80px',
           fontFamily: 'sans-serif',
+          position: 'relative',
+          overflow: 'hidden',
         }}
       >
+        {/* Atmosphere: Stadium Beam Gradients */}
+        <div 
+          style={{
+            position: 'absolute',
+            top: '-20%',
+            right: '-10%',
+            width: '800px',
+            height: '800px',
+            background: `radial-gradient(circle, ${COLORS.primary}15 0%, transparent 70%)`,
+          }}
+        />
+        <div 
+          style={{
+            position: 'absolute',
+            bottom: '-30%',
+            left: '-10%',
+            width: '600px',
+            height: '600px',
+            background: `radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%)`,
+          }}
+        />
+
+        {/* Outer Ghost Border Frame */}
+        <div 
+          style={{
+            position: 'absolute',
+            inset: '40px',
+            border: `1px solid ${COLORS.ghost}`,
+            borderRadius: '32px',
+          }}
+        />
+
         {/* Top Branding Section */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '40px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '40px', zIndex: 10 }}>
           <div 
             style={{ 
-              width: '48px', 
-              height: '48px', 
-              borderRadius: '50%', 
+              width: '56px', 
+              height: '56px', 
+              borderRadius: '16px', 
               backgroundColor: COLORS.primary, 
               display: 'flex', 
               alignItems: 'center', 
-              justifyContent: 'center' 
+              justifyContent: 'center',
+              boxShadow: '0 10px 30px rgba(35, 129, 69, 0.3)',
             }}
           >
-            <span style={{ color: COLORS.background, fontSize: '24px', fontWeight: '900' }}>D</span>
+            <span style={{ color: COLORS.foreground, fontSize: '28px', fontWeight: '900' }}>D</span>
           </div>
-          <span style={{ color: COLORS.primary, fontSize: '24px', fontWeight: '800', letterSpacing: '0.1em' }}>
-            PLAYER PROFILE
-          </span>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <span style={{ color: COLORS.primary, fontSize: '20px', fontWeight: '900', letterSpacing: '0.2em' }}>
+              PLAYER PROFILE
+            </span>
+            <span style={{ color: COLORS.muted, fontSize: '12px', fontWeight: '700', letterSpacing: '0.1em' }}>
+              CAYMAN ISLANDS PICKLEBALL
+            </span>
+          </div>
         </div>
         
         {/* Player Name */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0', marginBottom: '60px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0', marginBottom: '60px', zIndex: 10 }}>
           <h1
             style={{
               fontSize: '110px',
@@ -97,7 +140,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
               color: COLORS.foreground,
               margin: '0',
               textTransform: 'uppercase',
-              letterSpacing: '-0.04em',
+              letterSpacing: '-0.05em',
               lineHeight: '0.9',
             }}
           >
@@ -106,21 +149,30 @@ export default async function Image({ params }: { params: { slug: string } }) {
         </div>
 
         {/* Stats Section */}
-        <div style={{ display: 'flex', gap: '80px' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <span style={{ color: COLORS.muted, fontSize: '20px', fontWeight: '700', letterSpacing: '0.3em', textTransform: 'uppercase' }}>
-              Doubles Rating
+        <div style={{ display: 'flex', gap: '80px', zIndex: 10 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <span style={{ color: COLORS.muted, fontSize: '18px', fontWeight: '700', letterSpacing: '0.3em', textTransform: 'uppercase' }}>
+              Rating
             </span>
-            <span style={{ color: COLORS.primary, fontSize: '80px', fontWeight: '900', lineHeight: '1' }}>
+            <span style={{ color: COLORS.primary, fontSize: '84px', fontWeight: '900', lineHeight: '1', fontVariantNumeric: 'tabular-nums' }}>
               {doublesRating}
             </span>
           </div>
           
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <span style={{ color: COLORS.muted, fontSize: '20px', fontWeight: '700', letterSpacing: '0.3em', textTransform: 'uppercase' }}>
+          <div 
+            style={{ 
+              width: '1px', 
+              height: '100px', 
+              backgroundColor: COLORS.ghost, 
+              marginTop: '20px' 
+            }} 
+          />
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <span style={{ color: COLORS.muted, fontSize: '18px', fontWeight: '700', letterSpacing: '0.3em', textTransform: 'uppercase' }}>
               Global Rank
             </span>
-            <span style={{ color: COLORS.foreground, fontSize: '80px', fontWeight: '900', lineHeight: '1' }}>
+            <span style={{ color: COLORS.foreground, fontSize: '84px', fontWeight: '900', lineHeight: '1', fontVariantNumeric: 'tabular-nums' }}>
               #{rank}
             </span>
           </div>
@@ -134,24 +186,13 @@ export default async function Image({ params }: { params: { slug: string } }) {
             right: '80px', 
             display: 'flex', 
             alignItems: 'center', 
-            gap: '8px',
+            gap: '4px',
+            zIndex: 10,
           }}
         >
-          <span style={{ color: COLORS.foreground, fontSize: '28px', fontWeight: '800' }}>dinkdash</span>
-          <span style={{ color: COLORS.primary, fontSize: '28px', fontWeight: '800' }}>.xyz</span>
+          <span style={{ color: COLORS.foreground, fontSize: '32px', fontWeight: '900', letterSpacing: '-0.02em' }}>dinkdash</span>
+          <span style={{ color: COLORS.primary, fontSize: '32px', fontWeight: '900' }}>.xyz</span>
         </div>
-
-        {/* Decorative Element */}
-        <div 
-          style={{
-            position: 'absolute',
-            top: '0',
-            right: '0',
-            width: '400px',
-            height: '400px',
-            background: `radial-gradient(circle at 100% 0%, ${COLORS.primary}20 0%, transparent 70%)`,
-          }}
-        />
       </div>
     ),
     {
