@@ -109,8 +109,8 @@ export default async function Image({ params }: { params: { slug: string } }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '40px', zIndex: 10 }}>
           <div 
             style={{ 
-              width: '56px', 
-              height: '56px', 
+              width: '64px', 
+              height: '64px', 
               borderRadius: '16px', 
               backgroundColor: COLORS.primary, 
               display: 'flex', 
@@ -119,13 +119,13 @@ export default async function Image({ params }: { params: { slug: string } }) {
               boxShadow: '0 10px 30px rgba(35, 129, 69, 0.3)',
             }}
           >
-            <span style={{ color: COLORS.foreground, fontSize: '28px', fontWeight: '900' }}>D</span>
+            <span style={{ color: COLORS.foreground, fontSize: '32px', fontWeight: '900' }}>D</span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ color: COLORS.primary, fontSize: '20px', fontWeight: '900', letterSpacing: '0.2em' }}>
+            <span style={{ color: COLORS.primary, fontSize: '24px', fontWeight: '900', letterSpacing: '0.2em' }}>
               PLAYER PROFILE
             </span>
-            <span style={{ color: COLORS.muted, fontSize: '12px', fontWeight: '700', letterSpacing: '0.1em' }}>
+            <span style={{ color: COLORS.muted, fontSize: '16px', fontWeight: '700', letterSpacing: '0.1em' }}>
               CAYMAN ISLANDS PICKLEBALL
             </span>
           </div>
@@ -135,7 +135,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0', marginBottom: '60px', zIndex: 10 }}>
           <h1
             style={{
-              fontSize: '110px',
+              fontSize: '130px',
               fontWeight: '900',
               color: COLORS.foreground,
               margin: '0',
@@ -151,10 +151,10 @@ export default async function Image({ params }: { params: { slug: string } }) {
         {/* Stats Section */}
         <div style={{ display: 'flex', gap: '80px', zIndex: 10 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <span style={{ color: COLORS.muted, fontSize: '18px', fontWeight: '700', letterSpacing: '0.3em', textTransform: 'uppercase' }}>
+            <span style={{ color: COLORS.muted, fontSize: '22px', fontWeight: '700', letterSpacing: '0.3em', textTransform: 'uppercase' }}>
               Rating
             </span>
-            <span style={{ color: COLORS.primary, fontSize: '84px', fontWeight: '900', lineHeight: '1', fontVariantNumeric: 'tabular-nums' }}>
+            <span style={{ color: COLORS.primary, fontSize: '100px', fontWeight: '900', lineHeight: '1', fontVariantNumeric: 'tabular-nums' }}>
               {doublesRating}
             </span>
           </div>
@@ -162,17 +162,17 @@ export default async function Image({ params }: { params: { slug: string } }) {
           <div 
             style={{ 
               width: '1px', 
-              height: '100px', 
+              height: '110px', 
               backgroundColor: COLORS.ghost, 
-              marginTop: '20px' 
+              marginTop: '25px' 
             }} 
           />
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <span style={{ color: COLORS.muted, fontSize: '18px', fontWeight: '700', letterSpacing: '0.3em', textTransform: 'uppercase' }}>
+            <span style={{ color: COLORS.muted, fontSize: '22px', fontWeight: '700', letterSpacing: '0.3em', textTransform: 'uppercase' }}>
               Official Rank
             </span>
-            <span style={{ color: COLORS.foreground, fontSize: '84px', fontWeight: '900', lineHeight: '1', fontVariantNumeric: 'tabular-nums' }}>
+            <span style={{ color: COLORS.foreground, fontSize: '100px', fontWeight: '900', lineHeight: '1', fontVariantNumeric: 'tabular-nums' }}>
               #{rank}
             </span>
           </div>
@@ -182,7 +182,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
         <div 
           style={{ 
             position: 'absolute', 
-            bottom: '80px', 
+            bottom: '50px', 
             right: '80px', 
             display: 'flex', 
             alignItems: 'center', 
@@ -190,8 +190,8 @@ export default async function Image({ params }: { params: { slug: string } }) {
             zIndex: 10,
           }}
         >
-          <span style={{ color: COLORS.foreground, fontSize: '32px', fontWeight: '900', letterSpacing: '-0.02em' }}>dinkdash</span>
-          <span style={{ color: COLORS.primary, fontSize: '32px', fontWeight: '900' }}>.xyz</span>
+          <span style={{ color: COLORS.foreground, fontSize: '38px', fontWeight: '900', letterSpacing: '-0.02em' }}>dinkdash</span>
+          <span style={{ color: COLORS.primary, fontSize: '38px', fontWeight: '900' }}>.xyz</span>
         </div>
       </div>
     ),
