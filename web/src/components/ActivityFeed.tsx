@@ -176,22 +176,24 @@ export function ActivityFeed({
                     
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                       {/* Rating Change */}
-                      {item.ratingDiff !== 0 && (
-                        <div className="space-y-2">
-                          <span className="text-[10px] font-display font-bold text-muted-foreground tracking-widest uppercase">Rating</span>
-                          <div className="flex items-center gap-3">
-                            <span className="text-muted-foreground/50 text-base">{item.previous.rating.toFixed(3)}</span>
-                            <ArrowUpRight className="w-4 h-4 text-muted-foreground/30" />
-                            <span className="text-foreground font-bold text-lg">{item.current.rating.toFixed(3)}</span>
-                            <span className={cn(
-                              "text-[10px] font-bold px-2 py-1 rounded",
-                              item.ratingDiff > 0 ? "bg-primary/10 text-primary" : "bg-destructive/10 text-destructive"
-                            )}>
-                              {item.ratingDiff > 0 ? '+' : ''}{item.ratingDiff.toFixed(3)}
-                            </span>
-                          </div>
+                      <div className="space-y-2">
+                        <span className="text-[10px] font-display font-bold text-muted-foreground tracking-widest uppercase">Rating</span>
+                        <div className="flex items-center gap-3">
+                          <span className="text-muted-foreground/50 text-base">{item.previous.rating.toFixed(3)}</span>
+                          <ArrowUpRight className="w-4 h-4 text-muted-foreground/30" />
+                          <span className="text-foreground font-bold text-lg">{item.current.rating.toFixed(3)}</span>
+                          <span className={cn(
+                            "text-[10px] font-bold px-2 py-1 rounded uppercase",
+                            item.ratingDiff > 0 ? "bg-primary/10 text-primary" : 
+                            item.ratingDiff < 0 ? "bg-destructive/10 text-destructive" : 
+                            "bg-secondary text-muted-foreground/40"
+                          )}>
+                            {item.ratingDiff > 0 ? `+${item.ratingDiff.toFixed(3)}` : 
+                             item.ratingDiff < 0 ? item.ratingDiff.toFixed(3) : 
+                             'Stable'}
+                          </span>
                         </div>
-                      )}
+                      </div>
 
                       {/* Rounds Change */}
                       {item.roundsDiff !== 0 && (
