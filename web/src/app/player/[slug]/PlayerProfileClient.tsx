@@ -67,14 +67,19 @@ export function PlayerProfileClient() {
   }, [slug]);
 
   return (
-    <PlayerProfile 
-      playerName={playerName}
-      playerHistory={playerHistory}
-      activeTab={activeTab}
-      onTabChange={setActiveTab}
-      loading={loading}
-      backUrl={backUrl}
-      backLabel={backLabel}
-    />
+    <>
+      {/* Pre-warm the OG image for instant sharing/preview */}
+      <link rel="prefetch" href={`/player/${slug}/opengraph-image`} as="image" />
+      
+      <PlayerProfile 
+        playerName={playerName}
+        playerHistory={playerHistory}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        loading={loading}
+        backUrl={backUrl}
+        backLabel={backLabel}
+      />
+    </>
   );
 }
