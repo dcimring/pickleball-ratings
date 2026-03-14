@@ -190,6 +190,9 @@ export default async function Image({ params }: { params: { slug: string } }) {
     ),
     {
       ...size,
+      headers: {
+        'Cache-Control': 'public, s-maxage=1800, stale-while-revalidate=600',
+      },
     }
   );
 }
