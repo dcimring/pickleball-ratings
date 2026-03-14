@@ -66,11 +66,15 @@ export function PlayerProfileClient() {
     }
   }, [slug]);
 
+  useEffect(() => {
+    if (slug) {
+      // Warm the Vercel Edge Cache with an active fetch
+      fetch(`/player/${slug}/opengraph-image`, { mode: 'no-cors' }).catch(() => {});
+    }
+  }, [slug]);
+
   return (
     <>
-      {/* Pre-warm the OG image for instant sharing/preview */}
-      <link rel="prefetch" href={`/player/${slug}/opengraph-image`} as="image" />
-      
       <PlayerProfile 
         playerName={playerName}
         playerHistory={playerHistory}
