@@ -1,4 +1,6 @@
 import type { Config } from "tailwindcss";
+import { BRAND_COLORS } from "./src/lib/brand-config";
+import plugin from "tailwindcss/plugin";
 
 const config: Config = {
   content: [
@@ -45,10 +47,10 @@ const config: Config = {
           DEFAULT: "oklch(var(--ghost) / <alpha-value>)",
         },
         dinkdash: {
-          blue: '#1247b1',      // Primary Base
-          surface: '#144ec3',   // Surface Accent
-          white: '#FDFFFC',     // Text
-          green: '#47b112',     // Action Color
+          blue: BRAND_COLORS.background.hex,
+          surface: BRAND_COLORS.secondary.hex,
+          white: BRAND_COLORS.foreground.hex,
+          green: BRAND_COLORS.primary.hex,
         },
         // Legacy colors kept for compatibility during transition
         volt: "oklch(var(--primary))",
@@ -65,6 +67,24 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(function({ addBase }) {
+      const rootColors: Record<string, string> = {};
+      
+      // Automatically generate CSS variables from BRAND_COLORS
+      Object.entries(BRAND_COLORS).forEach(([name, color]) => {
+        if ('oklch' in color) {
+          rootColors[`--${name}`] = color.oklch;
+        }
+        if ('foreground' in color) {
+          rootColors[`--${name}-foreground`] = color.foreground;
+        }
+      });
+
+      addBase({
+        ':root': rootColors,
+      });
+    }),
+  ],
 };
 export default config;

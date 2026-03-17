@@ -4,40 +4,10 @@
 
 @layer base {
   :root {
-    /* Background - Primary Base (#1247b1) */
-    --background: 0.38 0.18 268;
-    /* Foreground - High-legibility White (#FDFFFC) */
-    --foreground: 0.99 0.01 130;
-    
-    /* Action Color - Action Green (#47b112) */
-    --primary: 0.66 0.20 142;
-    --primary-foreground: 0.99 0.01 130;
-    
-    /* Surface Accent - Surface (#144ec3) */
-    --secondary: 0.42 0.20 268;
-    --secondary-foreground: 0.99 0.01 130;
-    
-    /* Muted/Background variant */
-    --muted: 0.32 0.16 268;
-    --muted-foreground: 0.99 0.01 130 / 0.5;
-    
-    /* Accent */
-    --accent: 0.88 0.20 168;
-    --accent-foreground: 0.10 0.05 160;
-    
-    /* Ghost Border - A slightly lighter blue-tinted white for subtle layering */
-    --border: 0.99 0.01 264;
-    --input: 0.99 0.01 264;
-    --ring: 0.88 0.20 168;
-    
-    /* Destructive/Error - Red Accent */
-    --destructive: 0.60 0.20 25;
-    --destructive-foreground: 0.99 0.01 130;
-
-    /* Ghost - Blue-tinted white for subtle UI elements */
-    --ghost: 0.99 0.01 264;
-
-    /* Corner Radius - 16px */
+    /* 
+     * BRAND SOURCE OF TRUTH: web/src/lib/brand-config.ts
+     * Colors are now automatically injected via Tailwind plugin.
+     */
     --radius: 1rem;
   }
 }
