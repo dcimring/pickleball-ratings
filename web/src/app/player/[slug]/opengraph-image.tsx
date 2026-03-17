@@ -23,7 +23,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
       (
         <div
           style={{
-            background: BRAND_COLORS.background.hex,
+            background: BRAND_COLORS.secondary.hex,
             width: '100%',
             height: '100%',
             display: 'flex',
@@ -58,7 +58,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
           flexDirection: 'column',
           alignItems: 'flex-start',
           justifyContent: 'center',
-          backgroundColor: BRAND_COLORS.background.hex,
+          backgroundColor: BRAND_COLORS.secondary.hex,
           padding: '80px',
           fontFamily: 'sans-serif',
           position: 'relative',
