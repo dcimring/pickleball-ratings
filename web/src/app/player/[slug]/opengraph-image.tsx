@@ -106,7 +106,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
         />
 
         {/* Top Branding Section */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '40px', zIndex: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '40px' }}>
           <div 
             style={{ 
               width: '64px', 
@@ -132,7 +132,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
         </div>
         
         {/* Player Name */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0', marginBottom: '60px', zIndex: 10 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0', marginBottom: '60px' }}>
           <h1
             style={{
               fontSize: '130px',
@@ -149,7 +149,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
         </div>
 
         {/* Bottom Horizon: Stats & Branding aligned to the same baseline */}
-        <div style={{ display: 'flex', width: '100%', alignItems: 'flex-end', justifyContent: 'space-between', zIndex: 10 }}>
+        <div style={{ display: 'flex', width: '100%', alignItems: 'flex-end', justifyContent: 'space-between' }}>
           {/* Stats Section */}
           <div style={{ display: 'flex', gap: '80px' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
