@@ -28,9 +28,9 @@ export function SuggestFeature({
           <MessageSquarePlus className="w-5 h-5 text-primary" />
           <span className="text-primary font-display font-bold tracking-widest text-sm uppercase">Roadmap</span>
         </div>
-        <h1 className="text-5xl md:text-8xl font-display font-bold tracking-tighter text-foreground leading-[0.9] uppercase text-shadow-premium">
+        <h1 className="text-5xl md:text-8xl font-display font-bold tracking-tighter text-foreground leading-[0.9] uppercase">
           SUGGEST A <br />
-          <span className="text-primary">FEATURE</span>
+          FEATURE
         </h1>
         <p className="mt-6 text-muted-foreground font-sans text-lg text-balance">
           Have an idea to make DinkDash better? Let us know what tools or data you want to see next.

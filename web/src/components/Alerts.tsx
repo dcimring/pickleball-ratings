@@ -15,9 +15,9 @@ export function Alerts() {
           <MessageCircle className="w-5 h-5 text-primary" />
           <span className="text-primary font-display font-bold tracking-widest text-sm uppercase">Community</span>
         </div>
-        <h1 className="text-5xl md:text-8xl font-display font-bold tracking-tighter text-foreground leading-[0.9] uppercase text-shadow-premium">
+        <h1 className="text-5xl md:text-8xl font-display font-bold tracking-tighter text-foreground leading-[0.9] uppercase">
           COMMUNITY <br />
-          <span className="text-primary">ALERTS</span>
+          ALERTS
         </h1>
         <p className="mt-6 text-muted-foreground max-w-lg mx-auto font-sans text-lg text-balance">
           Join our WhatsApp group to get instant notifications when rankings change or new matches are logged.

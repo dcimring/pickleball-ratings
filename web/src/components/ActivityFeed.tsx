@@ -38,9 +38,9 @@ export function ActivityFeed({
             <Activity className="w-5 h-5 text-primary" />
             <span className="text-primary font-display font-bold tracking-widest text-sm uppercase">Live Feed</span>
           </div>
-          <h1 className="text-5xl md:text-8xl font-display font-bold tracking-tighter text-foreground leading-[0.9] uppercase text-shadow-premium">
+          <h1 className="text-5xl md:text-8xl font-display font-bold tracking-tighter text-foreground leading-[0.9] uppercase">
             COURT <br />
-            <span className="text-primary">ACTIVITY</span>
+            ACTIVITY
           </h1>
           <p className="mt-6 text-muted-foreground max-w-2xl font-sans text-lg text-balance">
             Track the latest moves and matches across the Cayman Islands.
