@@ -3,7 +3,7 @@
 import { useMemo, useRef } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Users, User, Zap, TrendingUp, TrendingDown, Minus, X } from 'lucide-react';
+import { Search, Users, User, Zap, TrendingUp, TrendingDown, Minus, X, Star } from 'lucide-react';
 import { Ranking } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { slugify } from '@/lib/slugify';
@@ -59,40 +59,40 @@ export function RankingTable({
   }, [data, searchQuery, sortConfig]);
 
   return (
-    <div className="pb-20 min-h-full">
+    <div className="pb-20 min-h-full bg-background">
       {/* Header Section */}
-      <header className="relative pt-24 pb-4 px-6 overflow-hidden text-left">
+      <header className="relative pt-24 pb-8 px-6 text-left">
         <div className="max-w-6xl mx-auto relative z-10">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <Zap className="w-5 h-5 text-primary fill-primary" />
-                <span className="text-primary font-display font-bold tracking-widest text-sm uppercase">Cayman Islands</span>
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-10">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <Star className="w-4 h-4 text-primary fill-primary" />
+                <span className="text-primary font-sans font-bold tracking-[0.2em] text-[10px] uppercase">Official Community Dashboard</span>
               </div>
-              <h1 className="text-5xl md:text-8xl font-display font-bold tracking-tighter text-foreground leading-[0.9]">
-                PICKLEBALL <br />
-                RANKINGS
+              <h1 className="text-6xl md:text-[7rem] font-display italic tracking-tighter text-foreground leading-[0.85]">
+                Cayman <br />
+                Rankings
               </h1>
             </div>
 
-            <div className="flex p-1 bg-secondary rounded-xl border border-border/10">
+            <div className="flex p-1.5 bg-muted rounded-2xl shadow-inner">
               <button 
                 onClick={() => onTabChange('doubles')}
                 className={cn(
-                  "flex items-center gap-2 px-6 py-3 rounded-lg font-display font-bold text-sm tracking-wider transition-all duration-300",
-                  activeTab === 'doubles' ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" : "text-muted-foreground hover:text-foreground"
+                  "flex items-center gap-2 px-8 py-4 rounded-xl font-sans font-bold text-xs tracking-widest transition-all duration-300 uppercase",
+                  activeTab === 'doubles' ? "bg-secondary text-foreground shadow-sm" : "text-foreground/40 hover:text-foreground"
                 )}
               >
-                <Users className="w-4 h-4" /> DOUBLES
+                <Users className="w-4 h-4" /> Doubles
               </button>
               <button 
                 onClick={() => onTabChange('singles')}
                 className={cn(
-                  "flex items-center gap-2 px-6 py-3 rounded-lg font-display font-bold text-sm tracking-wider transition-all duration-300",
-                  activeTab === 'singles' ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" : "text-muted-foreground hover:text-foreground"
+                  "flex items-center gap-2 px-8 py-4 rounded-xl font-sans font-bold text-xs tracking-widest transition-all duration-300 uppercase",
+                  activeTab === 'singles' ? "bg-secondary text-foreground shadow-sm" : "text-foreground/40 hover:text-foreground"
                 )}
               >
-                <User className="w-4 h-4" /> SINGLES
+                <User className="w-4 h-4" /> Singles
               </button>
             </div>
           </div>
@@ -100,15 +100,15 @@ export function RankingTable({
       </header>
 
       {/* Search & Stats - Sticky on scroll */}
-      <section ref={searchSectionRef} className="sticky top-16 md:top-20 z-40 px-6 py-4 mb-0 bg-transparent backdrop-blur-md text-left transition-all overflow-hidden">
+      <section ref={searchSectionRef} className="sticky top-16 md:top-20 z-40 px-6 py-6 bg-secondary/80 backdrop-blur-xl text-left transition-all overflow-hidden mb-8 shadow-sm">
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="relative group">
-            <div className="absolute left-4 inset-y-0 flex items-center pointer-events-none">
-              <Search className="w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            <div className="absolute left-6 inset-y-0 flex items-center pointer-events-none">
+              <Search className="w-5 h-5 text-primary/40 group-focus-within:text-primary transition-colors" />
             </div>
             <input 
               type="text"
-              placeholder="Search by player name..."
+              placeholder="Find a Player..."
               value={searchQuery}
               onKeyDown={(e) => {
                 if (e.key === 'Escape') {
@@ -116,19 +116,19 @@ export function RankingTable({
                 }
               }}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="w-full bg-secondary border border-border/10 rounded-2xl py-4 pl-12 pr-12 outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all font-sans text-base text-foreground placeholder:text-muted-foreground/50"
+              className="w-full bg-background rounded-[2rem] py-5 pl-14 pr-14 outline-none focus:ring-4 focus:ring-primary/5 transition-all font-sans text-lg text-foreground placeholder:text-foreground/20"
             />
             <AnimatePresence>
               {searchQuery && (
-                <div className="absolute right-2 inset-y-0 flex items-center">
+                <div className="absolute right-3 inset-y-0 flex items-center">
                   <motion.button
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.8 }}
                     onClick={() => onSearchChange('')}
-                    className="w-10 h-10 flex items-center justify-center hover:bg-muted rounded-full transition-colors group/clear"
+                    className="w-12 h-12 flex items-center justify-center hover:bg-muted rounded-full transition-colors group/clear"
                   >
-                    <X className="w-5 h-5 text-muted-foreground group-hover/clear:text-primary transition-colors" />
+                    <X className="w-5 h-5 text-foreground/40 group-hover/clear:text-primary transition-colors" />
                   </motion.button>
                 </div>
               )}
@@ -140,59 +140,63 @@ export function RankingTable({
       {/* Table Section */}
       <section className="px-6 text-left">
         <div className="max-w-6xl mx-auto">
-          <div className="bg-secondary/30 border border-border/10 rounded-3xl overflow-hidden backdrop-blur-sm">
-            <div className="grid grid-cols-12 gap-2 md:gap-4 px-4 md:px-8 py-6 border-b border-border/10 font-display text-[10px] font-bold tracking-[0.3em] text-muted-foreground select-none uppercase">
+          <div className="overflow-hidden">
+            <div className="grid grid-cols-12 gap-2 md:gap-4 px-8 py-8 font-sans text-[10px] font-bold tracking-[0.3em] text-foreground/30 select-none uppercase">
               <button 
                 onClick={() => onSort('rank_position')}
-                className="col-span-3 md:col-span-2 flex items-center gap-1 md:gap-2 hover:text-foreground transition-colors group"
+                className="col-span-3 md:col-span-2 flex items-center gap-2 hover:text-foreground transition-colors group"
               >
-                RANK <SortIndicator column="rank_position" />
+                Rank <SortIndicator column="rank_position" />
               </button>
               <button 
                 onClick={() => onSort('player_name')}
-                className="col-span-5 md:col-span-5 flex items-center gap-1 md:gap-2 hover:text-foreground transition-colors group"
+                className="col-span-5 md:col-span-5 flex items-center gap-2 hover:text-foreground transition-colors group"
               >
-                PLAYER <SortIndicator column="player_name" />
+                Player <SortIndicator column="player_name" />
               </button>
               <button 
                 onClick={() => onSort('rounds_played')}
                 className="hidden md:flex col-span-2 items-center justify-end gap-2 hover:text-foreground transition-colors group text-right"
               >
-                ROUNDS <SortIndicator column="rounds_played" />
+                Rounds <SortIndicator column="rounds_played" />
               </button>
               <button 
                 onClick={() => onSort('rating')}
-                className="col-span-4 md:col-span-3 flex items-center justify-end gap-1 md:gap-2 hover:text-foreground transition-colors group text-right"
+                className="col-span-4 md:col-span-3 flex items-center justify-end gap-2 hover:text-foreground transition-colors group text-right"
               >
-                RATING <SortIndicator column="rating" />
+                Rating <SortIndicator column="rating" />
               </button>
             </div>
 
-            <div className="min-h-[400px] flex flex-col">
+            <div className="min-h-[400px] flex flex-col gap-1">
               {loading ? (
-                <div className="flex-1 flex flex-col items-center justify-center py-20">
+                <div className="flex-1 flex flex-col items-center justify-center py-40">
                   <motion.div 
-                    animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
                   >
-                    <Zap className="w-12 h-12 text-primary fill-primary" />
+                    <Star className="w-12 h-12 text-primary/10 fill-primary/10" />
                   </motion.div>
-                  <p className="mt-4 font-display text-primary font-bold tracking-widest animate-pulse text-[10px]">LOADING COURT DATA...</p>
                 </div>
               ) : (
                 sortedAndFilteredData.map((player) => (
                   <motion.div
                     layout
                     key={`${activeTab}-${player.player_name}`}
-                    transition={{ 
-                      layout: { duration: 0.4, ease: "easeInOut" } 
-                    }}
-                    className="grid grid-cols-12 gap-2 md:gap-4 px-4 md:px-8 py-6 hover:bg-primary/[0.02] transition-colors items-center group border-b border-border/10 last:border-0"
+                    className={cn(
+                      "grid grid-cols-12 gap-2 md:gap-4 px-8 py-8 items-center group transition-all duration-300 relative rounded-2xl",
+                      player.rank_position % 2 === 0 ? "bg-muted" : "bg-secondary"
+                    )}
                   >
-                    <div className="col-span-3 md:col-span-2 flex items-center gap-3">
+                    {/* Wimbledon Stripe */}
+                    {player.rank_position === 1 && (
+                      <div className="absolute left-0 top-1/4 bottom-1/4 w-1 bg-tertiary rounded-r-full" />
+                    )}
+                    
+                    <div className="col-span-3 md:col-span-2 flex items-center gap-4">
                       <span className={cn(
-                        "font-display text-xl md:text-3xl font-bold tracking-tighter tabular-nums",
-                        player.rank_position === 1 ? "text-primary" : "text-muted-foreground/30"
+                        "font-display text-2xl md:text-5xl tracking-tighter tabular-nums italic",
+                        player.rank_position <= 3 ? "text-primary" : "text-foreground/10"
                       )}>
                         {player.rank_position}
                       </span>
@@ -200,28 +204,19 @@ export function RankingTable({
                     <div className="col-span-5 md:col-span-5">
                       <Link 
                         href={`/player/${slugify(player.player_name)}?tab=${activeTab}`}
-                        className="font-sans text-base md:text-lg text-foreground hover:text-primary transition-colors text-left"
+                        className="font-sans text-lg md:text-xl font-semibold text-foreground hover:text-primary transition-colors text-left tracking-tight"
                       >
                         {player.player_name}
                       </Link>
-                      <div className="flex items-center gap-2 mt-1 md:hidden">
-                        <span className="text-[10px] bg-secondary px-2 py-0.5 rounded uppercase tracking-wider text-muted-foreground">
-                          {player.rounds_played} Rounds
-                        </span>
-                      </div>
                     </div>
                     <div className="hidden md:block col-span-2 text-right">
-                      <div className="font-display font-medium text-lg text-muted-foreground group-hover:text-foreground transition-colors">
+                      <div className="font-sans font-medium text-xl text-foreground/40 group-hover:text-foreground transition-colors">
                         {player.rounds_played}
                       </div>
                     </div>
                     <div className="col-span-4 md:col-span-3 text-right">
-                      <div className="font-display font-bold text-lg md:text-2xl text-foreground tabular-nums">
+                      <div className="font-sans font-bold text-xl md:text-3xl text-foreground tabular-nums tracking-tighter">
                         {player.rating.toFixed(3)}
-                      </div>
-                      <div className="flex items-center justify-end gap-1 text-[10px] font-bold text-primary mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <TrendingUp className="w-3 h-3" />
-                        STABLE
                       </div>
                     </div>
                   </motion.div>

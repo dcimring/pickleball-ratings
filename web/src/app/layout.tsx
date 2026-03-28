@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Space_Grotesk } from "next/font/google";
+import { Inter, Newsreader } from "next/font/google";
 import "./globals.css";
 
 import { DataProvider } from "@/context/DataContext";
@@ -7,8 +7,8 @@ import { Navigation } from "@/components/Navigation";
 import { UpdatePrompt } from "@/components/UpdatePrompt";
 import { ScrollToTop } from "@/components/ScrollToTop";
 
-const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-sans" });
-const spaceGroteskDisplay = Space_Grotesk({ subsets: ["latin"], variable: "--font-display" });
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
+const newsreader = Newsreader({ subsets: ["latin"], variable: "--font-display", style: "italic" });
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://dinkdash.xyz'),
@@ -51,11 +51,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${spaceGrotesk.variable} ${spaceGroteskDisplay.variable}`}>
+    <html lang="en" className={`${inter.variable} ${newsreader.variable}`}>
       <body className="font-sans antialiased text-foreground bg-background overflow-x-hidden">
-        {/* Championship Depth Background Mesh */}
-        <div className="fixed inset-0 -z-10 bg-mesh-glow pointer-events-none" />
-
         <DataProvider>
           <main className="h-[100dvh] flex flex-col overflow-hidden relative overscroll-none">
             <Navigation />

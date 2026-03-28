@@ -14,16 +14,16 @@
 
 @layer base {
   * {
-    /* Use 8% opacity by default for the "Ghost" look */
-    @apply border-border/10;
+    /* "No-Line" Rule: Borders are 0 by default, use background shifts instead */
+    @apply border-0;
   }
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    color-scheme: dark;
+    color-scheme: light;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    @apply font-display font-bold tracking-tighter;
+    @apply font-display tracking-tighter;
   }
 
   /* Data precision: Use tabular numbers for metrics */
@@ -42,16 +42,6 @@ body {
 @layer utilities {
   .text-balance {
     text-wrap: balance;
-  }
-
-  /* Championship Depth: Max intensity tonal mesh for global visibility */
-  .bg-mesh-glow {
-    background: 
-      radial-gradient(circle at 0% 0%, oklch(0.60 0.22 268 / 0.4) 0%, transparent 70%),
-      radial-gradient(circle at 100% 0%, oklch(0.65 0.20 260 / 0.35) 0%, transparent 60%),
-      radial-gradient(circle at 100% 100%, oklch(0.50 0.25 268 / 0.5) 0%, transparent 70%),
-      radial-gradient(circle at 0% 100%, oklch(0.38 0.18 268) 0%, transparent 80%);
-    background-color: oklch(var(--background));
   }
 
   .animate-fade-in {
@@ -78,7 +68,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: oklch(var(--secondary));
+  background: oklch(var(--muted));
   border-radius: 4px;
 }
 
