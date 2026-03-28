@@ -174,12 +174,11 @@ export function ActivityFeed({
                       className="bg-secondary p-10 hover:bg-background transition-colors group relative overflow-hidden"
                     >
                       <div className="flex items-center justify-between mb-10">
-                        <h3 className="font-display italic text-4xl tracking-tighter text-foreground">
+                        <h3 className="font-sans font-bold text-3xl tracking-tight text-foreground">
                           <Link href={`/player/${slugify(item.player_name)}?tab=${activeTab}&sort=${activitySort}&from=activity`} className="hover:text-primary transition-colors">
                             {item.player_name}
                           </Link>
-                        </h3>
-                        <span className="font-sans text-[10px] font-bold text-foreground/20 uppercase tracking-[0.4em]">
+                        </h3>                        <span className="font-sans text-[10px] font-bold text-foreground/20 uppercase tracking-[0.4em]">
                           {new Date(item.date).toLocaleDateString('en-KY', { month: 'short', day: 'numeric' })}
                         </span>
                       </div>
@@ -206,7 +205,7 @@ export function ActivityFeed({
                         {/* Rounds Change */}
                         {item.roundsDiff !== 0 && (
                           <div className="space-y-4">
-                            <span className="text-[10px] font-sans font-bold text-foreground/20 tracking-[0.3em] uppercase">Session Play</span>
+                            <span className="text-[10px] font-sans font-bold text-foreground/20 tracking-[0.3em] uppercase">Rounds Played</span>
                             <div className="flex items-center gap-4">
                               <span className="text-foreground font-display italic text-3xl tracking-tighter tabular-nums">{item.current.rounds_played}</span>
                               <span className="text-[10px] font-bold px-3 py-1.5 rounded-full bg-primary/10 text-primary uppercase tracking-widest">
@@ -218,7 +217,7 @@ export function ActivityFeed({
 
                         {/* Rank Change */}
                         <div className="space-y-4">
-                          <span className="text-[10px] font-sans font-bold text-foreground/20 tracking-[0.3em] uppercase">Seed Movement</span>
+                          <span className="text-[10px] font-sans font-bold text-foreground/20 tracking-[0.3em] uppercase">Rank Movement</span>
                           <div className="flex items-center gap-4">
                             <span className="text-foreground font-display italic text-3xl tracking-tighter tabular-nums">#{item.current.rank_position}</span>
                             <span className={cn(
@@ -232,8 +231,7 @@ export function ActivityFeed({
                                'Stable'}
                             </span>
                           </div>
-                        </div>
-                      </div>
+                        </div>                      </div>
                     </motion.div>
                   ))}
                 </div>

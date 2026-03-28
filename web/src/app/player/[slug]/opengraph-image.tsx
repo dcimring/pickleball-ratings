@@ -111,7 +111,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
               boxShadow: '0 10px 30px rgba(35, 129, 69, 0.3)',
             }}
           >
-            <span style={{ color: BRAND_COLORS.foreground.hex, fontSize: '32px', fontWeight: '900' }}>D</span>
+            <span style={{ color: BRAND_COLORS.secondary.hex, fontSize: '32px', fontWeight: '900' }}>D</span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <span style={{ color: BRAND_COLORS.primary.hex, fontSize: '24px', fontWeight: '900', letterSpacing: '0.2em' }}>
