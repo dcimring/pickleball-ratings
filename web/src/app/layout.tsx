@@ -21,9 +21,9 @@ export const metadata: Metadata = {
     siteName: "DinkDash",
     images: [
       {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
+        url: "/og-image.jpg",
+        width: 2760,
+        height: 1504,
         alt: "DinkDash Pickleball Rankings",
       },
     ],
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "DinkDash | Your Pickleball Dashboard",
     description: "Real-time rank tracking and analytics for the Cayman Islands Pickleball community.",
-    images: ["/og-image.png"],
+    images: ["/og-image.jpg"],
   },
 };
 
