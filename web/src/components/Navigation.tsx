@@ -45,8 +45,8 @@ export function Navigation() {
               key={item.href}
               href={item.href}
               className={cn(
-                "text-xl font-display italic transition-colors duration-200",
-                isActive(item.href) ? "text-primary" : "text-foreground/60 hover:text-foreground"
+                "text-xs font-sans font-bold transition-colors duration-200 uppercase tracking-[0.2em]",
+                isActive(item.href) ? "text-primary" : "text-foreground/40 hover:text-primary"
               )}
             >
               {item.label}
