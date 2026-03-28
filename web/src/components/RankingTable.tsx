@@ -60,27 +60,36 @@ export function RankingTable({
 
   return (
     <div className="pb-20 min-h-full bg-background">
-      {/* Header Section */}
-      <header className="relative pt-24 pb-8 px-6 text-left">
+      {/* Center Court Hero Header */}
+      <header className="relative pt-24 pb-16 md:pt-32 md:pb-20 px-6 text-left bg-primary overflow-hidden">
+        {/* Pressed Grass Texture Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/10 to-transparent pointer-events-none" />
+        
+        {/* Kinetic Cut Accent */}
+        <div 
+          className="absolute bottom-0 left-0 w-full h-12 bg-background" 
+          style={{ clipPath: 'polygon(0 100%, 100% 100%, 100% 0)' }}
+        />
+
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-10">
             <div className="space-y-4">
               <div className="flex items-center gap-2">
-                <Star className="w-4 h-4 text-primary fill-primary" />
-                <span className="text-primary font-sans font-bold tracking-[0.2em] text-[10px] uppercase">Official Community Dashboard</span>
+                <Star className="w-4 h-4 text-secondary fill-secondary" />
+                <span className="text-secondary font-sans font-bold tracking-[0.2em] text-[10px] uppercase opacity-60">Official Community Dashboard</span>
               </div>
-              <h1 className="text-6xl md:text-[7rem] font-display italic tracking-tighter text-foreground leading-[0.85]">
+              <h1 className="text-6xl md:text-[7rem] font-display italic tracking-tighter text-secondary leading-[0.85]">
                 Cayman <br />
                 Rankings
               </h1>
             </div>
 
-            <div className="flex p-1.5 bg-muted rounded-2xl shadow-inner">
+            <div className="flex p-1 bg-white/10 backdrop-blur-md rounded-2xl h-fit">
               <button 
                 onClick={() => onTabChange('doubles')}
                 className={cn(
-                  "flex items-center gap-2 px-8 py-4 rounded-xl font-sans font-bold text-xs tracking-widest transition-all duration-300 uppercase",
-                  activeTab === 'doubles' ? "bg-secondary text-foreground shadow-sm" : "text-foreground/40 hover:text-foreground"
+                  "flex items-center gap-2 px-6 py-3 rounded-xl font-sans font-bold text-xs tracking-widest transition-all duration-300 uppercase",
+                  activeTab === 'doubles' ? "bg-secondary text-primary shadow-xl" : "text-secondary/60 hover:text-secondary"
                 )}
               >
                 <Users className="w-4 h-4" /> Doubles
@@ -88,8 +97,8 @@ export function RankingTable({
               <button 
                 onClick={() => onTabChange('singles')}
                 className={cn(
-                  "flex items-center gap-2 px-8 py-4 rounded-xl font-sans font-bold text-xs tracking-widest transition-all duration-300 uppercase",
-                  activeTab === 'singles' ? "bg-secondary text-foreground shadow-sm" : "text-foreground/40 hover:text-foreground"
+                  "flex items-center gap-2 px-8 py-3 rounded-xl font-sans font-bold text-xs tracking-widest transition-all duration-300 uppercase",
+                  activeTab === 'singles' ? "bg-secondary text-primary shadow-xl" : "text-secondary/60 hover:text-secondary"
                 )}
               >
                 <User className="w-4 h-4" /> Singles
@@ -99,16 +108,16 @@ export function RankingTable({
         </div>
       </header>
 
-      {/* Search & Stats - Sticky on scroll */}
-      <section ref={searchSectionRef} className="sticky top-16 md:top-20 z-40 px-6 py-6 bg-secondary/80 backdrop-blur-xl text-left transition-all overflow-hidden mb-8 shadow-sm">
+      {/* Floating Search Bridge */}
+      <section ref={searchSectionRef} className="sticky top-16 md:top-20 z-40 px-6 py-0 -mt-6 md:-mt-8 text-left transition-all overflow-visible mb-6">
         <div className="max-w-6xl mx-auto relative z-10">
-          <div className="relative group">
-            <div className="absolute left-6 inset-y-0 flex items-center pointer-events-none">
-              <Search className="w-5 h-5 text-primary/40 group-focus-within:text-primary transition-colors" />
+          <div className="relative group shadow-2xl shadow-primary/20 rounded-[2.5rem]">
+            <div className="absolute left-8 inset-y-0 flex items-center pointer-events-none">
+              <Search className="w-5 h-5 text-primary group-focus-within:scale-110 transition-transform" />
             </div>
             <input 
               type="text"
-              placeholder="Find a Player..."
+              placeholder="Find a Player or Tournament..."
               value={searchQuery}
               onKeyDown={(e) => {
                 if (e.key === 'Escape') {
@@ -116,7 +125,7 @@ export function RankingTable({
                 }
               }}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="w-full bg-background rounded-[2rem] py-5 pl-14 pr-14 outline-none focus:ring-4 focus:ring-primary/5 transition-all font-sans text-lg text-foreground placeholder:text-foreground/20"
+              className="w-full bg-secondary rounded-[2.5rem] py-6 pl-16 pr-14 outline-none focus:ring-8 focus:ring-primary/5 transition-all font-sans text-lg text-foreground placeholder:text-foreground/20"
             />
             <AnimatePresence>
               {searchQuery && (
