@@ -20,6 +20,7 @@ A prestigious, editorial data platform for Cayman Islands pickleball players. Th
 ## 📐 Architecture & Standards
 
 ### 1. Design System (The Grand Slam Editorial)
+Detailed specification available in `web/DESIGN.md`.
 *   **Colors:** Rooted in tradition with digital depth.
     *   **Primary (Court Green):** `#004b24`
     *   **Secondary (Wimbledon White):** `#ffffff`
