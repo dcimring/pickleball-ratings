@@ -1,9 +1,9 @@
 "use client";
 
-import { useMemo, useRef } from 'react';
+import { useMemo, useRef, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Users, User, Zap, TrendingUp, TrendingDown, Minus, X, Star } from 'lucide-react';
+import { Search, Users, User, Zap, TrendingUp, TrendingDown, Minus, X, Star, ChevronDown } from 'lucide-react';
 import { Ranking } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { slugify } from '@/lib/slugify';
@@ -31,6 +31,12 @@ export function RankingTable({
 }: RankingTableProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const searchSectionRef = useRef<HTMLElement>(null);
+  const [visibleCount, setVisibleCount] = useState(50);
+
+  // Reset pagination when filter/sort state changes
+  useEffect(() => {
+    setVisibleCount(50);
+  }, [activeTab, searchQuery, sortConfig]);
 
   const SortIndicator = ({ column }: { column: keyof Ranking }) => {
     if (sortConfig.key !== column) return <Minus className="w-3 h-3 opacity-20" />;
@@ -57,6 +63,12 @@ export function RankingTable({
 
     return filtered;
   }, [data, searchQuery, sortConfig]);
+
+  const visibleData = useMemo(() => {
+    return sortedAndFilteredData.slice(0, visibleCount);
+  }, [sortedAndFilteredData, visibleCount]);
+
+  const hasMore = visibleCount < sortedAndFilteredData.length;
 
   return (
     <div className="pb-20 min-h-full bg-background">
@@ -188,48 +200,70 @@ export function RankingTable({
                   </motion.div>
                 </div>
               ) : (
-                sortedAndFilteredData.map((player) => (
-                  <motion.div
-                    layout
-                    key={`${activeTab}-${player.player_name}`}
-                    className={cn(
-                      "grid grid-cols-12 gap-2 md:gap-4 px-8 py-8 items-center group transition-all duration-300 relative rounded-2xl",
-                      player.rank_position % 2 === 0 ? "bg-muted" : "bg-secondary"
-                    )}
-                  >
-                    {/* Wimbledon Stripe */}
-                    {player.rank_position === 1 && (
-                      <div className="absolute left-0 top-1/4 bottom-1/4 w-1 bg-tertiary rounded-r-full" />
-                    )}
-                    
-                    <div className="col-span-3 md:col-span-2 flex items-center gap-4">
-                      <span className={cn(
-                        "font-display text-2xl md:text-5xl tracking-tighter tabular-nums italic",
-                        player.rank_position <= 3 ? "text-primary" : "text-foreground/10"
-                      )}>
-                        {player.rank_position}
-                      </span>
-                    </div>
-                    <div className="col-span-5 md:col-span-5">
-                      <Link 
-                        href={`/player/${slugify(player.player_name)}?tab=${activeTab}`}
-                        className="font-sans text-lg md:text-xl font-semibold text-foreground hover:text-primary transition-colors text-left tracking-tight"
+                <>
+                  {visibleData.map((player) => (
+                    <motion.div
+                      layout
+                      key={`${activeTab}-${player.player_name}`}
+                      className={cn(
+                        "grid grid-cols-12 gap-2 md:gap-4 px-8 py-8 items-center group transition-all duration-300 relative rounded-2xl",
+                        player.rank_position % 2 === 0 ? "bg-muted" : "bg-secondary"
+                      )}
+                    >
+                      {/* Wimbledon Stripe */}
+                      {player.rank_position === 1 && (
+                        <div className="absolute left-0 top-1/4 bottom-1/4 w-1 bg-tertiary rounded-r-full" />
+                      )}
+                      
+                      <div className="col-span-3 md:col-span-2 flex items-center gap-4">
+                        <span className={cn(
+                          "font-display text-2xl md:text-5xl tracking-tighter tabular-nums italic",
+                          player.rank_position <= 3 ? "text-primary" : "text-foreground/10"
+                        )}>
+                          {player.rank_position}
+                        </span>
+                      </div>
+                      <div className="col-span-5 md:col-span-5">
+                        <Link 
+                          href={`/player/${slugify(player.player_name)}?tab=${activeTab}`}
+                          className="font-sans text-lg md:text-xl font-semibold text-foreground hover:text-primary transition-colors text-left tracking-tight"
+                        >
+                          {player.player_name}
+                        </Link>
+                      </div>
+                      <div className="hidden md:block col-span-2 text-right">
+                        <div className="font-sans font-medium text-xl text-foreground/40 group-hover:text-foreground transition-colors">
+                          {player.rounds_played}
+                        </div>
+                      </div>
+                      <div className="col-span-4 md:col-span-3 text-right">
+                        <div className="font-sans font-bold text-xl md:text-3xl text-foreground tabular-nums tracking-tighter">
+                          {player.rating.toFixed(3)}
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+
+                  {/* Show More Button */}
+                  {hasMore && (
+                    <div className="py-12 flex justify-center">
+                      <button
+                        onClick={() => setVisibleCount(prev => prev + 50)}
+                        className="group flex flex-col items-center gap-4 transition-all"
                       >
-                        {player.player_name}
-                      </Link>
+                        <div className="px-10 py-5 bg-primary text-secondary font-sans font-bold text-xs tracking-[0.2em] uppercase rounded-2xl shadow-xl shadow-primary/10 group-hover:opacity-95 active:scale-95 transition-all">
+                          Show More Results
+                        </div>
+                        <div className="flex flex-col items-center gap-1 opacity-20 group-hover:opacity-40 transition-opacity">
+                          <ChevronDown className="w-5 h-5 animate-bounce" />
+                          <span className="text-[10px] font-sans font-bold tracking-widest uppercase">
+                            {sortedAndFilteredData.length - visibleCount} more athletes remaining
+                          </span>
+                        </div>
+                      </button>
                     </div>
-                    <div className="hidden md:block col-span-2 text-right">
-                      <div className="font-sans font-medium text-xl text-foreground/40 group-hover:text-foreground transition-colors">
-                        {player.rounds_played}
-                      </div>
-                    </div>
-                    <div className="col-span-4 md:col-span-3 text-right">
-                      <div className="font-sans font-bold text-xl md:text-3xl text-foreground tabular-nums tracking-tighter">
-                        {player.rating.toFixed(3)}
-                      </div>
-                    </div>
-                  </motion.div>
-                ))
+                  )}
+                </>
               )}
             </div>
 
