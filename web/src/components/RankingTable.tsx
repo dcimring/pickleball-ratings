@@ -203,7 +203,10 @@ export function RankingTable({
                     )}
                     
                     <div className="col-span-3 md:col-span-2 flex items-center gap-4">
-                      <span className="font-display text-2xl md:text-5xl tracking-tighter tabular-nums italic text-primary">
+                      <span className={cn(
+                        "font-display text-2xl md:text-5xl tracking-tighter tabular-nums italic",
+                        player.rank_position <= 3 ? "text-primary" : "text-foreground/10"
+                      )}>
                         {player.rank_position}
                       </span>
                     </div>
