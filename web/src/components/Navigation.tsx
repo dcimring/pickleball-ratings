@@ -39,14 +39,13 @@ export function Navigation() {
           DinkDash<span className="text-primary italic">.xyz</span>
         </Link>
 
-        {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-10">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               className={cn(
-                "text-sm font-medium transition-colors duration-200 uppercase tracking-widest",
+                "text-xl font-display italic transition-colors duration-200",
                 isActive(item.href) ? "text-primary" : "text-foreground/60 hover:text-foreground"
               )}
             >
