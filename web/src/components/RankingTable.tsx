@@ -117,7 +117,7 @@ export function RankingTable({
             </div>
             <input 
               type="text"
-              placeholder="Find a Player or Tournament..."
+              placeholder="Search by player name"
               value={searchQuery}
               onKeyDown={(e) => {
                 if (e.key === 'Escape') {
