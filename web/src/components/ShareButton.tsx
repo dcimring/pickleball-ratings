@@ -66,18 +66,18 @@ export function ShareButton({ name }: ShareButtonProps) {
   return (
     <button
       onClick={handleShare}
-      className="group flex items-center gap-2 py-2 px-0 border-b border-border/10 hover:border-primary transition-all duration-300"
+      className="group flex items-center gap-2 py-2 px-0 border-b border-secondary/10 hover:border-secondary transition-all duration-300"
     >
       <div className="relative">
         {status === 'copied' ? (
-          <Check className="w-3.5 h-3.5 text-primary animate-in zoom-in duration-300" />
+          <Check className="w-3.5 h-3.5 text-secondary animate-in zoom-in duration-300" />
         ) : (
-          <Share2 className="w-3.5 h-3.5 text-muted-foreground/40 group-hover:text-primary transition-colors" />
+          <Share2 className="w-3.5 h-3.5 text-secondary/40 group-hover:text-secondary transition-colors" />
         )}
       </div>
       <span className={cn(
-        "font-display text-[10px] font-bold tracking-[0.2em] uppercase transition-colors",
-        status === 'copied' ? "text-primary" : "text-muted-foreground/60 group-hover:text-foreground"
+        "font-sans text-[10px] font-bold tracking-[0.2em] uppercase transition-colors",
+        status === 'copied' ? "text-secondary" : "text-secondary/60 group-hover:text-secondary"
       )}>
         {status === 'copied' ? 'Link Copied' : 'Share Profile'}
       </span>

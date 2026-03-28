@@ -36,56 +36,67 @@ export function PlayerProfile({
   }, []);
 
   return (
-    <div className="min-h-full bg-background relative overflow-hidden">
-      {/* Editorial Background Accent */}
-      <div className="absolute top-0 right-0 w-1/3 h-[600px] bg-primary/5 -skew-x-12 translate-x-1/4 -z-10" />
-      
-      <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-20 text-left">
-        <Link 
-          href={backUrl}
-          className="flex items-center gap-2 text-foreground/30 hover:text-primary transition-colors mb-12 group w-fit"
-        >
-          <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-          <span className="font-sans text-[10px] font-bold tracking-[0.2em] uppercase">{backLabel}</span>
-        </Link>
+    <div className="min-h-full bg-background relative overflow-hidden pb-20">
+      {/* Center Court Hero Header */}
+      <header className="relative pt-24 pb-16 md:pt-32 md:pb-20 px-6 text-left bg-primary overflow-hidden mb-12">
+        {/* Pressed Grass Texture Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/10 to-transparent pointer-events-none" />
+        
+        {/* Kinetic Cut Accent */}
+        <div 
+          className="absolute bottom-0 left-0 w-full h-12 bg-background" 
+          style={{ clipPath: 'polygon(0 100%, 100% 100%, 100% 0)' }}
+        />
 
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-12 mb-16">
+        <div className="max-w-6xl mx-auto relative z-10">
+          <Link 
+            href={backUrl}
+            className="flex items-center gap-2 text-secondary/40 hover:text-secondary transition-colors mb-10 group w-fit"
+          >
+            <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+            <span className="font-sans text-[10px] font-bold tracking-[0.2em] uppercase">{backLabel}</span>
+          </Link>
+
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-10">
             <div className="space-y-6">
               <div className="flex items-center gap-2">
-                <Star className="w-4 h-4 text-primary fill-primary" />
-                <span className="text-primary font-sans font-bold tracking-[0.2em] text-[10px] uppercase">Athlete Profile</span>
+                <Star className="w-4 h-4 text-secondary fill-secondary" />
+                <span className="text-secondary font-sans font-bold tracking-[0.2em] text-[10px] uppercase opacity-60">Athlete Profile</span>
               </div>
               <div className="flex flex-col items-start gap-6">
-                <h1 className="text-6xl md:text-[8rem] font-display italic tracking-tighter text-foreground leading-[0.85]">
+                <h1 className="text-6xl md:text-[8rem] font-display italic tracking-tighter text-secondary leading-[0.85]">
                   {playerName}
                 </h1>
                 <ShareButton name={playerName} />
               </div>
             </div>
 
-          <div className="flex p-1.5 bg-muted rounded-2xl shadow-inner h-fit">
-            <button 
-              onClick={() => onTabChange('doubles')}
-              className={cn(
-                "flex items-center gap-2 px-8 py-4 rounded-xl font-sans font-bold text-xs tracking-widest transition-all duration-300 uppercase",
-                activeTab === 'doubles' ? "bg-secondary text-foreground shadow-sm" : "text-foreground/40 hover:text-foreground"
-              )}
-            >
-              <Users className="w-4 h-4" /> Doubles
-            </button>
-            <button 
-              onClick={() => onTabChange('singles')}
-              className={cn(
-                "flex items-center gap-2 px-8 py-4 rounded-xl font-sans font-bold text-xs tracking-widest transition-all duration-300 uppercase",
-                activeTab === 'singles' ? "bg-secondary text-foreground shadow-sm" : "text-foreground/40 hover:text-foreground"
-              )}
-            >
-              <User className="w-4 h-4" /> Singles
-            </button>
+            <div className="flex p-1 bg-white/10 backdrop-blur-md rounded-2xl h-fit">
+              <button 
+                onClick={() => onTabChange('doubles')}
+                className={cn(
+                  "flex items-center gap-2 px-8 py-3 rounded-xl font-sans font-bold text-xs tracking-widest transition-all duration-300 uppercase",
+                  activeTab === 'doubles' ? "bg-secondary text-primary shadow-xl" : "text-secondary/60 hover:text-secondary"
+                )}
+              >
+                <Users className="w-4 h-4" /> Doubles
+              </button>
+              <button 
+                onClick={() => onTabChange('singles')}
+                className={cn(
+                  "flex items-center gap-2 px-8 py-3 rounded-xl font-sans font-bold text-xs tracking-widest transition-all duration-300 uppercase",
+                  activeTab === 'singles' ? "bg-secondary text-primary shadow-xl" : "text-secondary/60 hover:text-secondary"
+                )}
+              >
+                <User className="w-4 h-4" /> Singles
+              </button>
+            </div>
           </div>
         </div>
+      </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-1 mb-20 bg-muted p-1 rounded-3xl overflow-hidden">
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-1 mb-20 bg-muted p-1 rounded-[2.5rem] overflow-hidden">
           {loading ? (
             <>
               {[1, 2, 3].map((i) => (
