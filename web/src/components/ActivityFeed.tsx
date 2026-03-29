@@ -245,11 +245,10 @@ export function ActivityFeed({
 
                         {/* Asymmetric Date: Absolute positioned on desktop */}
                         <div className="mt-8 md:mt-0 md:absolute md:bottom-10 md:right-10">
-                          <span className="font-sans text-[9px] font-bold text-foreground/10 group-hover:text-foreground/30 transition-colors uppercase tracking-[0.4em]">
+                          <span className="font-sans text-[9px] font-bold text-foreground/40 group-hover:text-foreground/60 transition-colors uppercase tracking-[0.4em]">
                             {new Date(item.date).toLocaleDateString('en-KY', { month: 'short', day: 'numeric', year: 'numeric' })}
                           </span>
-                        </div>
-                      </div>
+                        </div>                      </div>
                     ))}
                   </div>
                 </div>
