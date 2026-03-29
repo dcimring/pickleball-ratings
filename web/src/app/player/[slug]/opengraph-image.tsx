@@ -23,13 +23,13 @@ export default async function Image({ params }: { params: { slug: string } }) {
       (
         <div
           style={{
-            background: BRAND_COLORS.secondary.hex,
+            background: BRAND_COLORS.primary.hex,
             width: '100%',
             height: '100%',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: BRAND_COLORS.primary.hex,
+            color: BRAND_COLORS.secondary.hex,
             fontFamily: 'sans-serif',
           }}
         >
@@ -58,14 +58,14 @@ export default async function Image({ params }: { params: { slug: string } }) {
           flexDirection: 'column',
           alignItems: 'flex-start',
           justifyContent: 'center',
-          backgroundColor: BRAND_COLORS.secondary.hex,
+          backgroundColor: BRAND_COLORS.primary.hex,
           padding: '80px',
           fontFamily: 'sans-serif',
           position: 'relative',
           overflow: 'hidden',
         }}
       >
-        {/* Atmosphere: Stadium Beam Gradients */}
+        {/* Atmosphere: Subtle Light Beams */}
         <div 
           style={{
             position: 'absolute',
@@ -73,7 +73,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
             right: '-10%',
             width: '800px',
             height: '800px',
-            background: `radial-gradient(circle, ${BRAND_COLORS.primary.hex}15 0%, transparent 70%)`,
+            background: `radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%)`,
           }}
         />
         <div 
@@ -83,7 +83,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
             left: '-10%',
             width: '600px',
             height: '600px',
-            background: `radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%)`,
+            background: `radial-gradient(circle, rgba(204,255,0,0.05) 0%, transparent 70%)`,
           }}
         />
 
@@ -92,7 +92,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
           style={{
             position: 'absolute',
             inset: '40px',
-            border: `1px solid ${BRAND_COLORS.border.hex}`,
+            border: `1px solid rgba(255,255,255,0.1)`,
             borderRadius: '32px',
           }}
         />
@@ -104,20 +104,20 @@ export default async function Image({ params }: { params: { slug: string } }) {
               width: '64px', 
               height: '64px', 
               borderRadius: '16px', 
-              backgroundColor: BRAND_COLORS.primary.hex, 
+              backgroundColor: BRAND_COLORS.secondary.hex, 
               display: 'flex', 
               alignItems: 'center', 
               justifyContent: 'center',
-              boxShadow: '0 10px 30px rgba(35, 129, 69, 0.3)',
+              boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)',
             }}
           >
-            <span style={{ color: BRAND_COLORS.secondary.hex, fontSize: '32px', fontWeight: '400' }}>D</span>
+            <span style={{ color: BRAND_COLORS.primary.hex, fontSize: '32px', fontWeight: '400' }}>D</span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ color: BRAND_COLORS.primary.hex, fontSize: '24px', fontWeight: '400', letterSpacing: '0.2em' }}>
+            <span style={{ color: BRAND_COLORS.secondary.hex, fontSize: '24px', fontWeight: '400', letterSpacing: '0.2em' }}>
               PLAYER PROFILE
             </span>
-            <span style={{ color: BRAND_COLORS.foreground.hex, opacity: 0.5, fontSize: '16px', fontWeight: '700', letterSpacing: '0.1em' }}>
+            <span style={{ color: BRAND_COLORS.secondary.hex, opacity: 0.5, fontSize: '16px', fontWeight: '700', letterSpacing: '0.1em' }}>
               CAYMAN ISLANDS PICKLEBALL
             </span>
           </div>
@@ -129,7 +129,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
             style={{
               fontSize: '130px',
               fontWeight: '900',
-              color: BRAND_COLORS.foreground.hex,
+              color: BRAND_COLORS.secondary.hex,
               margin: '0',
               textTransform: 'uppercase',
               letterSpacing: '-0.05em',
@@ -145,10 +145,10 @@ export default async function Image({ params }: { params: { slug: string } }) {
           {/* Stats Section */}
           <div style={{ display: 'flex', gap: '80px' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <span style={{ color: BRAND_COLORS.foreground.hex, opacity: 0.5, fontSize: '22px', fontWeight: '700', letterSpacing: '0.3em', textTransform: 'uppercase' }}>
+              <span style={{ color: BRAND_COLORS.secondary.hex, opacity: 0.5, fontSize: '22px', fontWeight: '700', letterSpacing: '0.3em', textTransform: 'uppercase' }}>
                 Rating
               </span>
-              <span style={{ color: BRAND_COLORS.primary.hex, fontSize: '100px', fontWeight: '900', lineHeight: '1', fontVariantNumeric: 'tabular-nums' }}>
+              <span style={{ color: BRAND_COLORS.tertiary.hex, fontSize: '100px', fontWeight: '900', lineHeight: '1', fontVariantNumeric: 'tabular-nums' }}>
                 {doublesRating}
               </span>
             </div>
@@ -157,16 +157,16 @@ export default async function Image({ params }: { params: { slug: string } }) {
               style={{ 
                 width: '1px', 
                 height: '110px', 
-                backgroundColor: BRAND_COLORS.border.hex, 
+                backgroundColor: 'rgba(255,255,255,0.1)', 
                 marginTop: '25px' 
               }} 
             />
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <span style={{ color: BRAND_COLORS.foreground.hex, opacity: 0.5, fontSize: '22px', fontWeight: '700', letterSpacing: '0.3em', textTransform: 'uppercase' }}>
+              <span style={{ color: BRAND_COLORS.secondary.hex, opacity: 0.5, fontSize: '22px', fontWeight: '700', letterSpacing: '0.3em', textTransform: 'uppercase' }}>
                 Official Rank
               </span>
-              <span style={{ color: BRAND_COLORS.foreground.hex, fontSize: '100px', fontWeight: '900', lineHeight: '1', fontVariantNumeric: 'tabular-nums' }}>
+              <span style={{ color: BRAND_COLORS.secondary.hex, fontSize: '100px', fontWeight: '900', lineHeight: '1', fontVariantNumeric: 'tabular-nums' }}>
                 #{rank}
               </span>
             </div>
@@ -174,8 +174,8 @@ export default async function Image({ params }: { params: { slug: string } }) {
 
           {/* Footer Branding */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px', paddingBottom: '5px' }}>
-            <span style={{ color: BRAND_COLORS.foreground.hex, fontSize: '38px', fontWeight: '400', letterSpacing: '-0.02em' }}>dinkdash</span>
-            <span style={{ color: BRAND_COLORS.primary.hex, fontSize: '38px', fontWeight: '400' }}>.xyz</span>
+            <span style={{ color: BRAND_COLORS.secondary.hex, fontSize: '38px', fontWeight: '400', letterSpacing: '-0.02em' }}>dinkdash</span>
+            <span style={{ color: BRAND_COLORS.tertiary.hex, fontSize: '38px', fontWeight: '400' }}>.xyz</span>
           </div>
         </div>
       </div>
