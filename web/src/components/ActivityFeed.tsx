@@ -93,7 +93,7 @@ export function ActivityFeed({
             <p className="text-xs md:text-sm font-sans font-bold tracking-tight text-foreground/40 uppercase">
               <span className="text-foreground">{pulseStats.activeCount} Athletes</span> active this session
               <span className="mx-4 text-foreground/10">|</span>
-              Leader: <Link href={`/player/${slugify(pulseStats.topGainerName)}?tab=${activeTab}&sort=${activitySort}&from=activity`} className="text-foreground hover:text-primary transition-colors underline decoration-primary/20 underline-offset-4 font-black">{pulseStats.topGainerName}</Link> 
+              Biggest Gainer: <Link href={`/player/${slugify(pulseStats.topGainerName)}?tab=${activeTab}&sort=${activitySort}&from=activity`} className="text-foreground hover:text-primary transition-colors underline decoration-primary/20 underline-offset-4 font-black">{pulseStats.topGainerName}</Link> 
               <span className="ml-3 text-primary">+{pulseStats.topGainerValue.toFixed(3)}</span>
             </p>
           </div>
@@ -120,7 +120,7 @@ export function ActivityFeed({
                   activitySort === 'rating' ? "bg-primary text-secondary" : "bg-muted text-foreground/40 hover:text-foreground"
                 )}
               >
-                Power Movers
+                Biggest Movers
               </button>
             </div>
           </div>
