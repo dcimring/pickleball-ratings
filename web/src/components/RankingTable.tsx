@@ -85,9 +85,9 @@ export function RankingTable({
             className="flex flex-col md:flex-row md:items-end justify-between gap-10"
           >
             <div className="space-y-4">
-              <div className="flex items-center gap-2 bg-tertiary px-3 py-1.5 rounded-full w-fit shadow-2xl shadow-black/20 border border-white/10 mb-6">
-                <Star className="w-3.5 h-3.5 text-tertiary-foreground fill-tertiary-foreground" />
-                <span className="text-tertiary-foreground font-sans font-bold tracking-[0.2em] text-[9px] uppercase">Cayman Islands</span>
+              <div className="flex items-center gap-2 mb-6">
+                <Star className="w-3.5 h-3.5 text-tertiary fill-tertiary" />
+                <span className="text-tertiary font-sans font-bold tracking-[0.3em] text-xs uppercase">Cayman Islands</span>
               </div>
               <h1 className="text-6xl md:text-[7rem] font-display italic tracking-[-0.06em] text-secondary leading-[0.8] drop-shadow-sm">
                 Pickleball <br />

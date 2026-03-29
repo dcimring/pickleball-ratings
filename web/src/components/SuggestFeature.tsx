@@ -37,9 +37,9 @@ export function SuggestFeature({
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="space-y-4"
           >
-            <div className="flex items-center justify-center gap-2 bg-tertiary px-3 py-1.5 rounded-full w-fit mx-auto shadow-2xl shadow-black/20 border border-white/10 mb-6">
-              <Star className="w-3.5 h-3.5 text-tertiary-foreground fill-tertiary-foreground" />
-              <span className="text-tertiary-foreground font-sans font-bold tracking-[0.3em] text-[9px] uppercase">Community Roadmap</span>
+            <div className="flex items-center justify-center gap-2 mb-6">
+              <Star className="w-3.5 h-3.5 text-tertiary fill-tertiary" />
+              <span className="text-tertiary font-sans font-bold tracking-[0.3em] text-xs uppercase">Community Roadmap</span>
             </div>
             <h1 className="text-6xl md:text-[7rem] font-display italic tracking-[-0.06em] text-secondary leading-[0.85] drop-shadow-sm">
               Suggest a <br />
