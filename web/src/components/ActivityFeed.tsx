@@ -33,9 +33,9 @@ export function ActivityFeed({
   return (
     <div className="max-w-full mx-auto pb-20 text-left min-h-full bg-background">
       {/* Center Court Hero Header */}
-      <header className="relative pt-24 pb-16 md:pt-32 md:pb-20 px-6 text-left bg-primary overflow-hidden mb-12">
-        {/* Pressed Grass Texture Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/10 to-transparent pointer-events-none" />
+      <header className="relative pt-24 pb-16 md:pt-32 md:pb-20 px-6 text-left bg-pressed-grass overflow-hidden mb-12">
+        {/* Editorial Pattern Overlay */}
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
         
         {/* Kinetic Cut Accent */}
         <div 
@@ -44,24 +44,29 @@ export function ActivityFeed({
         />
 
         <div className="max-w-6xl mx-auto relative z-10">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-10">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-col md:flex-row md:items-end justify-between gap-10"
+          >
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                 <Star className="w-4 h-4 text-secondary fill-secondary" />
                 <span className="text-secondary font-sans font-bold tracking-[0.2em] text-[10px] uppercase opacity-60">Live Tournament Feed</span>
               </div>
-              <h1 className="text-6xl md:text-[7rem] font-display italic tracking-tighter text-secondary leading-[0.85]">
+              <h1 className="text-6xl md:text-[7rem] font-display italic tracking-[-0.06em] text-secondary leading-[0.85] drop-shadow-sm">
                 Court <br />
                 Activity
               </h1>
             </div>
 
-            <div className="flex p-1 bg-white/10 backdrop-blur-md rounded-2xl h-fit">
+            <div className="flex p-1 bg-white/5 backdrop-blur-xl rounded-2xl h-fit border border-white/10 shadow-2xl">
               <button 
                 onClick={() => onTabChange('doubles')}
                 className={cn(
-                  "flex items-center gap-2 px-8 py-3 rounded-xl font-sans font-bold text-xs tracking-widest transition-all duration-300 uppercase",
-                  activeTab === 'doubles' ? "bg-secondary text-primary shadow-xl" : "text-secondary/60 hover:text-secondary"
+                  "flex items-center gap-2 px-8 py-3 rounded-xl font-sans font-bold text-xs tracking-widest transition-all duration-500 uppercase",
+                  activeTab === 'doubles' ? "bg-secondary text-primary shadow-2xl scale-[1.02]" : "text-secondary/60 hover:text-secondary hover:bg-white/5"
                 )}
               >
                 <Users className="w-4 h-4" /> Doubles
@@ -69,14 +74,14 @@ export function ActivityFeed({
               <button 
                 onClick={() => onTabChange('singles')}
                 className={cn(
-                  "flex items-center gap-2 px-8 py-3 rounded-xl font-sans font-bold text-xs tracking-widest transition-all duration-300 uppercase",
-                  activeTab === 'singles' ? "bg-secondary text-primary shadow-xl" : "text-secondary/60 hover:text-secondary"
+                  "flex items-center gap-2 px-8 py-3 rounded-xl font-sans font-bold text-xs tracking-widest transition-all duration-500 uppercase",
+                  activeTab === 'singles' ? "bg-secondary text-primary shadow-2xl scale-[1.02]" : "text-secondary/60 hover:text-secondary hover:bg-white/5"
                 )}
               >
                 <User className="w-4 h-4" /> Singles
               </button>
             </div>
-          </div>
+          </motion.div>
         </div>
       </header>
 

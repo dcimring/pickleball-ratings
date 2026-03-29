@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Users, User, Zap, ArrowUpRight, TrendingUp, Activity, History, ArrowLeft, Star } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Ranking } from '@/lib/types';
@@ -38,9 +39,9 @@ export function PlayerProfile({
   return (
     <div className="min-h-full bg-background relative overflow-hidden pb-20">
       {/* Center Court Hero Header */}
-      <header className="relative pt-24 pb-16 md:pt-32 md:pb-20 px-6 text-left bg-primary overflow-hidden mb-12">
-        {/* Pressed Grass Texture Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/10 to-transparent pointer-events-none" />
+      <header className="relative pt-24 pb-16 md:pt-32 md:pb-20 px-6 text-left bg-pressed-grass overflow-hidden mb-12">
+        {/* Editorial Pattern Overlay */}
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
         
         {/* Kinetic Cut Accent */}
         <div 
@@ -49,49 +50,55 @@ export function PlayerProfile({
         />
 
         <div className="max-w-6xl mx-auto relative z-10">
-          <Link 
-            href={backUrl}
-            className="flex items-center gap-2 text-secondary/40 hover:text-secondary transition-colors mb-10 group w-fit"
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
-            <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-            <span className="font-sans text-[10px] font-bold tracking-[0.2em] uppercase">{backLabel}</span>
-          </Link>
+            <Link 
+              href={backUrl}
+              className="flex items-center gap-2 text-secondary/40 hover:text-secondary transition-colors mb-10 group w-fit"
+            >
+              <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+              <span className="font-sans text-[10px] font-bold tracking-[0.2em] uppercase">{backLabel}</span>
+            </Link>
 
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-10">
-            <div className="space-y-6">
-              <div className="flex items-center gap-2">
-                <Star className="w-4 h-4 text-secondary fill-secondary" />
-                <span className="text-secondary font-sans font-bold tracking-[0.2em] text-[10px] uppercase opacity-60">Athlete Profile</span>
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-10">
+              <div className="space-y-6">
+                <div className="flex items-center gap-2">
+                  <Star className="w-4 h-4 text-secondary fill-secondary" />
+                  <span className="text-secondary font-sans font-bold tracking-[0.2em] text-[10px] uppercase opacity-60">Athlete Profile</span>
+                </div>
+                <div className="flex flex-col items-start gap-6">
+                  <h1 className="text-6xl md:text-[8rem] font-display italic tracking-[-0.06em] text-secondary leading-[0.8] drop-shadow-sm">
+                    {playerName}
+                  </h1>
+                  <ShareButton name={playerName} />
+                </div>
               </div>
-              <div className="flex flex-col items-start gap-6">
-                <h1 className="text-6xl md:text-[8rem] font-display italic tracking-tighter text-secondary leading-[0.85]">
-                  {playerName}
-                </h1>
-                <ShareButton name={playerName} />
+
+              <div className="flex p-1 bg-white/5 backdrop-blur-xl rounded-2xl h-fit border border-white/10 shadow-2xl">
+                <button 
+                  onClick={() => onTabChange('doubles')}
+                  className={cn(
+                    "flex items-center gap-2 px-8 py-4 rounded-xl font-sans font-bold text-xs tracking-widest transition-all duration-500 uppercase",
+                    activeTab === 'doubles' ? "bg-secondary text-primary shadow-2xl scale-[1.02]" : "text-secondary/60 hover:text-secondary hover:bg-white/5"
+                  )}
+                >
+                  <Users className="w-4 h-4" /> Doubles
+                </button>
+                <button 
+                  onClick={() => onTabChange('singles')}
+                  className={cn(
+                    "flex items-center gap-2 px-8 py-4 rounded-xl font-sans font-bold text-xs tracking-widest transition-all duration-500 uppercase",
+                    activeTab === 'singles' ? "bg-secondary text-primary shadow-2xl scale-[1.02]" : "text-secondary/60 hover:text-secondary hover:bg-white/5"
+                  )}
+                >
+                  <User className="w-4 h-4" /> Singles
+                </button>
               </div>
             </div>
-
-            <div className="flex p-1 bg-white/10 backdrop-blur-md rounded-2xl h-fit">
-              <button 
-                onClick={() => onTabChange('doubles')}
-                className={cn(
-                  "flex items-center gap-2 px-8 py-3 rounded-xl font-sans font-bold text-xs tracking-widest transition-all duration-300 uppercase",
-                  activeTab === 'doubles' ? "bg-secondary text-primary shadow-xl" : "text-secondary/60 hover:text-secondary"
-                )}
-              >
-                <Users className="w-4 h-4" /> Doubles
-              </button>
-              <button 
-                onClick={() => onTabChange('singles')}
-                className={cn(
-                  "flex items-center gap-2 px-8 py-3 rounded-xl font-sans font-bold text-xs tracking-widest transition-all duration-300 uppercase",
-                  activeTab === 'singles' ? "bg-secondary text-primary shadow-xl" : "text-secondary/60 hover:text-secondary"
-                )}
-              >
-                <User className="w-4 h-4" /> Singles
-              </button>
-            </div>
-          </div>
+          </motion.div>
         </div>
       </header>
 

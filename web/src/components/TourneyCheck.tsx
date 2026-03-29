@@ -25,9 +25,9 @@ export function TourneyCheck({
   return (
     <div className="max-w-full mx-auto pb-20 text-left min-h-full bg-background">
       {/* Center Court Hero Header */}
-      <header className="relative pt-24 pb-16 md:pt-32 md:pb-20 px-6 text-left bg-primary overflow-hidden mb-12">
-        {/* Pressed Grass Texture Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/10 to-transparent pointer-events-none" />
+      <header className="relative pt-24 pb-16 md:pt-32 md:pb-20 px-6 text-left bg-pressed-grass overflow-hidden mb-12">
+        {/* Editorial Pattern Overlay */}
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
         
         {/* Kinetic Cut Accent */}
         <div 
@@ -36,16 +36,21 @@ export function TourneyCheck({
         />
 
         <div className="max-w-6xl mx-auto relative z-10">
-          <div className="space-y-4">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="space-y-4"
+          >
             <div className="flex items-center gap-2">
               <Star className="w-4 h-4 text-secondary fill-secondary" />
               <span className="text-secondary font-sans font-bold tracking-[0.2em] text-[10px] uppercase opacity-60">Roster Analysis Tool</span>
             </div>
-            <h1 className="text-6xl md:text-[7rem] font-display italic tracking-tighter text-secondary leading-[0.85]">
+            <h1 className="text-6xl md:text-[7rem] font-display italic tracking-[-0.06em] text-secondary leading-[0.85] drop-shadow-sm">
               Tourney <br />
               Check
             </h1>
-          </div>
+          </motion.div>
         </div>
       </header>
 

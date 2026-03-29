@@ -5,7 +5,7 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { Ranking } from '@/lib/types';
 import { PlayerProfile } from '@/components/PlayerProfile';
-import { unslugify } from '@/lib/slugify';
+import { unslugify, properCaseUnslugify } from '@/lib/slugify';
 
 export function PlayerProfileClient() {
   const params = useParams();
@@ -38,7 +38,7 @@ export function PlayerProfileClient() {
   useEffect(() => {
     async function fetchProfile() {
       const name = unslugify(slug);
-      setPlayerName(name);
+      setPlayerName(properCaseUnslugify(slug));
       setLoading(true);
       
       try {
