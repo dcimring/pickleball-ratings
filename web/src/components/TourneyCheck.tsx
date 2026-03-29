@@ -28,12 +28,6 @@ export function TourneyCheck({
       <header className="relative pt-24 pb-16 md:pt-32 md:pb-20 px-6 text-left bg-pressed-grass overflow-hidden mb-12">
         {/* Editorial Pattern Overlay */}
         <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
-        
-        {/* Kinetic Cut Accent */}
-        <div 
-          className="absolute bottom-0 left-0 w-full h-12 bg-background" 
-          style={{ clipPath: 'polygon(0 100%, 100% 100%, 100% 0)' }}
-        />
 
         <div className="max-w-6xl mx-auto relative z-10 text-left">
           <motion.div 
