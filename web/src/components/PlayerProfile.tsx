@@ -39,7 +39,7 @@ export function PlayerProfile({
   return (
     <div className="min-h-full bg-background relative overflow-hidden pb-20">
       {/* Center Court Hero Header */}
-      <header className="relative pt-24 pb-16 md:pt-32 md:pb-20 px-6 text-left bg-pressed-grass overflow-hidden mb-12">
+      <header className="relative pt-24 pb-12 md:pt-28 md:pb-16 px-6 text-left bg-pressed-grass overflow-hidden mb-8">
         {/* Editorial Pattern Overlay */}
         <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
 
