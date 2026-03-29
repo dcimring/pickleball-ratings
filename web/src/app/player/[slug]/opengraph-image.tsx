@@ -33,8 +33,8 @@ export default async function Image({ params }: { params: { slug: string } }) {
             fontFamily: 'sans-serif',
           }}
         >
-          <h1 style={{ fontSize: '64px', fontWeight: '900', letterSpacing: '-0.02em' }}>
-            DINKDASH | PROFILE
+          <h1 style={{ fontSize: '64px', fontWeight: '400', letterSpacing: '-0.02em' }}>
+            DinkDash | Profile
           </h1>
         </div>
       ),
@@ -111,10 +111,10 @@ export default async function Image({ params }: { params: { slug: string } }) {
               boxShadow: '0 10px 30px rgba(35, 129, 69, 0.3)',
             }}
           >
-            <span style={{ color: BRAND_COLORS.secondary.hex, fontSize: '32px', fontWeight: '900' }}>D</span>
+            <span style={{ color: BRAND_COLORS.secondary.hex, fontSize: '32px', fontWeight: '400' }}>D</span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ color: BRAND_COLORS.primary.hex, fontSize: '24px', fontWeight: '900', letterSpacing: '0.2em' }}>
+            <span style={{ color: BRAND_COLORS.primary.hex, fontSize: '24px', fontWeight: '400', letterSpacing: '0.2em' }}>
               PLAYER PROFILE
             </span>
             <span style={{ color: BRAND_COLORS.foreground.hex, opacity: 0.5, fontSize: '16px', fontWeight: '700', letterSpacing: '0.1em' }}>
@@ -174,8 +174,8 @@ export default async function Image({ params }: { params: { slug: string } }) {
 
           {/* Footer Branding */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px', paddingBottom: '5px' }}>
-            <span style={{ color: BRAND_COLORS.foreground.hex, fontSize: '38px', fontWeight: '900', letterSpacing: '-0.02em' }}>dinkdash</span>
-            <span style={{ color: BRAND_COLORS.primary.hex, fontSize: '38px', fontWeight: '900' }}>.xyz</span>
+            <span style={{ color: BRAND_COLORS.foreground.hex, fontSize: '38px', fontWeight: '400', letterSpacing: '-0.02em' }}>dinkdash</span>
+            <span style={{ color: BRAND_COLORS.primary.hex, fontSize: '38px', fontWeight: '400' }}>.xyz</span>
           </div>
         </div>
       </div>
