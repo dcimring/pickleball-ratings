@@ -51,19 +51,19 @@ export function PlayerProfile({
           >
             <Link 
               href={backUrl}
-              className="flex items-center gap-2 text-secondary/40 hover:text-secondary transition-colors mb-10 group w-fit"
+              className="flex items-center gap-2 text-secondary/40 hover:text-secondary transition-colors mb-6 md:mb-10 group w-fit"
             >
               <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
               <span className="font-sans text-[10px] font-bold tracking-[0.2em] uppercase">{backLabel}</span>
             </Link>
 
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-10">
-              <div className="space-y-6">
-                <div className="flex items-center gap-2 bg-tertiary px-3 py-1.5 rounded-full w-fit shadow-2xl shadow-black/20 border border-white/10 mb-6">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-10">
+              <div className="space-y-4 md:space-y-6">
+                <div className="flex items-center gap-2 bg-tertiary px-3 py-1.5 rounded-full w-fit shadow-2xl shadow-black/20 border border-white/10 mb-4 md:mb-6">
                   <Star className="w-3.5 h-3.5 text-tertiary-foreground fill-tertiary-foreground" />
                   <span className="text-tertiary-foreground font-sans font-bold tracking-[0.3em] text-[9px] uppercase">Athlete Profile</span>
                 </div>
-                <div className="flex flex-col items-start gap-6">
+                <div className="flex flex-col items-start gap-4 md:gap-6">
                   <h1 className="text-6xl md:text-[8rem] font-display italic tracking-[-0.06em] text-secondary leading-[0.8] drop-shadow-sm">
                     {playerName}
                   </h1>
