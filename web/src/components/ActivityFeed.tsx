@@ -53,7 +53,7 @@ export function ActivityFeed({
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                 <Star className="w-4 h-4 text-secondary fill-secondary" />
-                <span className="text-secondary font-sans font-bold tracking-[0.2em] text-[10px] uppercase opacity-60">Live Tournament Feed</span>
+                <span className="text-secondary font-sans font-bold tracking-[0.3em] text-[10px] uppercase opacity-60">Live Tournament Feed</span>
               </div>
               <h1 className="text-6xl md:text-[7rem] font-display italic tracking-[-0.06em] text-secondary leading-[0.85] drop-shadow-sm">
                 Court <br />
@@ -99,61 +99,63 @@ export function ActivityFeed({
           </div>
         )}
 
-        {/* Sort & Jump Section */}
-        <div className="flex flex-col gap-6 md:gap-8 mb-10 md:mb-16">
-          <div className="flex items-center gap-6 text-[10px] font-sans font-bold tracking-widest text-foreground/30">
-            <span className="uppercase">Filter by:</span>
-            <div className="flex gap-3">
-              <button 
-                onClick={() => onSortChange('date')}
-                className={cn(
-                  "px-6 py-3 rounded-full transition-all font-bold",
-                  activitySort === 'date' ? "bg-primary text-secondary" : "bg-muted text-foreground/40 hover:text-foreground"
-                )}
-              >
-                Latest Matches
-              </button>
-              <button 
-                onClick={() => onSortChange('rating')}
-                className={cn(
-                  "px-6 py-3 rounded-full transition-all font-bold",
-                  activitySort === 'rating' ? "bg-primary text-secondary" : "bg-muted text-foreground/40 hover:text-foreground"
-                )}
-              >
-                Biggest Movers
-              </button>
-            </div>
-          </div>
-
-          {!loading && tiers.length > 0 && (
-            <div className="flex flex-wrap items-center gap-8 text-[10px] font-sans font-bold tracking-[0.2em]">
-              {tiers.map((tier) => (
-                <button
-                  key={tier.title}
-                  onClick={() => {
-                    const element = document.getElementById(`tier-${tier.title.replace(/\s+/g, '-').toLowerCase()}`);
-                    if (element) {
-                      const container = element.closest('.overflow-y-auto');
-                      if (container) {
-                        const offset = 100;
-                        const elementTop = element.offsetTop;
-                        container.scrollTo({
-                          top: elementTop - offset,
-                          behavior: 'smooth'
-                        });
-                      }
-                    }
-                  }}
-                  className="text-foreground/30 hover:text-primary transition-all uppercase py-2 border-b-2 border-transparent hover:border-primary"
+        {/* Sort & Jump Section with Bridge */}
+        <div className="bg-muted/50 rounded-2xl p-6 md:p-8 mb-10 md:mb-16">
+          <div className="flex flex-col gap-6 md:gap-8">
+            <div className="flex items-center gap-6 text-[9px] font-sans font-bold tracking-widest text-foreground/30">
+              <span className="uppercase">Filter by:</span>
+              <div className="flex gap-2">
+                <button 
+                  onClick={() => onSortChange('date')}
+                  className={cn(
+                    "px-4 py-2 rounded-full transition-all font-bold",
+                    activitySort === 'date' ? "bg-primary text-secondary" : "bg-muted text-foreground/40 hover:text-foreground"
+                  )}
                 >
-                  {tier.title}
+                  Latest Matches
                 </button>
-              ))}
+                <button 
+                  onClick={() => onSortChange('rating')}
+                  className={cn(
+                    "px-4 py-2 rounded-full transition-all font-bold",
+                    activitySort === 'rating' ? "bg-primary text-secondary" : "bg-muted text-foreground/40 hover:text-foreground"
+                  )}
+                >
+                  Biggest Movers
+                </button>
+              </div>
             </div>
-          )}
+
+            {!loading && tiers.length > 0 && (
+              <div className="flex flex-wrap items-center gap-6 text-[9px] font-sans font-bold tracking-[0.2em]">
+                {tiers.map((tier) => (
+                  <button
+                    key={tier.title}
+                    onClick={() => {
+                      const element = document.getElementById(`tier-${tier.title.replace(/\s+/g, '-').toLowerCase()}`);
+                      if (element) {
+                        const container = element.closest('.overflow-y-auto');
+                        if (container) {
+                          const offset = 80;
+                          const elementTop = element.offsetTop;
+                          container.scrollTo({
+                            top: elementTop - offset,
+                            behavior: 'smooth'
+                          });
+                        }
+                      }
+                    }}
+                    className="text-foreground/30 hover:text-primary transition-all uppercase py-1 border-b-2 border-transparent hover:border-primary"
+                  >
+                    {tier.title}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
-        <div className="space-y-12 md:space-y-24">
+        <div className="space-y-12 md:space-y-16">
           {loading ? (
             <div className="flex-1 flex flex-col items-center justify-center py-40 bg-muted rounded-3xl">
               <motion.div 
@@ -165,7 +167,7 @@ export function ActivityFeed({
             </div>
           ) : tiers.length > 0 ? (
             tiers.map((tier) => (
-              <div key={tier.title} id={`tier-${tier.title.replace(/\s+/g, '-').toLowerCase()}`} className="space-y-6 md:space-y-12 scroll-mt-32">
+              <div key={tier.title} id={`tier-${tier.title.replace(/\s+/g, '-').toLowerCase()}`} className="space-y-6 md:space-y-8 scroll-mt-32">
                 <div className="flex items-center gap-6">
                   <h2 className="font-display italic text-2xl md:text-4xl tracking-tighter text-foreground whitespace-nowrap">{tier.title}</h2>
                   <div className="h-0.5 w-full bg-muted" />
@@ -176,26 +178,24 @@ export function ActivityFeed({
                     <motion.div 
                       layout
                       key={`${item.player_name}-${item.date}`}
-                      className="bg-secondary p-6 md:p-10 hover:bg-background transition-colors group relative overflow-hidden"
+                      className="bg-secondary p-6 md:p-10 hover:bg-background transition-all duration-500 group relative overflow-hidden hover:scale-[1.01] hover:shadow-2xl hover:shadow-primary/5 active:scale-100"
                     >
-                      <div className="flex items-center justify-between mb-6 md:mb-10">
-                        <h3 className="font-sans font-bold text-2xl md:text-3xl tracking-tight text-foreground">
+                      <div className="flex items-center justify-between mb-8 md:mb-12">
+                        <h3 className="font-sans font-bold text-2xl md:text-4xl tracking-tight text-foreground group-hover:text-primary transition-colors">
                           <Link href={`/player/${slugify(item.player_name)}?tab=${activeTab}&sort=${activitySort}&from=activity`} className="hover:text-primary transition-colors">
                             {item.player_name}
                           </Link>
-                        </h3>                        <span className="font-sans text-[10px] font-bold text-foreground/20 uppercase tracking-[0.4em]">
-                          {new Date(item.date).toLocaleDateString('en-KY', { month: 'short', day: 'numeric' })}
-                        </span>
+                        </h3>
                       </div>
                       
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-12">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
                         {/* Rating Shift */}
                         <div className="space-y-2 md:space-y-4">
-                          <span className="text-[10px] font-sans font-bold text-foreground/20 tracking-[0.3em] uppercase">Rating Shift</span>
-                          <div className="flex items-center gap-4">
-                            <span className="text-foreground font-display italic text-3xl tracking-tighter tabular-nums">{item.current.rating.toFixed(3)}</span>
+                          <span className="text-[9px] font-sans font-bold text-foreground/20 tracking-[0.3em] uppercase">Rating Shift</span>
+                          <div className="flex items-center gap-3">
+                            <span className="text-foreground font-display italic text-2xl md:text-3xl tracking-tighter tabular-nums">{item.current.rating.toFixed(3)}</span>
                             <span className={cn(
-                              "text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest",
+                              "text-[9px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest",
                               item.ratingDiff > 0 ? "bg-primary/10 text-primary" : 
                               item.ratingDiff < 0 ? "bg-destructive/10 text-destructive" : 
                               "bg-muted text-foreground/40"
@@ -210,10 +210,10 @@ export function ActivityFeed({
                         {/* Rounds Played */}
                         {item.roundsDiff !== 0 && (
                           <div className="space-y-2 md:space-y-4">
-                            <span className="text-[10px] font-sans font-bold text-foreground/20 tracking-[0.3em] uppercase">Rounds Played</span>
-                            <div className="flex items-center gap-4">
-                              <span className="text-foreground font-display italic text-3xl tracking-tighter tabular-nums">{item.current.rounds_played}</span>
-                              <span className="text-[10px] font-bold px-3 py-1.5 rounded-full bg-primary/10 text-primary uppercase tracking-widest">
+                            <span className="text-[9px] font-sans font-bold text-foreground/20 tracking-[0.3em] uppercase">Rounds Played</span>
+                            <div className="flex items-center gap-3">
+                              <span className="text-foreground font-display italic text-2xl md:text-3xl tracking-tighter tabular-nums">{item.current.rounds_played}</span>
+                              <span className="text-[9px] font-bold px-3 py-1.5 rounded-full bg-primary/10 text-primary uppercase tracking-widest">
                                 +{item.roundsDiff} Sets
                               </span>
                             </div>
@@ -222,11 +222,11 @@ export function ActivityFeed({
 
                         {/* Rank Movement */}
                         <div className="space-y-2 md:space-y-4">
-                          <span className="text-[10px] font-sans font-bold text-foreground/20 tracking-[0.3em] uppercase">Rank Movement</span>
-                          <div className="flex items-center gap-4">
-                            <span className="text-foreground font-display italic text-3xl tracking-tighter tabular-nums">#{item.current.rank_position}</span>
+                          <span className="text-[9px] font-sans font-bold text-foreground/20 tracking-[0.3em] uppercase">Rank Movement</span>
+                          <div className="flex items-center gap-3">
+                            <span className="text-foreground font-display italic text-2xl md:text-3xl tracking-tighter tabular-nums">#{item.current.rank_position}</span>
                             <span className={cn(
-                              "text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest",
+                              "text-[9px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest",
                               item.rankDiff > 0 ? "bg-primary/10 text-primary" : 
                               item.rankDiff < 0 ? "bg-destructive/10 text-destructive" : 
                               "bg-muted text-foreground/40"
@@ -238,15 +238,22 @@ export function ActivityFeed({
                           </div>
                         </div>
                       </div>
+
+                      {/* Asymmetric Date: Absolute positioned on desktop */}
+                      <div className="mt-8 md:mt-0 md:absolute md:bottom-10 md:right-10">
+                        <span className="font-sans text-[9px] font-bold text-foreground/10 group-hover:text-foreground/30 transition-colors uppercase tracking-[0.4em]">
+                          {new Date(item.date).toLocaleDateString('en-KY', { month: 'short', day: 'numeric', year: 'numeric' })}
+                        </span>
+                      </div>
                     </motion.div>
                   ))}
                 </div>
               </div>
             ))
           ) : (
-            <div className="flex flex-col items-center justify-center py-40 bg-muted rounded-3xl">
-              <History className="w-16 h-16 text-foreground/5 mb-6" />
-              <p className="font-sans font-bold text-foreground/20 tracking-[0.4em] text-[10px] uppercase">Archive empty — no recent movements</p>
+            <div className="flex flex-col items-center justify-center py-20 bg-muted rounded-2xl">
+              <History className="w-12 h-12 text-foreground/5 mb-4" />
+              <p className="font-sans font-bold text-foreground/20 tracking-[0.4em] text-[9px] uppercase">Archive empty</p>
             </div>
           )}
         </div>
