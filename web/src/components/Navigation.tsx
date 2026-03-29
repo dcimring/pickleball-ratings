@@ -97,7 +97,7 @@ export function Navigation() {
                   href={item.href}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={cn(
-                    "text-2xl font-display italic",
+                    "text-xl font-sans font-semibold uppercase tracking-tight",
                     isActive(item.href) ? "text-primary" : "text-foreground"
                   )}
                 >
