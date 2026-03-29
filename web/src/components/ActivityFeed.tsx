@@ -1,7 +1,7 @@
 "use client";
 
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Users, User, Activity, History, Star, TrendingUp } from 'lucide-react';
 import { ActivityTier } from '@/lib/types';
 import { cn } from '@/lib/utils';
@@ -165,92 +165,98 @@ export function ActivityFeed({
                 <Star className="w-12 h-12 text-primary/10 fill-primary/10" />
               </motion.div>
             </div>
-          ) : tiers.length > 0 ? (
-            tiers.map((tier) => (
-              <div key={tier.title} id={`tier-${tier.title.replace(/\s+/g, '-').toLowerCase()}`} className="space-y-6 md:space-y-8 scroll-mt-32">
-                <div className="flex items-center gap-6">
-                  <h2 className="font-display italic text-2xl md:text-4xl tracking-tighter text-foreground whitespace-nowrap">{tier.title}</h2>
-                  <div className="h-0.5 w-full bg-muted" />
-                </div>
-                
-                <div className="space-y-1 bg-muted p-1 rounded-[2.5rem] overflow-hidden">
-                  {tier.items.map((item) => (
-                    <motion.div 
-                      layout
-                      key={`${item.player_name}-${item.date}`}
-                      className="bg-secondary p-6 md:p-10 hover:bg-background transition-all duration-500 group relative overflow-hidden hover:scale-[1.01] hover:shadow-2xl hover:shadow-primary/5 active:scale-100"
-                    >
-                      <div className="flex items-center justify-between mb-8 md:mb-12">
-                        <h3 className="font-sans font-bold text-2xl md:text-4xl tracking-tight text-foreground group-hover:text-primary transition-colors">
-                          <Link href={`/player/${slugify(item.player_name)}?tab=${activeTab}&sort=${activitySort}&from=activity`} className="hover:text-primary transition-colors">
-                            {item.player_name}
-                          </Link>
-                        </h3>
-                      </div>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-                        {/* Rating Shift */}
-                        <div className="space-y-2 md:space-y-4">
-                          <span className="text-[9px] font-sans font-bold text-foreground/20 tracking-[0.3em] uppercase">Rating Shift</span>
-                          <div className="flex items-center gap-3">
-                            <span className="text-foreground font-display italic text-2xl md:text-3xl tracking-tighter tabular-nums">{item.current.rating.toFixed(3)}</span>
-                            <span className={cn(
-                              "text-[9px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest",
-                              item.ratingDiff > 0 ? "bg-primary/10 text-primary" : 
-                              item.ratingDiff < 0 ? "bg-destructive/10 text-destructive" : 
-                              "bg-muted text-foreground/40"
-                            )}>
-                              {item.ratingDiff > 0 ? `+${item.ratingDiff.toFixed(3)}` : 
-                               item.ratingDiff < 0 ? item.ratingDiff.toFixed(3) : 
-                               'Stable'}
-                            </span>
-                          </div>
+          ) : (
+            <div className="flex flex-col gap-12 md:gap-16">
+              {tiers.map((tier) => (
+                <div 
+                  key={`${activeTab}-${tier.title}-${activitySort}`}
+                  id={`tier-${tier.title.replace(/\s+/g, '-').toLowerCase()}`} 
+                  className="space-y-6 md:space-y-8 scroll-mt-32"
+                >
+                  <div className="flex items-center gap-6">
+                    <h2 className="font-display italic text-2xl md:text-4xl tracking-tighter text-foreground whitespace-nowrap">{tier.title}</h2>
+                    <div className="h-0.5 w-full bg-muted" />
+                  </div>
+                  
+                  <div className="space-y-1 bg-muted p-1 rounded-[2.5rem] overflow-hidden">
+                    {tier.items.map((item, idx) => (
+                      <div 
+                        key={`${item.player_name}-${item.date}-${idx}`}
+                        className="bg-secondary p-6 md:p-10 hover:bg-background transition-all duration-500 group relative overflow-hidden hover:scale-[1.01] hover:shadow-2xl hover:shadow-primary/5 active:scale-100"
+                      >
+                        <div className="flex items-center justify-between mb-8 md:mb-12">
+                          <h3 className="font-sans font-bold text-2xl md:text-4xl tracking-tight text-foreground group-hover:text-primary transition-colors">
+                            <Link href={`/player/${slugify(item.player_name)}?tab=${activeTab}&sort=${activitySort}&from=activity`} className="hover:text-primary transition-colors">
+                              {item.player_name}
+                            </Link>
+                          </h3>
                         </div>
-
-                        {/* Rounds Played */}
-                        {item.roundsDiff !== 0 && (
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                          {/* Rating Shift */}
                           <div className="space-y-2 md:space-y-4">
-                            <span className="text-[9px] font-sans font-bold text-foreground/20 tracking-[0.3em] uppercase">Rounds Played</span>
+                            <span className="text-[9px] font-sans font-bold text-foreground/20 tracking-[0.3em] uppercase">Rating Shift</span>
                             <div className="flex items-center gap-3">
-                              <span className="text-foreground font-display italic text-2xl md:text-3xl tracking-tighter tabular-nums">{item.current.rounds_played}</span>
-                              <span className="text-[9px] font-bold px-3 py-1.5 rounded-full bg-primary/10 text-primary uppercase tracking-widest">
-                                +{item.roundsDiff} Sets
+                              <span className="text-foreground font-display italic text-2xl md:text-3xl tracking-tighter tabular-nums">{item.current.rating.toFixed(3)}</span>
+                              <span className={cn(
+                                "text-[9px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest",
+                                item.ratingDiff > 0 ? "bg-primary/10 text-primary" : 
+                                item.ratingDiff < 0 ? "bg-destructive/10 text-destructive" : 
+                                "bg-muted text-foreground/40"
+                              )}>
+                                {item.ratingDiff > 0 ? `+${item.ratingDiff.toFixed(3)}` : 
+                                 item.ratingDiff < 0 ? item.ratingDiff.toFixed(3) : 
+                                 'Stable'}
                               </span>
                             </div>
                           </div>
-                        )}
 
-                        {/* Rank Movement */}
-                        <div className="space-y-2 md:space-y-4">
-                          <span className="text-[9px] font-sans font-bold text-foreground/20 tracking-[0.3em] uppercase">Rank Movement</span>
-                          <div className="flex items-center gap-3">
-                            <span className="text-foreground font-display italic text-2xl md:text-3xl tracking-tighter tabular-nums">#{item.current.rank_position}</span>
-                            <span className={cn(
-                              "text-[9px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest",
-                              item.rankDiff > 0 ? "bg-primary/10 text-primary" : 
-                              item.rankDiff < 0 ? "bg-destructive/10 text-destructive" : 
-                              "bg-muted text-foreground/40"
-                            )}>
-                              {item.rankDiff > 0 ? `Up ${item.rankDiff}` : 
-                               item.rankDiff < 0 ? `Down ${Math.abs(item.rankDiff)}` : 
-                               'Stable'}
-                            </span>
+                          {/* Rounds Played */}
+                          {item.roundsDiff !== 0 && (
+                            <div className="space-y-2 md:space-y-4">
+                              <span className="text-[9px] font-sans font-bold text-foreground/20 tracking-[0.3em] uppercase">Rounds Played</span>
+                              <div className="flex items-center gap-3">
+                                <span className="text-foreground font-display italic text-2xl md:text-3xl tracking-tighter tabular-nums">{item.current.rounds_played}</span>
+                                <span className="text-[9px] font-bold px-3 py-1.5 rounded-full bg-primary/10 text-primary uppercase tracking-widest">
+                                  +{item.roundsDiff} Sets
+                                </span>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Rank Movement */}
+                          <div className="space-y-2 md:space-y-4">
+                            <span className="text-[9px] font-sans font-bold text-foreground/20 tracking-[0.3em] uppercase">Rank Movement</span>
+                            <div className="flex items-center gap-3">
+                              <span className="text-foreground font-display italic text-2xl md:text-3xl tracking-tighter tabular-nums">#{item.current.rank_position}</span>
+                              <span className={cn(
+                                "text-[9px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest",
+                                item.rankDiff > 0 ? "bg-primary/10 text-primary" : 
+                                item.rankDiff < 0 ? "bg-destructive/10 text-destructive" : 
+                                "bg-muted text-foreground/40"
+                              )}>
+                                {item.rankDiff > 0 ? `Up ${item.rankDiff}` : 
+                                 item.rankDiff < 0 ? `Down ${Math.abs(item.rankDiff)}` : 
+                                 'Stable'}
+                              </span>
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      {/* Asymmetric Date: Absolute positioned on desktop */}
-                      <div className="mt-8 md:mt-0 md:absolute md:bottom-10 md:right-10">
-                        <span className="font-sans text-[9px] font-bold text-foreground/10 group-hover:text-foreground/30 transition-colors uppercase tracking-[0.4em]">
-                          {new Date(item.date).toLocaleDateString('en-KY', { month: 'short', day: 'numeric', year: 'numeric' })}
-                        </span>
+                        {/* Asymmetric Date: Absolute positioned on desktop */}
+                        <div className="mt-8 md:mt-0 md:absolute md:bottom-10 md:right-10">
+                          <span className="font-sans text-[9px] font-bold text-foreground/10 group-hover:text-foreground/30 transition-colors uppercase tracking-[0.4em]">
+                            {new Date(item.date).toLocaleDateString('en-KY', { month: 'short', day: 'numeric', year: 'numeric' })}
+                          </span>
+                        </div>
                       </div>
-                    </motion.div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))
-          ) : (
+              ))}
+            </div>
+          )}
+          {!loading && tiers.length === 0 && (
             <div className="flex flex-col items-center justify-center py-20 bg-muted rounded-2xl">
               <History className="w-12 h-12 text-foreground/5 mb-4" />
               <p className="font-sans font-bold text-foreground/20 tracking-[0.4em] text-[9px] uppercase">Archive empty</p>
