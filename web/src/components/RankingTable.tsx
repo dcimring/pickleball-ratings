@@ -93,7 +93,7 @@ export function RankingTable({
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                 <Star className="w-4 h-4 text-secondary fill-secondary" />
-                <span className="text-secondary font-sans font-bold tracking-[0.3em] text-[10px] uppercase opacity-60">Cayman Community Dashboard</span>
+                <span className="text-secondary font-sans font-bold tracking-[0.3em] text-[10px] uppercase opacity-60">Cayman Islands</span>
               </div>
               <h1 className="text-6xl md:text-[8rem] font-display italic tracking-[-0.06em] text-secondary leading-[0.8] drop-shadow-sm">
                 Pickleball <br />
@@ -126,7 +126,7 @@ export function RankingTable({
       </header>
 
       {/* Floating Search Bridge */}
-      <section ref={searchSectionRef} className="sticky top-16 md:top-20 z-40 px-6 py-0 -mt-6 md:-mt-8 text-left transition-all overflow-visible mb-12">
+      <section ref={searchSectionRef} className="sticky top-16 md:top-20 z-40 px-6 py-0 -mt-6 md:-mt-8 text-left transition-all overflow-visible mb-4">
         <div className="max-w-6xl mx-auto relative z-10">
           <motion.div 
             initial={{ scale: 0.95 }}
@@ -147,7 +147,7 @@ export function RankingTable({
                 }
               }}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="w-full bg-secondary/90 backdrop-blur-xl rounded-[2.5rem] py-7 pl-20 pr-14 outline-none focus:ring-8 focus:ring-primary/5 transition-all duration-500 font-sans text-xl text-foreground placeholder:text-foreground/20 shadow-inner relative z-0"
+              className="w-full bg-secondary/90 backdrop-blur-xl rounded-[2.5rem] py-6 md:py-7 pl-16 md:pl-20 pr-12 md:pr-14 outline-none focus:ring-8 focus:ring-primary/5 transition-all duration-500 font-sans text-base md:text-xl text-foreground placeholder:text-foreground/20 shadow-inner relative z-0"
             />
             <AnimatePresence>
               {searchQuery && (
@@ -172,34 +172,37 @@ export function RankingTable({
       <section className="px-6 text-left">
         <div className="max-w-6xl mx-auto">
           <div className="overflow-hidden">
-            <div className="grid grid-cols-12 gap-2 md:gap-4 px-8 py-8 font-sans text-[10px] font-bold tracking-[0.3em] text-foreground/30 select-none uppercase">
-              <button 
-                onClick={() => onSort('rank_position')}
-                className="col-span-3 md:col-span-2 flex items-center gap-2 hover:text-foreground transition-colors group"
-              >
-                Rank <SortIndicator column="rank_position" />
-              </button>
-              <button 
-                onClick={() => onSort('player_name')}
-                className="col-span-5 md:col-span-5 flex items-center gap-2 hover:text-foreground transition-colors group"
-              >
-                Player <SortIndicator column="player_name" />
-              </button>
-              <button 
-                onClick={() => onSort('rounds_played')}
-                className="hidden md:flex col-span-2 items-center justify-end gap-2 hover:text-foreground transition-colors group px-4"
-              >
-                <span className="text-right">Rounds</span> <SortIndicator column="rounds_played" />
-              </button>
-              <button 
-                onClick={() => onSort('rating')}
-                className="col-span-4 md:col-span-3 flex items-center justify-end gap-2 hover:text-foreground transition-colors group text-right pr-4"
-              >
-                Rating <SortIndicator column="rating" />
-              </button>
+            {/* Layered Header Container */}
+            <div className="bg-muted/50 rounded-t-[2.5rem] -mt-2 relative z-0">
+              <div className="grid grid-cols-12 gap-2 md:gap-4 px-8 py-5 font-sans text-[9px] font-bold tracking-[0.3em] text-foreground/30 select-none uppercase">
+                <button 
+                  onClick={() => onSort('rank_position')}
+                  className="col-span-3 md:col-span-2 flex items-center gap-2 hover:text-foreground transition-colors group"
+                >
+                  Rank <SortIndicator column="rank_position" />
+                </button>
+                <button 
+                  onClick={() => onSort('player_name')}
+                  className="col-span-5 md:col-span-5 flex items-center gap-2 hover:text-foreground transition-colors group"
+                >
+                  Player <SortIndicator column="player_name" />
+                </button>
+                <button 
+                  onClick={() => onSort('rounds_played')}
+                  className="hidden md:flex col-span-2 items-center justify-end gap-2 hover:text-foreground transition-colors group px-4"
+                >
+                  <span className="text-right">Rounds</span> <SortIndicator column="rounds_played" />
+                </button>
+                <button 
+                  onClick={() => onSort('rating')}
+                  className="col-span-4 md:col-span-3 flex items-center justify-end gap-2 hover:text-foreground transition-colors group text-right pr-4"
+                >
+                  Rating <SortIndicator column="rating" />
+                </button>
+              </div>
             </div>
 
-            <div className="min-h-[400px] flex flex-col gap-2 relative">
+            <div className="min-h-[400px] flex flex-col gap-2 relative mt-2">
               {loading ? (
                 <div className="flex-1 flex flex-col items-center justify-center py-40">
                   <motion.div 
