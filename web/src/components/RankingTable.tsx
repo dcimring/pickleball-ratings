@@ -88,10 +88,10 @@ export function RankingTable({
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                 <Star className="w-4 h-4 text-secondary fill-secondary" />
-                <span className="text-secondary font-sans font-bold tracking-[0.2em] text-[10px] uppercase opacity-60">Community Dashboard</span>
+                <span className="text-secondary font-sans font-bold tracking-[0.2em] text-[10px] uppercase opacity-60">Cayman Community Dashboard</span>
               </div>
               <h1 className="text-6xl md:text-[7rem] font-display italic tracking-tighter text-secondary leading-[0.85]">
-                Cayman <br />
+                Pickleball <br />
                 Rankings
               </h1>
             </div>
