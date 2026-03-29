@@ -9,6 +9,7 @@ interface SuggestFeatureProps {
   formState: { success?: boolean; error?: string };
   nameInput: string;
   onNameInputChange: (val: string) => void;
+  onSelectSuggestion: (val: string) => void;
   nameSuggestions: string[];
   loading: boolean;
 }
@@ -18,6 +19,7 @@ export function SuggestFeature({
   formState,
   nameInput,
   onNameInputChange,
+  onSelectSuggestion,
   nameSuggestions,
   loading,
 }: SuggestFeatureProps) {
@@ -101,7 +103,7 @@ export function SuggestFeature({
                         <button
                           key={name}
                           type="button"
-                          onClick={() => onNameInputChange(name)}
+                          onClick={() => onSelectSuggestion(name)}
                           className="w-full px-8 py-5 text-left hover:bg-muted text-foreground/60 hover:text-primary transition-colors font-sans text-sm font-bold border-b border-muted last:border-0"
                         >
                           {name}

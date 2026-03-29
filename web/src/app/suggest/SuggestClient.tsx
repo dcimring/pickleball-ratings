@@ -11,6 +11,7 @@ export function SuggestClient() {
   const router = useRouter();
   const { singles, doubles, loading } = useData();
   const [nameInput, setNameInput] = useState('');
+  const [showSuggestions, setShowSuggestions] = useState(true);
   const [formState, formAction] = useFormState(submitFeatureRequest, {});
 
   const allUniqueNames = useMemo(() => {
@@ -19,11 +20,21 @@ export function SuggestClient() {
   }, [singles, doubles]);
 
   const nameSuggestions = useMemo(() => {
-    if (!nameInput.trim()) return [];
+    if (!nameInput.trim() || !showSuggestions) return [];
     return allUniqueNames
       .filter(n => n.toLowerCase().includes(nameInput.toLowerCase()))
       .slice(0, 5);
-  }, [allUniqueNames, nameInput]);
+  }, [allUniqueNames, nameInput, showSuggestions]);
+
+  const handleInputChange = (val: string) => {
+    setNameInput(val);
+    setShowSuggestions(true);
+  };
+
+  const handleSelectSuggestion = (val: string) => {
+    setNameInput(val);
+    setShowSuggestions(false);
+  };
 
   useEffect(() => {
     if (formState.success) {
@@ -39,7 +50,8 @@ export function SuggestClient() {
       formAction={formAction}
       formState={formState}
       nameInput={nameInput}
-      onNameInputChange={setNameInput}
+      onNameInputChange={handleInputChange}
+      onSelectSuggestion={handleSelectSuggestion}
       nameSuggestions={nameSuggestions}
       loading={loading}
     />
