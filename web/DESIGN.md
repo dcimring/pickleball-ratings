@@ -15,7 +15,8 @@ The palette is rooted in tradition but executed with digital depth. We utilize t
 ### The Palette
 * **Primary (Court Green):** `#004b24` to `#006633`. This is our anchor. Use it for high-impact brand moments and primary actions.
 * **Secondary (Wimbledon White):** `#ffffff`. Not just a background, but a structural element.
-* **Tertiary (Classic Purple):** `#533072`. Used sparingly for "Royal" accents—notifications, active states, or premium tier indicators.
+* **Tertiary (Volt Green):** `#ccff00`. A high-energy digital accent used for data highlights, ranking gains, and high-impact branding moments (e.g., in OpenGraph images).
+* **Quaternary (Classic Purple):** `#533072`. Used sparingly for "Royal" accents—notifications, active states, or premium tier indicators.
 
 ### The "No-Line" Rule
 **Explicit Instruction:** Do not use 1px solid borders to define sections. Sectioning must be achieved through background shifts. For example, a `surface_container_low` (#f3f3f3) list should sit directly on a `surface` (#f9f9f9) background. Let the tonal difference create the boundary.
