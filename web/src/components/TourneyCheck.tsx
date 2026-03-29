@@ -25,7 +25,7 @@ export function TourneyCheck({
   return (
     <div className="max-w-full mx-auto pb-20 text-left min-h-full bg-background">
       {/* Center Court Hero Header */}
-      <header className="relative pt-24 pb-12 md:pt-28 md:pb-16 px-6 text-left bg-pressed-grass overflow-hidden mb-8">
+      <header className="relative pt-24 pb-12 md:pt-28 md:pb-12 px-6 text-left bg-pressed-grass overflow-hidden mb-8">
         {/* Editorial Pattern Overlay */}
         <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
 

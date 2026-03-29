@@ -39,7 +39,7 @@ export function PlayerProfile({
   return (
     <div className="min-h-full bg-background relative overflow-hidden pb-20">
       {/* Center Court Hero Header */}
-      <header className="relative pt-24 pb-12 md:pt-28 md:pb-16 px-6 text-left bg-pressed-grass overflow-hidden mb-8">
+      <header className="relative pt-24 pb-12 md:pt-28 md:pb-12 px-6 text-left bg-pressed-grass overflow-hidden mb-8">
         {/* Editorial Pattern Overlay */}
         <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
 
@@ -51,15 +51,15 @@ export function PlayerProfile({
           >
             <Link 
               href={backUrl}
-              className="flex items-center gap-2 text-secondary/40 hover:text-secondary transition-colors mb-6 md:mb-10 group w-fit"
+              className="flex items-center gap-2 text-secondary/40 hover:text-secondary transition-colors mb-6 md:mb-8 group w-fit"
             >
               <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
               <span className="font-sans text-[10px] font-bold tracking-[0.2em] uppercase">{backLabel}</span>
             </Link>
 
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-10">
-              <div className="space-y-4 md:space-y-6">
-                <div className="flex items-center gap-2 bg-tertiary px-3 py-1.5 rounded-full w-fit shadow-2xl shadow-black/20 border border-white/10 mb-4 md:mb-6">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-8">
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 bg-tertiary px-3 py-1.5 rounded-full w-fit shadow-2xl shadow-black/20 border border-white/10 mb-4">
                   <Star className="w-3.5 h-3.5 text-tertiary-foreground fill-tertiary-foreground" />
                   <span className="text-tertiary-foreground font-sans font-bold tracking-[0.3em] text-[9px] uppercase">Athlete Profile</span>
                 </div>
