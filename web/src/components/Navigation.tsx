@@ -101,7 +101,7 @@ export function Navigation() {
                   href={item.href}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={cn(
-                    "text-xl font-sans font-semibold uppercase tracking-tight flex items-center gap-3",
+                    "text-xl font-sans font-normal uppercase tracking-tight flex items-center gap-3",
                     isActive(item.href) ? "text-primary" : "text-foreground"
                   )}
                 >
