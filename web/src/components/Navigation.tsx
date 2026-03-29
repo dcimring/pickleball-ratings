@@ -45,11 +45,15 @@ export function Navigation() {
               key={item.href}
               href={item.href}
               className={cn(
-                "text-xs font-sans font-bold transition-colors duration-200 uppercase tracking-[0.2em]",
+                "text-xs font-sans font-bold transition-all duration-300 uppercase tracking-[0.2em] relative py-2 group/nav",
                 isActive(item.href) ? "text-primary" : "text-foreground/40 hover:text-primary"
               )}
             >
               {item.label}
+              <div className={cn(
+                "absolute bottom-0 left-0 h-[2px] bg-tertiary transition-all duration-300",
+                isActive(item.href) ? "w-full opacity-100" : "w-0 opacity-0 group-hover/nav:w-4 group-hover/nav:opacity-50"
+              )} />
             </Link>
           ))}
           <button 
@@ -97,10 +101,11 @@ export function Navigation() {
                   href={item.href}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={cn(
-                    "text-xl font-sans font-semibold uppercase tracking-tight",
+                    "text-xl font-sans font-semibold uppercase tracking-tight flex items-center gap-3",
                     isActive(item.href) ? "text-primary" : "text-foreground"
                   )}
                 >
+                  {isActive(item.href) && <div className="w-2 h-2 rounded-full bg-tertiary shadow-[0_0_10px_rgba(204,255,0,0.5)]" />}
                   {item.label}
                 </Link>
               ))}

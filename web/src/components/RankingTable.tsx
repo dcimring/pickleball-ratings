@@ -91,11 +91,11 @@ export function RankingTable({
             className="flex flex-col md:flex-row md:items-end justify-between gap-10"
           >
             <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <Star className="w-4 h-4 text-secondary fill-secondary" />
-                <span className="text-secondary font-sans font-bold tracking-[0.3em] text-[10px] uppercase opacity-60">Cayman Islands</span>
+              <div className="flex items-center gap-2 bg-tertiary px-3 py-1.5 rounded-full w-fit shadow-2xl shadow-black/20 border border-white/10 mb-6">
+                <Star className="w-3.5 h-3.5 text-tertiary-foreground fill-tertiary-foreground" />
+                <span className="text-tertiary-foreground font-sans font-bold tracking-[0.2em] text-[9px] uppercase">Cayman Islands</span>
               </div>
-              <h1 className="text-6xl md:text-[8rem] font-display italic tracking-[-0.06em] text-secondary leading-[0.8] drop-shadow-sm">
+              <h1 className="text-6xl md:text-[7rem] font-display italic tracking-[-0.06em] text-secondary leading-[0.8] drop-shadow-sm">
                 Pickleball <br />
                 Rankings
               </h1>
@@ -234,12 +234,12 @@ export function RankingTable({
                       <div className="col-span-5 md:col-span-5">
                         <Link 
                           href={`/player/${slugify(player.player_name)}?tab=${activeTab}`}
-                          className="font-sans text-lg md:text-xl font-semibold text-foreground hover:text-primary transition-colors text-left tracking-tight"
+                          className="font-sans text-lg md:text-xl font-semibold text-foreground hover:text-primary transition-colors text-left tracking-tight flex items-center gap-2"
                         >
                           {player.player_name}
+                          {player.rank_position === 1 && <Star className="w-3.5 h-3.5 text-tertiary fill-tertiary shrink-0" />}
                         </Link>
-                      </div>
-                      <div className="hidden md:flex col-span-2 items-center justify-end px-4">
+                      </div>                      <div className="hidden md:flex col-span-2 items-center justify-end px-4">
                         <div className="flex items-center gap-2">
                           <div className="font-sans font-medium text-xl text-foreground/40 group-hover:text-foreground transition-colors duration-500 tabular-nums text-right">
                             {player.rounds_played}

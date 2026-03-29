@@ -51,9 +51,9 @@ export function ActivityFeed({
             className="flex flex-col md:flex-row md:items-end justify-between gap-10"
           >
             <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <Star className="w-4 h-4 text-secondary fill-secondary" />
-                <span className="text-secondary font-sans font-bold tracking-[0.3em] text-[10px] uppercase opacity-60">Live Tournament Feed</span>
+              <div className="flex items-center gap-2 bg-tertiary px-3 py-1.5 rounded-full w-fit shadow-2xl shadow-black/20 border border-white/10 mb-6">
+                <Star className="w-3.5 h-3.5 text-tertiary-foreground fill-tertiary-foreground" />
+                <span className="text-tertiary-foreground font-sans font-bold tracking-[0.3em] text-[9px] uppercase">Live Tournament Feed</span>
               </div>
               <h1 className="text-6xl md:text-[7rem] font-display italic tracking-[-0.06em] text-secondary leading-[0.85] drop-shadow-sm">
                 Court <br />

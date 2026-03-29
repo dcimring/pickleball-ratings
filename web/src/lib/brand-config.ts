@@ -24,9 +24,9 @@ export const BRAND_COLORS = {
     foreground: "0.25 0.01 0",
   },
   tertiary: {
-    oklch: "0.35 0.12 300", // #533072 (Classic Purple)
-    hex: "#533072",
-    foreground: "0.99 0.01 0",
+    oklch: "0.90 0.20 110", // #ccff00 (Volt Green)
+    hex: "#ccff00",
+    foreground: "0.25 0.01 0", // Dark soft black
   },
   muted: {
     oklch: "0.96 0.00 0", // #f3f3f3 (Surface L1)

@@ -34,16 +34,16 @@ export function SuggestFeature({
           style={{ clipPath: 'polygon(0 100%, 100% 100%, 100% 0)' }}
         />
 
-        <div className="max-w-6xl mx-auto relative z-10">
+        <div className="max-w-6xl mx-auto relative z-10 text-center">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="space-y-4"
           >
-            <div className="flex items-center justify-center gap-2">
-              <Star className="w-4 h-4 text-secondary fill-secondary" />
-              <span className="text-secondary font-sans font-bold tracking-[0.2em] text-[10px] uppercase opacity-60">Community Roadmap</span>
+            <div className="flex items-center justify-center gap-2 bg-tertiary px-3 py-1.5 rounded-full w-fit mx-auto shadow-2xl shadow-black/20 border border-white/10 mb-6">
+              <Star className="w-3.5 h-3.5 text-tertiary-foreground fill-tertiary-foreground" />
+              <span className="text-tertiary-foreground font-sans font-bold tracking-[0.3em] text-[9px] uppercase">Community Roadmap</span>
             </div>
             <h1 className="text-6xl md:text-[7rem] font-display italic tracking-[-0.06em] text-secondary leading-[0.85] drop-shadow-sm">
               Suggest a <br />

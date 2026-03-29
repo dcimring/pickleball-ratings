@@ -39,6 +39,10 @@ const config: Config = {
           DEFAULT: "oklch(var(--accent) / <alpha-value>)",
           foreground: "oklch(var(--accent-foreground) / <alpha-value>)",
         },
+        tertiary: {
+          DEFAULT: "oklch(var(--tertiary) / <alpha-value>)",
+          foreground: "oklch(var(--tertiary-foreground) / <alpha-value>)",
+        },
         destructive: {
           DEFAULT: "oklch(var(--destructive) / <alpha-value>)",
           foreground: "oklch(var(--destructive-foreground) / <alpha-value>)",

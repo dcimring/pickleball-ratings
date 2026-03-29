@@ -30,6 +30,10 @@
   .tabular-nums {
     font-variant-numeric: tabular-nums;
   }
+
+  .recharts-wrapper:focus {
+    outline: none;
+  }
 }
 
 @layer utilities {
