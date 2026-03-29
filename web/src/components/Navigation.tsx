@@ -36,7 +36,7 @@ export function Navigation() {
           <div className="w-8 h-8 rounded-sm bg-primary flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
             <span className="text-secondary font-display text-lg leading-none pt-0.5 italic">D</span>
           </div>
-          DinkDash<span className="text-primary italic">.xyz</span>
+          DinkDash
         </Link>
 
         <div className="hidden md:flex items-center gap-10">
