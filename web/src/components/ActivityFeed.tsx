@@ -33,7 +33,7 @@ export function ActivityFeed({
   return (
     <div className="max-w-full mx-auto pb-20 text-left min-h-full bg-background">
       {/* Center Court Hero Header */}
-      <header className="relative pt-24 pb-16 md:pt-32 md:pb-20 px-6 text-left bg-pressed-grass overflow-hidden mb-12">
+      <header className="relative pt-24 pb-16 md:pt-32 md:pb-20 px-6 text-left bg-pressed-grass overflow-hidden mb-4 md:mb-12">
         {/* Editorial Pattern Overlay */}
         <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
         
@@ -88,7 +88,7 @@ export function ActivityFeed({
       <div className="max-w-6xl mx-auto px-6">
         {/* Daily Pulse */}
         {pulseStats && (
-          <div className="mb-12 flex items-center gap-4 bg-muted rounded-2xl px-8 py-6 shadow-sm">
+          <div className="mb-6 md:mb-12 flex items-center gap-4 bg-muted rounded-2xl px-8 py-6 shadow-sm">
             <TrendingUp className="w-5 h-5 text-primary" />
             <p className="text-xs md:text-sm font-sans font-bold tracking-tight text-foreground/40 uppercase">
               <span className="text-foreground">{pulseStats.activeCount} Athletes</span> active this session
@@ -100,7 +100,7 @@ export function ActivityFeed({
         )}
 
         {/* Sort & Jump Section */}
-        <div className="flex flex-col gap-8 mb-16">
+        <div className="flex flex-col gap-6 md:gap-8 mb-10 md:mb-16">
           <div className="flex items-center gap-6 text-[10px] font-sans font-bold tracking-widest text-foreground/30">
             <span className="uppercase">Filter by:</span>
             <div className="flex gap-3">
@@ -153,7 +153,7 @@ export function ActivityFeed({
           )}
         </div>
 
-        <div className="space-y-24">
+        <div className="space-y-12 md:space-y-24">
           {loading ? (
             <div className="flex-1 flex flex-col items-center justify-center py-40 bg-muted rounded-3xl">
               <motion.div 
@@ -165,9 +165,9 @@ export function ActivityFeed({
             </div>
           ) : tiers.length > 0 ? (
             tiers.map((tier) => (
-              <div key={tier.title} id={`tier-${tier.title.replace(/\s+/g, '-').toLowerCase()}`} className="space-y-12 scroll-mt-32">
+              <div key={tier.title} id={`tier-${tier.title.replace(/\s+/g, '-').toLowerCase()}`} className="space-y-6 md:space-y-12 scroll-mt-32">
                 <div className="flex items-center gap-6">
-                  <h2 className="font-display italic text-4xl tracking-tighter text-foreground whitespace-nowrap">{tier.title}</h2>
+                  <h2 className="font-display italic text-2xl md:text-4xl tracking-tighter text-foreground whitespace-nowrap">{tier.title}</h2>
                   <div className="h-0.5 w-full bg-muted" />
                 </div>
                 
@@ -176,10 +176,10 @@ export function ActivityFeed({
                     <motion.div 
                       layout
                       key={`${item.player_name}-${item.date}`}
-                      className="bg-secondary p-10 hover:bg-background transition-colors group relative overflow-hidden"
+                      className="bg-secondary p-6 md:p-10 hover:bg-background transition-colors group relative overflow-hidden"
                     >
-                      <div className="flex items-center justify-between mb-10">
-                        <h3 className="font-sans font-bold text-3xl tracking-tight text-foreground">
+                      <div className="flex items-center justify-between mb-6 md:mb-10">
+                        <h3 className="font-sans font-bold text-2xl md:text-3xl tracking-tight text-foreground">
                           <Link href={`/player/${slugify(item.player_name)}?tab=${activeTab}&sort=${activitySort}&from=activity`} className="hover:text-primary transition-colors">
                             {item.player_name}
                           </Link>
@@ -188,9 +188,9 @@ export function ActivityFeed({
                         </span>
                       </div>
                       
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-                        {/* Rating Change */}
-                        <div className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-12">
+                        {/* Rating Shift */}
+                        <div className="space-y-2 md:space-y-4">
                           <span className="text-[10px] font-sans font-bold text-foreground/20 tracking-[0.3em] uppercase">Rating Shift</span>
                           <div className="flex items-center gap-4">
                             <span className="text-foreground font-display italic text-3xl tracking-tighter tabular-nums">{item.current.rating.toFixed(3)}</span>
@@ -207,9 +207,9 @@ export function ActivityFeed({
                           </div>
                         </div>
 
-                        {/* Rounds Change */}
+                        {/* Rounds Played */}
                         {item.roundsDiff !== 0 && (
-                          <div className="space-y-4">
+                          <div className="space-y-2 md:space-y-4">
                             <span className="text-[10px] font-sans font-bold text-foreground/20 tracking-[0.3em] uppercase">Rounds Played</span>
                             <div className="flex items-center gap-4">
                               <span className="text-foreground font-display italic text-3xl tracking-tighter tabular-nums">{item.current.rounds_played}</span>
@@ -220,8 +220,8 @@ export function ActivityFeed({
                           </div>
                         )}
 
-                        {/* Rank Change */}
-                        <div className="space-y-4">
+                        {/* Rank Movement */}
+                        <div className="space-y-2 md:space-y-4">
                           <span className="text-[10px] font-sans font-bold text-foreground/20 tracking-[0.3em] uppercase">Rank Movement</span>
                           <div className="flex items-center gap-4">
                             <span className="text-foreground font-display italic text-3xl tracking-tighter tabular-nums">#{item.current.rank_position}</span>
@@ -236,7 +236,8 @@ export function ActivityFeed({
                                'Stable'}
                             </span>
                           </div>
-                        </div>                      </div>
+                        </div>
+                      </div>
                     </motion.div>
                   ))}
                 </div>
