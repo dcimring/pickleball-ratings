@@ -135,11 +135,12 @@ export function PlayerProfile({
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-sans text-[10px] font-bold tracking-[0.4em] text-foreground/30 uppercase">{type} Rating</span>
+                      {type === 'doubles' ? <Users className="w-4 h-4 text-foreground/10" /> : <User className="w-4 h-4 text-foreground/10" />}
                     </div>
                     {current ? (
                       <div className="space-y-8 text-right self-end w-full">
                         <div className="flex items-end justify-between">
-                           <span className="text-primary font-sans font-bold text-[10px] uppercase tracking-[0.3em]">Official Seed</span>
+                           <span className="text-primary font-sans font-bold text-[10px] uppercase tracking-[0.3em]">Official</span>
                            <span className="text-7xl font-display italic tracking-tighter text-foreground leading-none tabular-nums">{current.rating.toFixed(3)}</span>
                         </div>
                         <div className="flex items-center justify-end gap-10 text-foreground/40">
