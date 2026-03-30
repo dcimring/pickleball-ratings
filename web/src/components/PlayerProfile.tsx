@@ -8,6 +8,7 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { Ranking } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { ShareButton } from './ShareButton';
+import { RankingHistoryTable } from './RankingHistoryTable';
 
 interface PlayerProfileProps {
   playerName: string;
@@ -262,6 +263,14 @@ export function PlayerProfile({
               </div>
             </div>
           </div>
+        )}
+
+        {/* Ranking History Table */}
+        {!loading && hasData && (
+          <RankingHistoryTable 
+            history={playerHistory[activeTab]} 
+            activeTab={activeTab} 
+          />
         )}
       </div>
     </div>
