@@ -62,7 +62,7 @@ export function PlayerProfile({
               <div className="space-y-4">
                 <div className="flex items-center gap-2 mb-4">
                   <Star className="w-3.5 h-3.5 text-tertiary fill-tertiary" />
-                  <span className="text-tertiary font-sans font-bold tracking-[0.3em] text-xs uppercase">Athlete Profile</span>
+                  <span className="text-tertiary font-sans font-bold tracking-[0.3em] text-xs uppercase">Player Profile</span>
                 </div>
                 <div className="flex flex-col items-start gap-4 md:gap-6">
                   <h1 className="text-6xl md:text-[8rem] font-display italic tracking-[-0.06em] text-secondary leading-[0.8] drop-shadow-sm">
