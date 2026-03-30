@@ -74,24 +74,15 @@ export function RankingHistoryTable({ history, activeTab }: RankingHistoryTableP
                       <span className="font-display text-2xl italic text-foreground tabular-nums">
                         {row!.current.rating.toFixed(3)}
                       </span>
-                      <div className={cn(
-                        "flex items-center gap-1 font-sans text-[10px] font-bold tabular-nums",
-                        row!.ratingDiff > 0 ? "text-primary" : row!.ratingDiff < 0 ? "text-red-500" : "text-foreground/20"
-                      )}>
-                        {row!.ratingDiff > 0 ? (
-                          <>
-                            <ArrowUpRight className="w-3 h-3" />
-                            {Math.abs(row!.ratingDiff).toFixed(3)}
-                          </>
-                        ) : row!.ratingDiff < 0 ? (
-                          <>
-                            <ArrowDownRight className="w-3 h-3" />
-                            {Math.abs(row!.ratingDiff).toFixed(3)}
-                          </>
-                        ) : (
-                          <Minus className="w-3 h-3" />
-                        )}
-                      </div>
+                      {row!.ratingDiff !== 0 && (
+                        <div className={cn(
+                          "flex items-center gap-1 font-sans text-[10px] font-bold tabular-nums",
+                          row!.ratingDiff > 0 ? "text-primary" : "text-red-500"
+                        )}>
+                          {row!.ratingDiff > 0 ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
+                          {Math.abs(row!.ratingDiff).toFixed(3)}
+                        </div>
+                      )}
                     </div>
                   </td>
                   <td className="py-6 text-right">
@@ -99,24 +90,15 @@ export function RankingHistoryTable({ history, activeTab }: RankingHistoryTableP
                       <span className="font-display text-2xl italic text-foreground tabular-nums">
                         #{row!.current.rank_position}
                       </span>
-                      <div className={cn(
-                        "flex items-center gap-1 font-sans text-[10px] font-bold tabular-nums",
-                        row!.rankDiff > 0 ? "text-primary" : row!.rankDiff < 0 ? "text-red-500" : "text-foreground/20"
-                      )}>
-                        {row!.rankDiff > 0 ? (
-                          <>
-                            <ArrowUpRight className="w-3 h-3" />
-                            {Math.abs(row!.rankDiff)}
-                          </>
-                        ) : row!.rankDiff < 0 ? (
-                          <>
-                            <ArrowDownRight className="w-3 h-3" />
-                            {Math.abs(row!.rankDiff)}
-                          </>
-                        ) : (
-                          <Minus className="w-3 h-3" />
-                        )}
-                      </div>
+                      {row!.rankDiff !== 0 && (
+                        <div className={cn(
+                          "flex items-center gap-1 font-sans text-[10px] font-bold tabular-nums",
+                          row!.rankDiff > 0 ? "text-primary" : "text-red-500"
+                        )}>
+                          {row!.rankDiff > 0 ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
+                          {Math.abs(row!.rankDiff)}
+                        </div>
+                      )}
                     </div>
                   </td>
                   <td className="py-6 text-right">
