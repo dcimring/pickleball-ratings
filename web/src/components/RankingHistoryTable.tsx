@@ -47,21 +47,21 @@ export function RankingHistoryTable({ history, activeTab }: RankingHistoryTableP
           </span>
         </div>
 
-        <div className="overflow-x-auto -mx-4 md:mx-0">
-          <table className="w-full border-collapse min-w-[320px]">
+        <div className="overflow-x-auto -mx-4 md:mx-0 scrollbar-hide">
+          <table className="w-full border-collapse">
             <thead>
               <tr className="text-left border-b border-foreground/5">
-                <th className="pb-6 pl-4 md:pl-0 font-sans text-[10px] font-bold tracking-[0.3em] text-foreground/30 uppercase">Date</th>
-                <th className="pb-6 font-sans text-[10px] font-bold tracking-[0.3em] text-foreground/30 uppercase text-right">Rating</th>
-                <th className="pb-6 font-sans text-[10px] font-bold tracking-[0.3em] text-foreground/30 uppercase text-right">Rank</th>
-                <th className="pb-6 pr-4 md:pr-0 font-sans text-[10px] font-bold tracking-[0.3em] text-foreground/30 uppercase text-right">Rounds</th>
+                <th className="pb-6 pl-4 md:pl-0 font-sans text-[9px] md:text-[10px] font-bold tracking-[0.2em] md:tracking-[0.3em] text-foreground/30 uppercase">Date</th>
+                <th className="pb-6 font-sans text-[9px] md:text-[10px] font-bold tracking-[0.2em] md:tracking-[0.3em] text-foreground/30 uppercase text-right">Rating</th>
+                <th className="pb-6 font-sans text-[9px] md:text-[10px] font-bold tracking-[0.2em] md:tracking-[0.3em] text-foreground/30 uppercase text-right px-2">Rank</th>
+                <th className="pb-6 pr-4 md:pr-0 font-sans text-[9px] md:text-[10px] font-bold tracking-[0.2em] md:tracking-[0.3em] text-foreground/30 uppercase text-right">Rounds</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-foreground/[0.02]">
               {rows.map((row, i) => (
                 <tr key={row!.current.id} className="group hover:bg-foreground/[0.01] transition-colors">
-                  <td className="py-6 pl-4 md:pl-0">
-                    <span className="font-sans text-[11px] font-bold text-foreground/40 uppercase tracking-wider whitespace-nowrap">
+                  <td className="py-5 md:py-6 pl-4 md:pl-0">
+                    <span className="font-sans text-[10px] md:text-[11px] font-bold text-foreground/40 uppercase tracking-tight md:tracking-wider whitespace-nowrap">
                       {new Date(row!.current.valid_from).toLocaleDateString('en-KY', { 
                         month: 'short', 
                         day: 'numeric',
@@ -69,45 +69,45 @@ export function RankingHistoryTable({ history, activeTab }: RankingHistoryTableP
                       })}
                     </span>
                   </td>
-                  <td className="py-6 text-right">
-                    <div className="flex flex-col items-end gap-1">
-                      <span className="font-display text-2xl italic text-foreground tabular-nums leading-none">
+                  <td className="py-5 md:py-6 text-right">
+                    <div className="flex flex-col items-end">
+                      <span className="font-display text-lg md:text-2xl italic text-foreground tabular-nums leading-none">
                         {row!.current.rating.toFixed(3)}
                       </span>
                       {row!.ratingDiff !== 0 && (
                         <div className={cn(
-                          "flex items-center gap-1 font-sans text-[10px] font-bold tabular-nums",
+                          "flex items-center gap-0.5 mt-1 font-sans text-[8px] md:text-[10px] font-bold tabular-nums",
                           row!.ratingDiff > 0 ? "text-primary" : "text-red-500"
                         )}>
-                          {row!.ratingDiff > 0 ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
+                          {row!.ratingDiff > 0 ? <ArrowUpRight className="w-2.5 h-2.5 md:w-3 md:h-3" /> : <ArrowDownRight className="w-2.5 h-2.5 md:w-3 md:h-3" />}
                           {Math.abs(row!.ratingDiff).toFixed(3)}
                         </div>
                       )}
                     </div>
                   </td>
-                  <td className="py-6 text-right">
-                    <div className="flex flex-col items-end gap-1">
-                      <span className="font-display text-2xl italic text-foreground tabular-nums leading-none">
+                  <td className="py-5 md:py-6 text-right px-2">
+                    <div className="flex flex-col items-end">
+                      <span className="font-display text-lg md:text-2xl italic text-foreground tabular-nums leading-none">
                         #{row!.current.rank_position}
                       </span>
                       {row!.rankDiff !== 0 && (
                         <div className={cn(
-                          "flex items-center gap-1 font-sans text-[10px] font-bold tabular-nums",
+                          "flex items-center gap-0.5 mt-1 font-sans text-[8px] md:text-[10px] font-bold tabular-nums",
                           row!.rankDiff > 0 ? "text-primary" : "text-red-500"
                         )}>
-                          {row!.rankDiff > 0 ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
+                          {row!.rankDiff > 0 ? <ArrowUpRight className="w-2.5 h-2.5 md:w-3 md:h-3" /> : <ArrowDownRight className="w-2.5 h-2.5 md:w-3 md:h-3" />}
                           {Math.abs(row!.rankDiff)}
                         </div>
                       )}
                     </div>
                   </td>
-                  <td className="py-6 text-right pr-4 md:pr-0">
-                    <div className="flex flex-col items-end gap-1">
-                      <span className="font-display text-2xl italic text-foreground tabular-nums leading-none">
+                  <td className="py-5 md:py-6 text-right pr-4 md:pr-0">
+                    <div className="flex flex-col items-end">
+                      <span className="font-display text-lg md:text-2xl italic text-foreground tabular-nums leading-none">
                         {row!.current.rounds_played}
                       </span>
                       {row!.roundsDiff !== 0 && (
-                        <div className="flex items-center gap-1 font-sans text-[10px] font-bold text-foreground/20 tabular-nums">
+                        <div className="flex items-center gap-0.5 mt-1 font-sans text-[8px] md:text-[10px] font-bold text-foreground/20 tabular-nums">
                           <span className="opacity-50">+</span>
                           {row!.roundsDiff}
                         </div>
