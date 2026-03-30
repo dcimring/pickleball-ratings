@@ -74,15 +74,13 @@ export function RankingHistoryTable({ history, activeTab }: RankingHistoryTableP
                       <span className="font-display text-xl md:text-3xl italic text-foreground tabular-nums leading-none">
                         {row!.current.rating.toFixed(3)}
                       </span>
-                      {row!.ratingDiff !== 0 && (
-                        <div className={cn(
-                          "flex items-center gap-0.5 mt-1 font-sans text-[8.5px] md:text-[10px] font-bold tabular-nums",
-                          row!.ratingDiff > 0 ? "text-primary" : "text-red-500"
-                        )}>
-                          {row!.ratingDiff > 0 ? <ArrowUpRight className="w-2.5 h-2.5 md:w-3 md:h-3" /> : <ArrowDownRight className="w-2.5 h-2.5 md:w-3 md:h-3" />}
-                          {Math.abs(row!.ratingDiff).toFixed(3)}
-                        </div>
-                      )}
+                      <div className={cn(
+                        "flex items-center gap-0.5 mt-1 font-sans text-[8.5px] md:text-[10px] font-bold tabular-nums min-h-[12px] md:min-h-[14px]",
+                        row!.ratingDiff > 0 ? "text-primary" : row!.ratingDiff < 0 ? "text-red-500" : "opacity-0"
+                      )}>
+                        {row!.ratingDiff > 0 ? <ArrowUpRight className="w-2.5 h-2.5 md:w-3 md:h-3" /> : <ArrowDownRight className="w-2.5 h-2.5 md:w-3 md:h-3" />}
+                        {Math.abs(row!.ratingDiff).toFixed(3)}
+                      </div>
                     </div>
                   </td>
                   <td className="py-5 md:py-6 text-right px-2">
@@ -90,15 +88,13 @@ export function RankingHistoryTable({ history, activeTab }: RankingHistoryTableP
                       <span className="font-display text-xl md:text-3xl italic text-foreground tabular-nums leading-none">
                         #{row!.current.rank_position}
                       </span>
-                      {row!.rankDiff !== 0 && (
-                        <div className={cn(
-                          "flex items-center gap-0.5 mt-1 font-sans text-[8.5px] md:text-[10px] font-bold tabular-nums",
-                          row!.rankDiff > 0 ? "text-primary" : "text-red-500"
-                        )}>
-                          {row!.rankDiff > 0 ? <ArrowUpRight className="w-2.5 h-2.5 md:w-3 md:h-3" /> : <ArrowDownRight className="w-2.5 h-2.5 md:w-3 md:h-3" />}
-                          {Math.abs(row!.rankDiff)}
-                        </div>
-                      )}
+                      <div className={cn(
+                        "flex items-center gap-0.5 mt-1 font-sans text-[8.5px] md:text-[10px] font-bold tabular-nums min-h-[12px] md:min-h-[14px]",
+                        row!.rankDiff > 0 ? "text-primary" : row!.rankDiff < 0 ? "text-red-500" : "opacity-0"
+                      )}>
+                        {row!.rankDiff > 0 ? <ArrowUpRight className="w-2.5 h-2.5 md:w-3 md:h-3" /> : <ArrowDownRight className="w-2.5 h-2.5 md:w-3 md:h-3" />}
+                        {Math.abs(row!.rankDiff)}
+                      </div>
                     </div>
                   </td>
                   <td className="py-5 md:py-6 text-right pr-4 md:pr-0">
@@ -106,12 +102,13 @@ export function RankingHistoryTable({ history, activeTab }: RankingHistoryTableP
                       <span className="font-display text-xl md:text-3xl italic text-foreground tabular-nums leading-none">
                         {row!.current.rounds_played}
                       </span>
-                      {row!.roundsDiff !== 0 && (
-                        <div className="flex items-center gap-0.5 mt-1 font-sans text-[8.5px] md:text-[10px] font-bold text-foreground/20 tabular-nums">
-                          <span className="opacity-50">+</span>
-                          {row!.roundsDiff}
-                        </div>
-                      )}
+                      <div className={cn(
+                        "flex items-center gap-0.5 mt-1 font-sans text-[8.5px] md:text-[10px] font-bold text-foreground/20 tabular-nums min-h-[12px] md:min-h-[14px]",
+                        row!.roundsDiff !== 0 ? "opacity-100" : "opacity-0"
+                      )}>
+                        <span className="opacity-50">+</span>
+                        {row!.roundsDiff}
+                      </div>
                     </div>
                   </td>
                 </tr>
