@@ -47,31 +47,31 @@ export function RankingHistoryTable({ history, activeTab }: RankingHistoryTableP
           </span>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
+        <div className="overflow-x-auto -mx-4 md:mx-0">
+          <table className="w-full border-collapse min-w-[320px]">
             <thead>
               <tr className="text-left border-b border-foreground/5">
-                <th className="pb-6 font-sans text-[10px] font-bold tracking-[0.3em] text-foreground/30 uppercase">Date</th>
+                <th className="pb-6 pl-4 md:pl-0 font-sans text-[10px] font-bold tracking-[0.3em] text-foreground/30 uppercase">Date</th>
                 <th className="pb-6 font-sans text-[10px] font-bold tracking-[0.3em] text-foreground/30 uppercase text-right">Rating</th>
                 <th className="pb-6 font-sans text-[10px] font-bold tracking-[0.3em] text-foreground/30 uppercase text-right">Rank</th>
-                <th className="pb-6 font-sans text-[10px] font-bold tracking-[0.3em] text-foreground/30 uppercase text-right">Rounds</th>
+                <th className="pb-6 pr-4 md:pr-0 font-sans text-[10px] font-bold tracking-[0.3em] text-foreground/30 uppercase text-right">Rounds</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-foreground/[0.02]">
               {rows.map((row, i) => (
                 <tr key={row!.current.id} className="group hover:bg-foreground/[0.01] transition-colors">
-                  <td className="py-6">
-                    <span className="font-sans text-[11px] font-bold text-foreground/40 uppercase tracking-wider">
+                  <td className="py-6 pl-4 md:pl-0">
+                    <span className="font-sans text-[11px] font-bold text-foreground/40 uppercase tracking-wider whitespace-nowrap">
                       {new Date(row!.current.valid_from).toLocaleDateString('en-KY', { 
                         month: 'short', 
                         day: 'numeric',
-                        year: 'numeric' 
+                        year: '2-digit' 
                       })}
                     </span>
                   </td>
                   <td className="py-6 text-right">
                     <div className="flex flex-col items-end gap-1">
-                      <span className="font-display text-2xl italic text-foreground tabular-nums">
+                      <span className="font-display text-2xl italic text-foreground tabular-nums leading-none">
                         {row!.current.rating.toFixed(3)}
                       </span>
                       {row!.ratingDiff !== 0 && (
@@ -87,7 +87,7 @@ export function RankingHistoryTable({ history, activeTab }: RankingHistoryTableP
                   </td>
                   <td className="py-6 text-right">
                     <div className="flex flex-col items-end gap-1">
-                      <span className="font-display text-2xl italic text-foreground tabular-nums">
+                      <span className="font-display text-2xl italic text-foreground tabular-nums leading-none">
                         #{row!.current.rank_position}
                       </span>
                       {row!.rankDiff !== 0 && (
@@ -101,9 +101,9 @@ export function RankingHistoryTable({ history, activeTab }: RankingHistoryTableP
                       )}
                     </div>
                   </td>
-                  <td className="py-6 text-right">
+                  <td className="py-6 text-right pr-4 md:pr-0">
                     <div className="flex flex-col items-end gap-1">
-                      <span className="font-display text-2xl italic text-foreground tabular-nums">
+                      <span className="font-display text-2xl italic text-foreground tabular-nums leading-none">
                         {row!.current.rounds_played}
                       </span>
                       {row!.roundsDiff !== 0 && (
