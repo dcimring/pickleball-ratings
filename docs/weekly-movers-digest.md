@@ -16,7 +16,10 @@ Daniel posts it manually into existing WhatsApp groups, same day every week.
 - **Voice**: Daniel's — plain, direct, no hype, no emoji spam. The last line
   states the moat ("tracking every rating change since February") without
   selling.
-- **Link**: use `dinkdash.xyz/weekly` — a clean short link that forwards to
+- **Link**: always write the full `https://dinkdash.xyz/weekly` in the message
+  — WhatsApp only reliably generates the preview card when the URL includes
+  the scheme; a bare `dinkdash.xyz/weekly` can render as plain text (found
+  2026-08-08). `/weekly` is a clean short link that forwards to
   the Activity page with UTM parameters attached, so WhatsApp shares are
   measurable without ugly URLs in the message. `/weekly` is a real page (not a
   bare 30x — preview crawlers don't follow those) that serves a **dynamic
@@ -41,7 +44,7 @@ Biggest climb: [NAME], +[RATING DELTA] and up [X] spots to #[RANK].
 
 [MILESTONE NAME] crossed [THRESHOLD] — now [RATING], up [X] to #[RANK].
 
-Full list plus every player's rating history is at dinkdash.xyz/weekly — search your name to see your own trend.
+Full list plus every player's rating history is at https://dinkdash.xyz/weekly — search your name to see your own trend.
 
 I've been tracking every rating change on the island since February, so the charts get more interesting every week.
 ```
@@ -63,6 +66,6 @@ Ankit Gupta +0.103, up 23 places to #160.
 
 Louie Pullen crossed 4.0 — now 4.030, up 14 to #57.
 
-Full list plus every player's rating history is at dinkdash.xyz/weekly — search your name to see your own trend.
+Full list plus every player's rating history is at https://dinkdash.xyz/weekly — search your name to see your own trend.
 
 I've been tracking every rating change on the island since February, so the charts get more interesting every week.
