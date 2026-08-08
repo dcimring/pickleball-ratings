@@ -1,90 +1,54 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { useParams, useSearchParams } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
 import { Ranking } from '@/lib/types';
 import { PlayerProfile } from '@/components/PlayerProfile';
-import { unslugify, properCaseUnslugify, escapeLike } from '@/lib/slugify';
 
-export function PlayerProfileClient() {
-  const params = useParams();
-  const searchParams = useSearchParams();
-  const slug = params.slug as string;
-  
+interface PlayerProfileClientProps {
+  slug: string;
+  playerName: string;
+  initialHistory: { singles: Ranking[]; doubles: Ranking[] };
+}
+
+export function PlayerProfileClient({ slug, playerName, initialHistory }: PlayerProfileClientProps) {
   const [activeTab, setActiveTab] = useState<'doubles' | 'singles'>('doubles');
-  const [loading, setLoading] = useState(true);
-  const [playerHistory, setPlayerHistory] = useState<{ singles: Ranking[], doubles: Ranking[] }>({ singles: [], doubles: [] });
-  const [playerName, setPlayerName] = useState('');
+  const [backUrl, setBackUrl] = useState('/?tab=doubles');
+  const [backLabel, setBackLabel] = useState('Back to Rankings');
 
-  const isFromActivity = searchParams.get('from') === 'activity';
-  const sort = searchParams.get('sort');
-  const tab = searchParams.get('tab');
-  
-  const backUrl = isFromActivity 
-    ? `/activity?tab=${tab || 'doubles'}${sort ? `&sort=${sort}` : ''}`
-    : `/?tab=${tab || 'doubles'}`;
-  
-  const backLabel = isFromActivity ? 'Back to Activity' : 'Back to Rankings';
-
-  // Handle initial tab from URL search params
+  // Read navigation params after mount instead of useSearchParams so the
+  // server-rendered profile content isn't replaced by a CSR bailout.
   useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
     const tab = searchParams.get('tab');
+    const sort = searchParams.get('sort');
+    const isFromActivity = searchParams.get('from') === 'activity';
+
     if (tab === 'singles' || tab === 'doubles') {
       setActiveTab(tab);
     }
-  }, [searchParams]);
+
+    setBackUrl(
+      isFromActivity
+        ? `/activity?tab=${tab || 'doubles'}${sort ? `&sort=${sort}` : ''}`
+        : `/?tab=${tab || 'doubles'}`
+    );
+    setBackLabel(isFromActivity ? 'Back to Activity' : 'Back to Rankings');
+  }, []);
 
   useEffect(() => {
-    async function fetchProfile() {
-      const name = unslugify(slug);
-      const pattern = escapeLike(name);
-      setPlayerName(properCaseUnslugify(slug));
-      setLoading(true);
-
-      try {
-        const [singlesRes, doublesRes] = await Promise.all([
-          supabase.schema('pickleball_ratings').from('singles_ratings_deltas').select('*').ilike('player_name', pattern).order('valid_from', { ascending: true }),
-          supabase.schema('pickleball_ratings').from('doubles_ratings_deltas').select('*').ilike('player_name', pattern).order('valid_from', { ascending: true })
-        ]);
-
-        const actualName = singlesRes.data?.[0]?.player_name || doublesRes.data?.[0]?.player_name || name;
-        setPlayerName(actualName);
-
-        setPlayerHistory({
-          singles: singlesRes.data || [],
-          doubles: doublesRes.data || []
-        });
-      } catch (err) {
-        console.error('PROFILE_FETCH_ERROR:', err);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    if (slug) {
-      fetchProfile();
-    }
-  }, [slug]);
-
-  useEffect(() => {
-    if (slug) {
-      // Warm the Vercel Edge Cache with an active fetch
-      fetch(`/player/${slug}/opengraph-image`, { mode: 'no-cors' }).catch(() => {});
-    }
+    // Warm the Vercel Edge Cache with an active fetch
+    fetch(`/player/${slug}/opengraph-image`, { mode: 'no-cors' }).catch(() => {});
   }, [slug]);
 
   return (
-    <>
-      <PlayerProfile 
-        playerName={playerName}
-        playerHistory={playerHistory}
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-        loading={loading}
-        backUrl={backUrl}
-        backLabel={backLabel}
-      />
-    </>
+    <PlayerProfile
+      playerName={playerName}
+      playerHistory={initialHistory}
+      activeTab={activeTab}
+      onTabChange={setActiveTab}
+      loading={false}
+      backUrl={backUrl}
+      backLabel={backLabel}
+    />
   );
 }

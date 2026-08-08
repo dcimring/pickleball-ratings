@@ -13,9 +13,14 @@ export function ActivityClient() {
   const initialTab = (searchParams.get('tab') as 'doubles' | 'singles') || 'doubles';
   const initialSort = (searchParams.get('sort') as 'rating' | 'date') || 'rating';
 
-  const { singlesHistory, doublesHistory, loading } = useData();
+  const { singlesHistory, doublesHistory, loading, historyLoading, ensureHistory } = useData();
   const [activeTab, setActiveTab] = useState<'doubles' | 'singles'>(initialTab);
   const [activitySort, setActivitySort] = useState<'rating' | 'date'>(initialSort);
+
+  // History is lazy-loaded; request it when the feed mounts
+  useEffect(() => {
+    ensureHistory();
+  }, [ensureHistory]);
 
   // Update URL when state changes
   useEffect(() => {
@@ -115,7 +120,7 @@ export function ActivityClient() {
       activitySort={activitySort}
       onSortChange={setActivitySort}
       pulseStats={pulseStats}
-      loading={loading}
+      loading={loading || historyLoading}
     />
   );
 }

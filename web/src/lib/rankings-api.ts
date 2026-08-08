@@ -1,0 +1,95 @@
+import { cache } from 'react';
+import { supabase } from './supabase';
+import { unslugify, escapeLike } from './slugify';
+import { Ranking } from './types';
+
+export interface CurrentRankings {
+  singles: Ranking[];
+  doubles: Ranking[];
+}
+
+export interface PlayerHistory {
+  name: string;
+  singles: Ranking[];
+  doubles: Ranking[];
+}
+
+/**
+ * Server-side fetch of the current rankings for both modes.
+ * cache()-wrapped so layout and page share one fetch per request.
+ * Returns null on failure so callers can fall back to client-side fetching.
+ */
+export const getCurrentRankings = cache(async (): Promise<CurrentRankings | null> => {
+  try {
+    const [singlesRes, doublesRes] = await Promise.all([
+      supabase
+        .schema('pickleball_ratings')
+        .from('singles_ratings_deltas')
+        .select('*')
+        .eq('is_current', true)
+        .order('rank_position', { ascending: true }),
+      supabase
+        .schema('pickleball_ratings')
+        .from('doubles_ratings_deltas')
+        .select('*')
+        .eq('is_current', true)
+        .order('rank_position', { ascending: true }),
+    ]);
+
+    if (singlesRes.error && doublesRes.error) {
+      console.error('RANKINGS_FETCH_ERROR:', singlesRes.error, doublesRes.error);
+      return null;
+    }
+
+    return {
+      singles: singlesRes.data ?? [],
+      doubles: doublesRes.data ?? [],
+    };
+  } catch (err) {
+    console.error('RANKINGS_FETCH_ERROR:', err);
+    return null;
+  }
+});
+
+/**
+ * Server-side fetch of a player's full rating history for both modes,
+ * ascending by valid_from. Returns null when the player has no rows at all.
+ * Throws on query errors so outages don't masquerade as 404s.
+ */
+export const getPlayerHistory = cache(async (slug: string): Promise<PlayerHistory | null> => {
+  const name = unslugify(slug);
+  const pattern = escapeLike(name);
+
+  const [singlesRes, doublesRes] = await Promise.all([
+    supabase
+      .schema('pickleball_ratings')
+      .from('singles_ratings_deltas')
+      .select('*')
+      .ilike('player_name', pattern)
+      .order('valid_from', { ascending: true }),
+    supabase
+      .schema('pickleball_ratings')
+      .from('doubles_ratings_deltas')
+      .select('*')
+      .ilike('player_name', pattern)
+      .order('valid_from', { ascending: true }),
+  ]);
+
+  if (singlesRes.error && doublesRes.error) {
+    console.error('PLAYER_HISTORY_FETCH_ERROR:', singlesRes.error, doublesRes.error);
+    throw new Error('Failed to fetch player history');
+  }
+
+  const singles = singlesRes.data ?? [];
+  const doubles = doublesRes.data ?? [];
+
+  if (singles.length === 0 && doubles.length === 0) {
+    return null;
+  }
+
+  return {
+    name: singles[0]?.player_name || doubles[0]?.player_name || name,
+    singles,
+    doubles,
+  };
+});

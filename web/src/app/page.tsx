@@ -1,78 +1,38 @@
-"use client";
+import { getCurrentRankings } from '@/lib/rankings-api';
+import { slugify } from '@/lib/slugify';
+import { HomeClient } from './HomeClient';
 
-import { useState, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { useData } from '@/context/DataContext';
-import { RankingTable } from '@/components/RankingTable';
-import { Ranking } from '@/lib/types';
-import { motion } from 'framer-motion';
-import { Zap } from 'lucide-react';
+const BASE_URL = 'https://dinkdash.xyz';
 
-function RankingsContent() {
-  const searchParams = useSearchParams();
-  const initialTab = (searchParams.get('tab') as 'doubles' | 'singles') || 'doubles';
-  
-  const { singles, doubles, loading, error, fetchData, refreshing } = useData();
-  const [activeTab, setActiveTab] = useState<'doubles' | 'singles'>(initialTab);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortConfig, setSortConfig] = useState<{ key: keyof Ranking; direction: 'asc' | 'desc' }>({
-    key: 'rank_position',
-    direction: 'asc'
-  });
+export default async function RankingsPage() {
+  // Shares the request-level cache with the layout's fetch
+  const rankings = await getCurrentRankings();
 
-  const handleSort = (key: keyof Ranking) => {
-    setSortConfig((current) => ({
-      key,
-      direction: current.key === key && current.direction === 'asc' ? 'desc' : 'asc'
-    }));
-  };
-
-  const currentData = activeTab === 'doubles' ? doubles : singles;
-
-  if (error && !loading && currentData.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] px-6 text-center">
-        <p className="font-display italic text-3xl text-primary mb-2">Something went wrong</p>
-        <p className="text-foreground/60 mb-6 max-w-sm">{error}</p>
-        <button
-          onClick={() => fetchData(true)}
-          disabled={refreshing}
-          className="px-8 py-3 bg-primary text-white rounded-full font-bold tracking-widest text-sm uppercase disabled:opacity-50"
-        >
-          {refreshing ? 'Retrying…' : 'Retry'}
-        </button>
-      </div>
-    );
-  }
+  const jsonLd = rankings
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        name: 'Cayman Islands Pickleball Doubles Rankings',
+        itemListOrder: 'https://schema.org/ItemListOrderAscending',
+        numberOfItems: rankings.doubles.length,
+        itemListElement: rankings.doubles.slice(0, 25).map((player) => ({
+          '@type': 'ListItem',
+          position: player.rank_position,
+          name: player.player_name,
+          url: `${BASE_URL}/player/${slugify(player.player_name)}`,
+        })),
+      }
+    : null;
 
   return (
-    <RankingTable 
-      data={currentData}
-      activeTab={activeTab}
-      onTabChange={setActiveTab}
-      searchQuery={searchQuery}
-      onSearchChange={setSearchQuery}
-      sortConfig={sortConfig}
-      onSort={handleSort}
-      loading={loading}
-    />
-  );
-}
-
-export default function RankingsPage() {
-  return (
-    <Suspense fallback={
-      <div className="flex flex-col items-center justify-center min-h-[60vh]">
-        <motion.div 
-          animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <Zap className="w-12 h-12 text-primary fill-primary" />
-        </motion.div>
-        <p className="mt-4 font-display text-primary font-bold tracking-widest animate-pulse">PREPARING RANKINGS...</p>
-      </div>
-    }>
-      <RankingsContent />
-    </Suspense>
+    <>
+      {jsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      )}
+      <HomeClient />
+    </>
   );
 }
