@@ -16,9 +16,14 @@ Daniel posts it manually into existing WhatsApp groups, same day every week.
 - **Voice**: Daniel's — plain, direct, no hype, no emoji spam. The last line
   states the moat ("tracking every rating change since February") without
   selling.
-- **Link**: use `dinkdash.xyz/weekly` — a clean short link that redirects to
+- **Link**: use `dinkdash.xyz/weekly` — a clean short link that forwards to
   the Activity page with UTM parameters attached, so WhatsApp shares are
-  measurable without ugly URLs in the message.
+  measurable without ugly URLs in the message. `/weekly` is a real page (not a
+  bare 30x — preview crawlers don't follow those) that serves a **dynamic
+  digest OG card** (`web/src/app/weekly/opengraph-image.tsx`: players moved,
+  biggest climb, milestone crossing — computed live from `getWeeklyMovers()`)
+  and instantly redirects human visitors. The preview card regenerates itself,
+  so the pasted message gets a current headline graphic with zero manual work.
 
 ## Template
 
