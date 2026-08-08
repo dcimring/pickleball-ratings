@@ -1,17 +1,20 @@
 "use client";
 
-import { useMemo, useRef, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Users, User, Zap, TrendingUp, TrendingDown, Minus, X, Star, ChevronDown } from 'lucide-react';
-import { Ranking } from '@/lib/types';
+import { Search, TrendingUp, TrendingDown, Minus, X, Star, ChevronDown } from 'lucide-react';
+import { Ranking, RatingMode } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { slugify } from '@/lib/slugify';
+import { PageHero } from '@/components/PageHero';
+import { ModeSwitcher } from '@/components/ModeSwitcher';
+import { Spinner } from '@/components/Spinner';
 
 interface RankingTableProps {
   data: Ranking[];
-  activeTab: 'doubles' | 'singles';
-  onTabChange: (tab: 'doubles' | 'singles') => void;
+  activeTab: RatingMode;
+  onTabChange: (tab: RatingMode) => void;
   searchQuery: string;
   onSearchChange: (query: string) => void;
   sortConfig: { key: keyof Ranking; direction: 'asc' | 'desc' };
@@ -29,8 +32,6 @@ export function RankingTable({
   onSort,
   loading,
 }: RankingTableProps) {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const searchSectionRef = useRef<HTMLElement>(null);
   const [visibleCount, setVisibleCount] = useState(50);
 
   // Reset pagination when filter/sort state changes
@@ -73,54 +74,17 @@ export function RankingTable({
   return (
     <div className="pb-20 min-h-full bg-background">
       {/* Center Court Hero Header */}
-      <header className="relative pt-24 pb-16 md:pt-32 md:pb-20 px-6 text-left bg-pressed-grass overflow-hidden">
-        {/* Editorial Pattern Overlay */}
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
-
-        <div className="max-w-6xl mx-auto relative z-10">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col md:flex-row md:items-end justify-between gap-10"
-          >
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 mb-6">
-                <Star className="w-3.5 h-3.5 text-tertiary fill-tertiary" />
-                <span className="text-tertiary font-sans font-bold tracking-[0.3em] text-xs uppercase">Cayman Islands</span>
-              </div>
-              <h1 className="text-6xl md:text-[7rem] font-display italic tracking-[-0.06em] text-secondary leading-[0.8] drop-shadow-sm">
-                Pickleball <br />
-                Rankings
-              </h1>
-            </div>
-
-            <div className="flex p-1 bg-white/5 backdrop-blur-xl rounded-2xl h-fit border border-white/10 shadow-2xl">
-              <button 
-                onClick={() => onTabChange('doubles')}
-                className={cn(
-                  "flex items-center gap-2 px-8 py-4 rounded-xl font-sans font-bold text-xs tracking-widest transition-all duration-500 uppercase",
-                  activeTab === 'doubles' ? "bg-secondary text-primary shadow-2xl scale-[1.02]" : "text-secondary/60 hover:text-secondary hover:bg-white/5"
-                )}
-              >
-                <Users className="w-4 h-4" /> Doubles
-              </button>
-              <button 
-                onClick={() => onTabChange('singles')}
-                className={cn(
-                  "flex items-center gap-2 px-8 py-4 rounded-xl font-sans font-bold text-xs tracking-widest transition-all duration-500 uppercase",
-                  activeTab === 'singles' ? "bg-secondary text-primary shadow-2xl scale-[1.02]" : "text-secondary/60 hover:text-secondary hover:bg-white/5"
-                )}
-              >
-                <User className="w-4 h-4" /> Singles
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      </header>
+      <PageHero
+        eyebrow="Cayman Islands"
+        title={<>Pickleball <br /> Rankings</>}
+        className="pt-24 pb-16 md:pt-32 md:pb-20"
+        titleClassName="leading-[0.8]"
+      >
+        <ModeSwitcher activeTab={activeTab} onTabChange={onTabChange} size="lg" />
+      </PageHero>
 
       {/* Floating Search Bridge */}
-      <section ref={searchSectionRef} className="sticky top-16 md:top-20 z-40 px-6 py-0 -mt-6 md:-mt-8 text-left transition-all overflow-visible mb-4">
+      <section className="sticky top-16 md:top-20 z-40 px-6 py-0 -mt-6 md:-mt-8 text-left transition-all overflow-visible mb-4">
         <div className="max-w-6xl mx-auto relative z-10">
           <motion.div 
             initial={{ scale: 0.95 }}
@@ -131,8 +95,9 @@ export function RankingTable({
             <div className="absolute left-8 inset-y-0 flex items-center pointer-events-none z-10">
               <Search className="w-6 h-6 text-primary group-focus-within:scale-110 transition-transform duration-500 opacity-80" />
             </div>
-            <input 
+            <input
               type="text"
+              aria-label="Search by player name"
               placeholder="Search by player name"
               value={searchQuery}
               onKeyDown={(e) => {
@@ -151,6 +116,7 @@ export function RankingTable({
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.8 }}
                     onClick={() => onSearchChange('')}
+                    aria-label="Clear search"
                     className="w-12 h-12 flex items-center justify-center hover:bg-muted rounded-full transition-colors group/clear"
                   >
                     <X className="w-5 h-5 text-foreground/40 group-hover/clear:text-primary transition-colors" />
@@ -198,14 +164,7 @@ export function RankingTable({
 
             <div className="min-h-[400px] flex flex-col gap-2 relative mt-2">
               {loading ? (
-                <div className="flex-1 flex flex-col items-center justify-center py-40">
-                  <motion.div 
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                  >
-                    <Star className="w-12 h-12 text-primary/10 fill-primary/10" />
-                  </motion.div>
-                </div>
+                <Spinner />
               ) : (
                 <div className="flex flex-col gap-2">
                   {visibleData.map((player, idx) => (

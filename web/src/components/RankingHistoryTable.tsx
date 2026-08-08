@@ -2,7 +2,8 @@
 
 import { Ranking } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { ArrowUpRight, ArrowDownRight, Minus } from 'lucide-react';
+import { LOCALE } from '@/lib/site-config';
+import { ArrowUpRight, ArrowDownRight } from 'lucide-react';
 
 interface RankingHistoryTableProps {
   history: Ranking[];
@@ -62,7 +63,7 @@ export function RankingHistoryTable({ history, activeTab }: RankingHistoryTableP
                 <tr key={row!.current.id} className="group hover:bg-foreground/[0.01] transition-colors">
                   <td className="py-5 md:py-6 pl-4 md:pl-0">
                     <span className="font-sans text-[10px] md:text-[11px] font-bold text-foreground/40 uppercase tracking-tight md:tracking-wider whitespace-nowrap">
-                      {new Date(row!.current.valid_from).toLocaleDateString('en-KY', { 
+                      {new Date(row!.current.valid_from).toLocaleDateString(LOCALE, { 
                         month: 'short', 
                         day: 'numeric',
                         year: '2-digit' 

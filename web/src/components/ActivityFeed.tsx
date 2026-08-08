@@ -1,16 +1,19 @@
 "use client";
 
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Users, User, Activity, History, Star, TrendingUp } from 'lucide-react';
-import { ActivityTier } from '@/lib/types';
+import { History, TrendingUp } from 'lucide-react';
+import { ActivityTier, RatingMode } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { slugify } from '@/lib/slugify';
+import { LOCALE } from '@/lib/site-config';
+import { PageHero } from '@/components/PageHero';
+import { ModeSwitcher } from '@/components/ModeSwitcher';
+import { Spinner } from '@/components/Spinner';
 
 interface ActivityFeedProps {
   tiers: ActivityTier[];
-  activeTab: 'doubles' | 'singles';
-  onTabChange: (tab: 'doubles' | 'singles') => void;
+  activeTab: RatingMode;
+  onTabChange: (tab: RatingMode) => void;
   activitySort: 'rating' | 'date';
   onSortChange: (sort: 'rating' | 'date') => void;
   pulseStats: {
@@ -33,51 +36,13 @@ export function ActivityFeed({
   return (
     <div className="max-w-full mx-auto pb-20 text-left min-h-full bg-background">
       {/* Center Court Hero Header */}
-      <header className="relative pt-24 pb-12 md:pt-28 md:pb-12 px-6 text-left bg-pressed-grass overflow-hidden mb-4 md:mb-8">
-        {/* Editorial Pattern Overlay */}
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
-
-        <div className="max-w-6xl mx-auto relative z-10">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col md:flex-row md:items-end justify-between gap-10"
-          >
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 mb-6">
-                <Star className="w-3.5 h-3.5 text-tertiary fill-tertiary" />
-                <span className="text-tertiary font-sans font-bold tracking-[0.3em] text-xs uppercase">Live Tournament Feed</span>
-              </div>
-              <h1 className="text-6xl md:text-[7rem] font-display italic tracking-[-0.06em] text-secondary leading-[0.85] drop-shadow-sm">
-                Court <br />
-                Activity
-              </h1>
-            </div>
-
-            <div className="flex p-1 bg-white/5 backdrop-blur-xl rounded-2xl h-fit border border-white/10 shadow-2xl">
-              <button 
-                onClick={() => onTabChange('doubles')}
-                className={cn(
-                  "flex items-center gap-2 px-8 py-3 rounded-xl font-sans font-bold text-xs tracking-widest transition-all duration-500 uppercase",
-                  activeTab === 'doubles' ? "bg-secondary text-primary shadow-2xl scale-[1.02]" : "text-secondary/60 hover:text-secondary hover:bg-white/5"
-                )}
-              >
-                <Users className="w-4 h-4" /> Doubles
-              </button>
-              <button 
-                onClick={() => onTabChange('singles')}
-                className={cn(
-                  "flex items-center gap-2 px-8 py-3 rounded-xl font-sans font-bold text-xs tracking-widest transition-all duration-500 uppercase",
-                  activeTab === 'singles' ? "bg-secondary text-primary shadow-2xl scale-[1.02]" : "text-secondary/60 hover:text-secondary hover:bg-white/5"
-                )}
-              >
-                <User className="w-4 h-4" /> Singles
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      </header>
+      <PageHero
+        eyebrow="Live Tournament Feed"
+        title={<>Court <br /> Activity</>}
+        className="mb-4 md:mb-8"
+      >
+        <ModeSwitcher activeTab={activeTab} onTabChange={onTabChange} />
+      </PageHero>
 
       <div className="max-w-6xl mx-auto px-6">
         {/* Daily Pulse */}
@@ -151,13 +116,8 @@ export function ActivityFeed({
 
         <div className="space-y-12 md:space-y-16">
           {loading ? (
-            <div className="flex-1 flex flex-col items-center justify-center py-40 bg-muted rounded-3xl">
-              <motion.div 
-                animate={{ rotate: 360 }}
-                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-              >
-                <Star className="w-12 h-12 text-primary/10 fill-primary/10" />
-              </motion.div>
+            <div className="flex flex-col bg-muted rounded-3xl">
+              <Spinner />
             </div>
           ) : (
             <div className="flex flex-col gap-12 md:gap-16">
@@ -240,7 +200,7 @@ export function ActivityFeed({
                         {/* Asymmetric Date: Absolute positioned on desktop */}
                         <div className="mt-8 md:mt-0 md:absolute md:bottom-10 md:right-10">
                           <span className="font-sans text-[9px] font-bold text-foreground/40 group-hover:text-foreground/60 transition-colors uppercase tracking-[0.4em]">
-                            {new Date(item.date).toLocaleDateString('en-KY', { month: 'short', day: 'numeric', year: 'numeric' })}
+                            {new Date(item.date).toLocaleDateString(LOCALE, { month: 'short', day: 'numeric', year: 'numeric' })}
                           </span>
                         </div>                      </div>
                     ))}

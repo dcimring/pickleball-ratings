@@ -45,7 +45,6 @@ export default async function Image({ params }: { params: { slug: string } }) {
   }
 
   const doublesRating = player.latestDoubles?.rating.toFixed(3) || 'N/A';
-  const singlesRating = player.latestSingles?.rating.toFixed(3) || 'N/A';
   const rank = player.latestDoubles?.rank_position || player.latestSingles?.rank_position || 'N/A';
 
   return new ImageResponse(

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Zap, RefreshCw, Star } from 'lucide-react';
+import { RefreshCw, Star } from 'lucide-react';
 
 export function UpdatePrompt() {
   const [initialBuildId, setInitialBuildId] = useState<string | null>(null);

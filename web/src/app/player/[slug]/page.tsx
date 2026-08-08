@@ -4,8 +4,7 @@ import { notFound } from 'next/navigation';
 import { getPlayerData } from '@/lib/metadata-api';
 import { getPlayerHistory } from '@/lib/rankings-api';
 import { PlayerProfileClient } from './PlayerProfileClient';
-
-const BASE_URL = 'https://dinkdash.xyz';
+import { SITE_URL as BASE_URL } from '@/lib/site-config';
 
 // Cache rendered player pages for an hour (data updates once daily)
 export const revalidate = 3600;

@@ -1,8 +1,7 @@
 import { getCurrentRankings } from '@/lib/rankings-api';
 import { slugify } from '@/lib/slugify';
+import { SITE_URL as BASE_URL } from '@/lib/site-config';
 import { HomeClient } from './HomeClient';
-
-const BASE_URL = 'https://dinkdash.xyz';
 
 export default async function RankingsPage() {
   // Shares the request-level cache with the layout's fetch

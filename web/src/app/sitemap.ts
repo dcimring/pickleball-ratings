@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { supabase } from '@/lib/supabase';
 import { slugify } from '@/lib/slugify';
 
-const BASE_URL = 'https://dinkdash.xyz';
+import { SITE_URL as BASE_URL } from '@/lib/site-config';
 
 // Regenerate the sitemap at most once per hour
 export const revalidate = 3600;

@@ -3,11 +3,12 @@
 import { useState } from 'react';
 import { useData } from '@/context/DataContext';
 import { TourneyCheck } from '@/components/TourneyCheck';
+import { TourneyResult } from '@/lib/types';
 
 export function TourneyClient() {
   const { singles, doubles, loading } = useData();
   const [tourneyInput, setTourneyInput] = useState('');
-  const [tourneyResults, setTourneyResults] = useState<any[]>([]);
+  const [tourneyResults, setTourneyResults] = useState<TourneyResult[]>([]);
 
   const handleTourneyCheck = () => {
     const names = tourneyInput.split('\n').map(n => n.trim()).filter(n => n.length > 0);

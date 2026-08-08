@@ -1,3 +1,5 @@
+export type RatingMode = 'doubles' | 'singles';
+
 export type Ranking = {
   id: number;
   player_name: string;
@@ -16,6 +18,12 @@ export type ActivityItem = {
   roundsDiff: number;
   rankDiff: number;
   date: string;
+};
+
+export type TourneyResult = {
+  name: string;
+  singles: { rank: number; rating: number } | null;
+  doubles: { rank: number; rating: number } | null;
 };
 
 export type ActivityTier = {

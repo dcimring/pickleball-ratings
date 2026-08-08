@@ -2,19 +2,21 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Users, User, Zap, ArrowUpRight, TrendingUp, Activity, History, ArrowLeft, Star } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Users, User, Activity, History, ArrowLeft, Star } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Ranking } from '@/lib/types';
+import { Ranking, RatingMode } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import { LOCALE, HERO_TEXTURE_URL } from '@/lib/site-config';
 import { ShareButton } from './ShareButton';
 import { RankingHistoryTable } from './RankingHistoryTable';
+import { ModeSwitcher } from './ModeSwitcher';
 
 interface PlayerProfileProps {
   playerName: string;
   playerHistory: { singles: Ranking[], doubles: Ranking[] };
-  activeTab: 'doubles' | 'singles';
-  onTabChange: (tab: 'doubles' | 'singles') => void;
+  activeTab: RatingMode;
+  onTabChange: (tab: RatingMode) => void;
   loading: boolean;
   backUrl?: string;
   backLabel?: string;
@@ -42,7 +44,10 @@ export function PlayerProfile({
       {/* Center Court Hero Header */}
       <header className="relative pt-24 pb-12 md:pt-28 md:pb-12 px-6 text-left bg-pressed-grass overflow-hidden mb-8">
         {/* Editorial Pattern Overlay */}
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
+        <div
+          className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay"
+          style={{ backgroundImage: `url('${HERO_TEXTURE_URL}')` }}
+        />
 
         <div className="max-w-6xl mx-auto relative z-10">
           <motion.div
@@ -72,26 +77,7 @@ export function PlayerProfile({
                 </div>
               </div>
 
-              <div className="flex p-1 bg-white/5 backdrop-blur-xl rounded-2xl h-fit border border-white/10 shadow-2xl">
-                <button 
-                  onClick={() => onTabChange('doubles')}
-                  className={cn(
-                    "flex items-center gap-2 px-8 py-4 rounded-xl font-sans font-bold text-xs tracking-widest transition-all duration-500 uppercase",
-                    activeTab === 'doubles' ? "bg-secondary text-primary shadow-2xl scale-[1.02]" : "text-secondary/60 hover:text-secondary hover:bg-white/5"
-                  )}
-                >
-                  <Users className="w-4 h-4" /> Doubles
-                </button>
-                <button 
-                  onClick={() => onTabChange('singles')}
-                  className={cn(
-                    "flex items-center gap-2 px-8 py-4 rounded-xl font-sans font-bold text-xs tracking-widest transition-all duration-500 uppercase",
-                    activeTab === 'singles' ? "bg-secondary text-primary shadow-2xl scale-[1.02]" : "text-secondary/60 hover:text-secondary hover:bg-white/5"
-                  )}
-                >
-                  <User className="w-4 h-4" /> Singles
-                </button>
-              </div>
+              <ModeSwitcher activeTab={activeTab} onTabChange={onTabChange} size="lg" />
             </div>
           </motion.div>
         </div>
@@ -167,7 +153,7 @@ export function PlayerProfile({
                     <span className="text-[9px] text-foreground/30 font-bold uppercase tracking-[0.4em]">Tracking Since</span>
                     <span className="text-foreground font-bold text-2xl tracking-tighter italic font-display">
                       {playerHistory[activeTab][0]?.valid_from 
-                        ? new Date(playerHistory[activeTab][0].valid_from).toLocaleDateString('en-KY', { month: 'long', year: 'numeric' })
+                        ? new Date(playerHistory[activeTab][0].valid_from).toLocaleDateString(LOCALE, { month: 'long', year: 'numeric' })
                         : 'N/A'
                       }
                     </span>
@@ -215,7 +201,7 @@ export function PlayerProfile({
                         stroke="oklch(var(--foreground) / 0.2)" 
                         fontSize={10}
                         fontWeight={700}
-                        tickFormatter={(str) => new Date(str).toLocaleDateString('en-KY', { month: 'short' })}
+                        tickFormatter={(str) => new Date(str).toLocaleDateString(LOCALE, { month: 'short' })}
                         axisLine={false}
                         tickLine={false}
                         dy={20}
@@ -241,7 +227,7 @@ export function PlayerProfile({
                         }}
                         itemStyle={{ color: 'oklch(var(--primary))' }}
                         labelStyle={{ color: 'oklch(var(--foreground) / 0.4)', marginBottom: '4px' }}
-                        labelFormatter={(label) => new Date(label).toLocaleDateString('en-KY', { month: 'long', day: 'numeric', year: 'numeric' })}
+                        labelFormatter={(label) => new Date(label).toLocaleDateString(LOCALE, { month: 'long', day: 'numeric', year: 'numeric' })}
                       />
                       <Area 
                         type="monotone" 

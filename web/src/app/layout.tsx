@@ -7,6 +7,7 @@ import { Navigation } from "@/components/Navigation";
 import { UpdatePrompt } from "@/components/UpdatePrompt";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { getCurrentRankings } from "@/lib/rankings-api";
+import { SITE_URL } from "@/lib/site-config";
 
 // Regenerate server-rendered pages (and their seeded ranking data) hourly,
 // matching the daily scrape cadence with headroom.
@@ -16,13 +17,13 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const newsreader = Newsreader({ subsets: ["latin"], variable: "--font-display", style: "italic" });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://dinkdash.xyz'),
+  metadataBase: new URL(SITE_URL),
   title: "DinkDash | Your Pickleball Dashboard",
   description: "Real-time rank tracking and analytics for the Cayman Islands Pickleball community.",
   openGraph: {
     title: "DinkDash | Your Pickleball Dashboard",
     description: "Real-time rank tracking and analytics for the Cayman Islands Pickleball community.",
-    url: "https://dinkdash.xyz",
+    url: SITE_URL,
     siteName: "DinkDash",
     images: [
       {

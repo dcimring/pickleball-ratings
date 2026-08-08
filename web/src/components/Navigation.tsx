@@ -76,9 +76,11 @@ export function Navigation() {
           >
             <RefreshCw className={cn("w-5 h-5", refreshing ? "animate-spin text-primary" : "")} />
           </button>
-          <button 
+          <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="text-primary p-2 focus:outline-none"
+            aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={isMobileMenuOpen}
+            className="text-primary p-2"
           >
             {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -109,14 +111,6 @@ export function Navigation() {
                   {item.label}
                 </Link>
               ))}
-              <div className="pt-8 mt-4 bg-muted/50 rounded-2xl flex flex-col gap-3 p-6">
-                <button className="w-full py-4 px-4 bg-background text-foreground font-medium text-sm transition-colors rounded-lg">
-                  Log In
-                </button>
-                <button className="w-full py-4 px-4 bg-primary text-secondary font-medium text-sm hover:opacity-90 transition-opacity rounded-lg shadow-lg shadow-primary/10">
-                  Join Now
-                </button>
-              </div>
             </div>
           </motion.div>
         )}

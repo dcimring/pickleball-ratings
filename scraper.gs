@@ -1,11 +1,13 @@
 /**
  * Pickleball Rankings Scraper & Supabase Integration (Optimized Bulk Version)
- * 
+ *
  * Instructions:
  * 1. Open Google Apps Script (script.google.com).
  * 2. Paste this code into the editor.
  * 3. Go to Project Settings (gear icon) -> Script Properties.
  * 4. Add 'SUPABASE_URL' and 'SUPABASE_SERVICE_ROLE_KEY'.
+ *    Optionally add 'ALERT_EMAIL' to receive failure notifications
+ *    (defaults to the script owner's email).
  * 5. Run 'createDailyTrigger' once to schedule the daily scrape.
  */
 
@@ -27,39 +29,48 @@ function runScraper() {
     throw new Error('Please set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in Script Properties.');
   }
 
+  const failures = [];
+
   // 1. Scrape Doubles
   console.log('Starting Doubles scrape...');
-  scrapeAndSync(CONFIG.DOUBLES_URL, 'doubles_ratings_deltas', supabaseUrl, supabaseKey);
+  const doublesError = scrapeAndSync(CONFIG.DOUBLES_URL, 'doubles_ratings_deltas', supabaseUrl, supabaseKey);
+  if (doublesError) failures.push(doublesError);
 
   // 2. Scrape Singles
   console.log('Starting Singles scrape...');
-  scrapeAndSync(CONFIG.SINGLES_URL, 'singles_ratings_deltas', supabaseUrl, supabaseKey);
+  const singlesError = scrapeAndSync(CONFIG.SINGLES_URL, 'singles_ratings_deltas', supabaseUrl, supabaseKey);
+  if (singlesError) failures.push(singlesError);
+
+  if (failures.length > 0) {
+    sendFailureAlert(failures);
+  }
 
   console.log('Scrape and Sync complete.');
 }
 
 /**
  * Fetches the URL, parses the table, and sends a bulk update to Supabase.
+ * Returns null on success, or a description of the failure.
  */
 function scrapeAndSync(url, tableName, supabaseUrl, supabaseKey) {
   try {
     const response = UrlFetchApp.fetch(url);
     const html = response.getContentText();
-    
+
     // Regex targets TablePress row structure with 4 columns:
     // <td class="column-1">RANK</td><td class="column-2">NAME</td><td class="column-3">RATING</td><td class="column-4">ROUNDS</td>
     const rowRegex = /<tr class="row-\d+">[\s\S]*?<td class="column-1">(\d+)<\/td>[\s\S]*?<td class="column-2">([^<]+)<\/td>[\s\S]*?<td class="column-3">([\d\.]+)<\/td>[\s\S]*?<td class="column-4">(\d+)<\/td>/gi;
-    
+
     let match;
     let players = [];
     let seenNames = {}; // Track names already processed in this table
-    
+
     while ((match = rowRegex.exec(html)) !== null) {
       const rank = parseInt(match[1]);
       const name = match[2].trim();
       const rating = parseFloat(match[3]);
       const rounds = parseInt(match[4]);
-      
+
       if (!isNaN(rank) && name && !isNaN(rating) && !isNaN(rounds)) {
         if (!seenNames[name]) {
           seenNames[name] = true;
@@ -74,28 +85,33 @@ function scrapeAndSync(url, tableName, supabaseUrl, supabaseKey) {
         }
       }
     }
-    
-    if (players.length > 0) {
-      console.log(`Collected ${players.length} unique players for ${tableName}. Sending to Supabase...`);
-      sendBulkToSupabase(supabaseUrl, supabaseKey, {
-        p_rows: players,
-        p_table_name: tableName
-      });
-    } else {
-      console.warn(`No players found for ${tableName}. Check if the website structure has changed.`);
+
+    if (players.length === 0) {
+      const msg = `No players found for ${tableName} at ${url}. The website structure may have changed.`;
+      console.warn(msg);
+      return msg;
     }
-    
+
+    console.log(`Collected ${players.length} unique players for ${tableName}. Sending to Supabase...`);
+    return sendBulkToSupabase(supabaseUrl, supabaseKey, {
+      p_rows: players,
+      p_table_name: tableName
+    });
+
   } catch (error) {
-    console.error(`Error processing ${url}: ${error.message}`);
+    const msg = `Error processing ${url}: ${error.message}`;
+    console.error(msg);
+    return msg;
   }
 }
 
 /**
  * Calls the Supabase Bulk RPC.
+ * Returns null on success, or a description of the failure.
  */
 function sendBulkToSupabase(url, key, payload) {
   const rpcUrl = `${url}/rest/v1/rpc/${CONFIG.SUPABASE_RPC_NAME}`;
-  
+
   const options = {
     method: 'post',
     contentType: 'application/json',
@@ -111,11 +127,33 @@ function sendBulkToSupabase(url, key, payload) {
 
   const response = UrlFetchApp.fetch(rpcUrl, options);
   const responseCode = response.getResponseCode();
-  
+
   if (responseCode !== 200 && responseCode !== 204) {
-    console.error(`Supabase RPC Error (${responseCode}): ${response.getContentText()}`);
-  } else {
-    console.log(`Successfully synced ${payload.p_table_name}`);
+    const msg = `Supabase RPC error for ${payload.p_table_name} (HTTP ${responseCode}): ${response.getContentText()}`;
+    console.error(msg);
+    return msg;
+  }
+
+  console.log(`Successfully synced ${payload.p_table_name}`);
+  return null;
+}
+
+/**
+ * Emails a failure summary so broken scrapes don't go unnoticed.
+ */
+function sendFailureAlert(failures) {
+  try {
+    const recipient = PropertiesService.getScriptProperties().getProperty('ALERT_EMAIL')
+      || Session.getEffectiveUser().getEmail();
+    MailApp.sendEmail(
+      recipient,
+      'DinkDash scraper failure',
+      'The daily pickleball rankings scrape had problems:\n\n- '
+        + failures.join('\n- ')
+        + '\n\nCheck the Apps Script execution log at https://script.google.com for details.'
+    );
+  } catch (error) {
+    console.error(`Failed to send alert email: ${error.message}`);
   }
 }
 
@@ -135,6 +173,6 @@ function createDailyTrigger() {
     .atHour(1)
     .everyDays(1)
     .create();
-    
+
   console.log('Daily trigger created successfully (1 AM - 2 AM).');
 }

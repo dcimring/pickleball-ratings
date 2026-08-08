@@ -66,12 +66,12 @@ We eschew heavy drop shadows in favor of **Tonal Layering** and **Ambient Light*
 ### Data Tables (The Ranking Grid)
 * **Separation:** Use alternating row colors: `surface` and `surface_container_low`.
 * **Typography:** Rank numbers in `headline-md` (Newsreader); player names in `title-md` (Inter).
-* **The "Wimbledon Stripe":** A 4px vertical accent of `tertiary` (Purple) on the left edge of the "Top Seed" or "Current User" row.
+* **The "Wimbledon Stripe":** A 4px vertical accent of `tertiary` (Volt Green) on the left edge of the "Top Seed" or "Current User" row.
 
 ### Buttons
 * **Primary:** `primary` background (#004b24), `on_primary` text. Use a subtle linear gradient from `primary` to `primary_container` to give it a "pressed grass" texture.
 * **Secondary:** `outline` ghost button with a `sm` (0.25rem) radius.
-* **Tertiary:** Text-only with `tertiary` (#533072) coloring, reserved for "View All" or "Filter" actions.
+* **Tertiary:** Text-only with `tertiary` (#ccff00) coloring, reserved for "View All" or "Filter" actions.
 
 ---
 

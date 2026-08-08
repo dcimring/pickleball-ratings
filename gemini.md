@@ -7,7 +7,7 @@ A prestigious, editorial data platform for Cayman Islands pickleball players. Th
 ## 🛠 Tech Stack
 
 *   **Frontend:** Next.js (App Router) with **Tailwind CSS**.
-*   **Design System:** **The Grand Slam Editorial** (Court Green, Wimbledon White, Classic Purple).
+*   **Design System:** **The Grand Slam Editorial** (Court Green, Wimbledon White, Volt Green).
 *   **Typography:** `Newsreader` (Serif/Editorial) and `Inter` (Sans/Functional).
 *   **Icons:** **Lucide React**.
 *   **Animations:** **Framer Motion**.
@@ -24,7 +24,7 @@ Detailed specification available in `web/DESIGN.md`.
 *   **Colors:** Rooted in tradition with digital depth.
     *   **Primary (Court Green):** `#004b24`
     *   **Secondary (Wimbledon White):** `#ffffff`
-    *   **Tertiary (Classic Purple):** `#533072`
+    *   **Tertiary (Volt Green):** `#ccff00`
     *   **Background (Surface):** `#f9f9f9`
 *   **Typography:** 
     *   **Headlines & Rankings:** `Newsreader` (Serif) for prestige and authority.
