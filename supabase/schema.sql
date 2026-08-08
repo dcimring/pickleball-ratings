@@ -26,40 +26,6 @@ CREATE SCHEMA pickleball_ratings;
 
 
 --
--- Name: upsert_ranking_delta(text, integer, numeric, text); Type: FUNCTION; Schema: pickleball_ratings; Owner: -
---
-
-CREATE FUNCTION pickleball_ratings.upsert_ranking_delta(p_player_name text, p_rank_position integer, p_rating numeric, p_table_name text) RETURNS void
-    LANGUAGE plpgsql
-    AS $$
-DECLARE
-    v_current_rank INTEGER;
-    v_current_rating NUMERIC;
-    v_sql TEXT;
-BEGIN
-    -- 1. Dynamically check the current active rank for the player
-    v_sql := format('SELECT rank_position, rating FROM pickleball_ratings.%I WHERE player_name = %L AND is_current = TRUE LIMIT 1', p_table_name, p_player_name);
-    EXECUTE v_sql INTO v_current_rank, v_current_rating;
-
-    -- 2. If no record exists OR the rank/rating has changed
-    IF v_current_rank IS NULL OR v_current_rank != p_rank_position OR v_current_rating != p_rating THEN
-        
-        -- Close the old record if it exists
-        IF v_current_rank IS NOT NULL THEN
-            v_sql := format('UPDATE pickleball_ratings.%I SET is_current = FALSE, valid_to = CURRENT_DATE - 1 WHERE player_name = %L AND is_current = TRUE', p_table_name, p_player_name);
-            EXECUTE v_sql;
-        END IF;
-
-        -- Insert the new delta record
-        v_sql := format('INSERT INTO pickleball_ratings.%I (player_name, rank_position, rating, valid_from, is_current) VALUES (%L, %s, %s, CURRENT_DATE, TRUE)', p_table_name, p_player_name, p_rank_position, p_rating);
-        EXECUTE v_sql;
-        
-    END IF;
-END;
-$$;
-
-
---
 -- Name: upsert_ranking_delta_bulk(jsonb, text); Type: FUNCTION; Schema: pickleball_ratings; Owner: -
 --
 
@@ -273,13 +239,6 @@ ALTER TABLE pickleball_ratings.singles_ratings_deltas ENABLE ROW LEVEL SECURITY;
 GRANT USAGE ON SCHEMA pickleball_ratings TO anon;
 GRANT USAGE ON SCHEMA pickleball_ratings TO authenticated;
 GRANT USAGE ON SCHEMA pickleball_ratings TO service_role;
-
-
---
--- Name: FUNCTION upsert_ranking_delta(p_player_name text, p_rank_position integer, p_rating numeric, p_table_name text); Type: ACL; Schema: pickleball_ratings; Owner: -
---
-
-GRANT ALL ON FUNCTION pickleball_ratings.upsert_ranking_delta(p_player_name text, p_rank_position integer, p_rating numeric, p_table_name text) TO service_role;
 
 
 --

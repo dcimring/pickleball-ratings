@@ -28,8 +28,5 @@ sed -i '' '/^\\restrict /d; /^\\unrestrict /d' supabase/schema.sql
 
 ## Notes
 
-- `upsert_ranking_delta` (singular) is a legacy per-row function superseded by
-  `upsert_ranking_delta_bulk`; it's kept in the dump because it still exists in
-  the database. Safe to drop from the DB if nothing else calls it.
 - `feature_requests` has RLS enabled with no read policy, so the anon `GRANT SELECT`
   on it is inert — reads only work via the service role.
