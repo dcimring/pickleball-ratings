@@ -5,7 +5,7 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { Ranking } from '@/lib/types';
 import { PlayerProfile } from '@/components/PlayerProfile';
-import { unslugify, properCaseUnslugify } from '@/lib/slugify';
+import { unslugify, properCaseUnslugify, escapeLike } from '@/lib/slugify';
 
 export function PlayerProfileClient() {
   const params = useParams();
@@ -38,13 +38,14 @@ export function PlayerProfileClient() {
   useEffect(() => {
     async function fetchProfile() {
       const name = unslugify(slug);
+      const pattern = escapeLike(name);
       setPlayerName(properCaseUnslugify(slug));
       setLoading(true);
-      
+
       try {
         const [singlesRes, doublesRes] = await Promise.all([
-          supabase.schema('pickleball_ratings').from('singles_ratings_deltas').select('*').ilike('player_name', name).order('valid_from', { ascending: true }),
-          supabase.schema('pickleball_ratings').from('doubles_ratings_deltas').select('*').ilike('player_name', name).order('valid_from', { ascending: true })
+          supabase.schema('pickleball_ratings').from('singles_ratings_deltas').select('*').ilike('player_name', pattern).order('valid_from', { ascending: true }),
+          supabase.schema('pickleball_ratings').from('doubles_ratings_deltas').select('*').ilike('player_name', pattern).order('valid_from', { ascending: true })
         ]);
 
         const actualName = singlesRes.data?.[0]?.player_name || doublesRes.data?.[0]?.player_name || name;

@@ -11,6 +11,7 @@ interface DataContextType {
   doublesHistory: Ranking[];
   loading: boolean;
   refreshing: boolean;
+  error: string | null;
   fetchData: (isManual?: boolean) => Promise<void>;
 }
 
@@ -23,6 +24,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const [doublesHistory, setDoublesHistory] = useState<Ranking[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchData = async (isManual = false) => {
     if (isManual) setRefreshing(true);
@@ -38,8 +40,17 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       if (doublesRes.data) setDoubles(doublesRes.data);
       if (sHistRes.data) setSinglesHistory(sHistRes.data);
       if (dHistRes.data) setDoublesHistory(dHistRes.data);
+
+      // Supabase returns errors in the response rather than throwing
+      if (singlesRes.error && doublesRes.error) {
+        console.error('CRITICAL_FETCH_ERROR:', singlesRes.error, doublesRes.error);
+        setError('Unable to load rankings. Please check your connection and try again.');
+      } else {
+        setError(null);
+      }
     } catch (err) {
       console.error('CRITICAL_FETCH_ERROR:', err);
+      setError('Unable to load rankings. Please check your connection and try again.');
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -64,6 +75,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     doublesHistory,
     loading,
     refreshing,
+    error,
     fetchData
   };
 

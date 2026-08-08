@@ -1,11 +1,36 @@
 "use server";
 
+import { headers } from "next/headers";
 import { adminSupabase } from "@/lib/admin";
 
 export type FeatureRequestState = {
   success?: boolean;
   error?: string;
 };
+
+// Per-instance sliding-window rate limit. Serverless instances don't share
+// this map, so it's a soft cap — enough to stop casual abuse of a public action.
+const RATE_LIMIT_MAX = 5;
+const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
+const submissionLog = new Map<string, number[]>();
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const recent = (submissionLog.get(ip) ?? []).filter((t) => now - t < RATE_LIMIT_WINDOW_MS);
+  if (recent.length >= RATE_LIMIT_MAX) {
+    submissionLog.set(ip, recent);
+    return true;
+  }
+  recent.push(now);
+  submissionLog.set(ip, recent);
+  // Keep the map from growing unboundedly
+  if (submissionLog.size > 1000) {
+    for (const [key, times] of submissionLog) {
+      if (times.every((t) => now - t >= RATE_LIMIT_WINDOW_MS)) submissionLog.delete(key);
+    }
+  }
+  return false;
+}
 
 export async function submitFeatureRequest(prevState: FeatureRequestState, formData: FormData): Promise<FeatureRequestState> {
   const userName = formData.get("user_name") as string;
@@ -17,7 +42,13 @@ export async function submitFeatureRequest(prevState: FeatureRequestState, formD
     return { success: true }; // Silently ignore bot submissions
   }
 
-  // 2. Validation
+  // 2. Rate limit by IP
+  const ip = headers().get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  if (isRateLimited(ip)) {
+    return { error: "Too many submissions. Please try again later." };
+  }
+
+  // 3. Validation
   if (!userName || userName.length > 50) {
     return { error: "Please provide a name under 50 characters." };
   }
@@ -27,7 +58,7 @@ export async function submitFeatureRequest(prevState: FeatureRequestState, formD
   }
 
   try {
-    // 3. Secure Insertion (using service_role client)
+    // 4. Secure Insertion (using service_role client)
     const { error } = await adminSupabase
       .schema('pickleball_ratings')
       .from('feature_requests')

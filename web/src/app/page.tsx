@@ -12,7 +12,7 @@ function RankingsContent() {
   const searchParams = useSearchParams();
   const initialTab = (searchParams.get('tab') as 'doubles' | 'singles') || 'doubles';
   
-  const { singles, doubles, loading } = useData();
+  const { singles, doubles, loading, error, fetchData, refreshing } = useData();
   const [activeTab, setActiveTab] = useState<'doubles' | 'singles'>(initialTab);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortConfig, setSortConfig] = useState<{ key: keyof Ranking; direction: 'asc' | 'desc' }>({
@@ -28,6 +28,22 @@ function RankingsContent() {
   };
 
   const currentData = activeTab === 'doubles' ? doubles : singles;
+
+  if (error && !loading && currentData.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] px-6 text-center">
+        <p className="font-display italic text-3xl text-primary mb-2">Something went wrong</p>
+        <p className="text-foreground/60 mb-6 max-w-sm">{error}</p>
+        <button
+          onClick={() => fetchData(true)}
+          disabled={refreshing}
+          className="px-8 py-3 bg-primary text-white rounded-full font-bold tracking-widest text-sm uppercase disabled:opacity-50"
+        >
+          {refreshing ? 'Retrying…' : 'Retry'}
+        </button>
+      </div>
+    );
+  }
 
   return (
     <RankingTable 

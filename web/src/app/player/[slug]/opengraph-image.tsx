@@ -16,7 +16,7 @@ export const contentType = 'image/png';
 
 export default async function Image({ params }: { params: { slug: string } }) {
   const { slug } = params;
-  const player = await getPlayerData(slug);
+  const player = await getPlayerData(slug).catch(() => null);
 
   if (!player) {
     return new ImageResponse(

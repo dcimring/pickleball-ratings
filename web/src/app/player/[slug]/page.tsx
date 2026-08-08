@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import { getPlayerData } from '@/lib/metadata-api';
 import { PlayerProfileClient } from './PlayerProfileClient';
 
@@ -9,7 +10,13 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const player = await getPlayerData(slug);
+
+  let player = null;
+  try {
+    player = await getPlayerData(slug);
+  } catch {
+    // Fall through to generic metadata on fetch failure
+  }
 
   if (!player) {
     return {
@@ -50,7 +57,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default function PlayerProfilePage() {
+export default async function PlayerProfilePage({ params }: Props) {
+  const { slug } = await params;
+  const player = await getPlayerData(slug);
+
+  if (!player) {
+    notFound();
+  }
+
   return (
     <Suspense fallback={null}>
       <PlayerProfileClient />
