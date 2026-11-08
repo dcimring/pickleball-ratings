@@ -1,7 +1,6 @@
 "use client";
 
 import { ReactNode } from 'react';
-import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 interface PageHeroProps {
@@ -31,12 +30,8 @@ export function PageHero({ eyebrow, kicker, title, lead, children, className, ti
   return (
     <header className={cn('pt-[72px] md:pt-[100px] px-4 md:px-10', className)}>
       <div className="max-w-6xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col gap-5 md:gap-7"
-        >
+        {/* CSS-only entrance so the server-rendered header is visible before hydration */}
+        <div className="flex flex-col gap-5 md:gap-7 animate-fade-in">
           {topSlot}
 
           <div className="min-h-[30px] md:min-h-8 py-1 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 px-3 bg-secondary rounded-md kicker text-[13px] md:text-sm w-fit max-w-full">
@@ -65,7 +60,7 @@ export function PageHero({ eyebrow, kicker, title, lead, children, className, ti
 
             {children && <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-3 w-full md:w-auto shrink-0">{children}</div>}
           </div>
-        </motion.div>
+        </div>
       </div>
     </header>
   );
