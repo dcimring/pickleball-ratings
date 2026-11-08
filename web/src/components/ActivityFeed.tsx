@@ -1,8 +1,8 @@
 "use client";
 
 import Link from 'next/link';
-import { History, TrendingUp } from 'lucide-react';
-import { ActivityTier, RatingMode } from '@/lib/types';
+import { History } from 'lucide-react';
+import { ActivityTier, ActivityItem, RatingMode } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { slugify } from '@/lib/slugify';
 import { LOCALE } from '@/lib/site-config';
@@ -24,6 +24,40 @@ interface ActivityFeedProps {
   loading: boolean;
 }
 
+const shortDate = (iso: string) => new Date(iso).toLocaleDateString(LOCALE, { day: 'numeric', month: 'short' });
+
+function MoverTile({ item, href }: { item: ActivityItem; href: string }) {
+  const up = item.ratingDiff > 0;
+  const flat = item.ratingDiff === 0;
+  const kind = flat ? 'Played' : up ? 'Riser' : 'Faller';
+  const rankText =
+    item.rankDiff > 0 ? `${item.previous.rank_position} → ${item.current.rank_position}` :
+    item.rankDiff < 0 ? `${item.previous.rank_position} → ${item.current.rank_position}` :
+    `holds ${item.current.rank_position}`;
+
+  return (
+    <Link
+      href={href}
+      className="bg-secondary rounded-lg p-3.5 md:p-4 flex flex-col gap-2.5 min-h-[130px] md:min-h-[150px] hover:bg-muted transition-colors"
+    >
+      <span className="flex items-center justify-between gap-2 kicker text-xs">
+        <span className={cn(up && 'text-primary', !up && !flat && 'text-destructive')}>{kind}</span>
+        <span className="tabular-nums normal-case tracking-normal font-sans font-medium">{rankText}</span>
+      </span>
+      <span className="font-sans font-semibold text-base md:text-[17px] leading-tight">{item.player_name}</span>
+      <span className="mt-auto flex items-end justify-between gap-2">
+        <span className={cn('numeral text-[32px] md:text-[36px]', up ? 'text-primary' : flat ? 'text-muted-foreground' : 'text-destructive')}>
+          {flat ? `+${item.roundsDiff} rnd` : `${up ? '+' : '−'}${Math.abs(item.ratingDiff).toFixed(3)}`}
+        </span>
+        <span className="flex flex-col items-end text-right">
+          <span className="font-display font-bold text-base md:text-[17px] tabular-nums text-muted-foreground">{item.current.rating.toFixed(3)}</span>
+          <span className="text-[11px] text-muted-foreground">{shortDate(item.date)}</span>
+        </span>
+      </span>
+    </Link>
+  );
+}
+
 export function ActivityFeed({
   tiers,
   activeTab,
@@ -33,187 +67,109 @@ export function ActivityFeed({
   pulseStats,
   loading,
 }: ActivityFeedProps) {
+  const latestDate = tiers.flatMap((t) => t.items).reduce<string | null>((max, i) => (!max || i.date > max ? i.date : max), null);
+  const gainer = pulseStats
+    ? tiers.flatMap((t) => t.items).find((i) => i.player_name === pulseStats.topGainerName)
+    : undefined;
+  const profileHref = (name: string) => `/player/${slugify(name)}?tab=${activeTab}&sort=${activitySort}&from=activity`;
+
+  const segmented = (
+    <div className="flex w-full md:w-auto p-[3px] bg-secondary rounded-md gap-0.5" role="group" aria-label="Sort movers">
+      {(['rating', 'date'] as const).map((key) => (
+        <button
+          key={key}
+          onClick={() => onSortChange(key)}
+          aria-pressed={activitySort === key}
+          className={cn(
+            'flex-1 md:flex-none md:px-4 h-[42px] rounded font-display font-bold text-sm uppercase tracking-[0.14em] transition-colors whitespace-nowrap',
+            activitySort === key ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'
+          )}
+        >
+          {key === 'rating' ? 'Biggest movers' : 'Latest'}
+        </button>
+      ))}
+    </div>
+  );
+
   return (
-    <div className="max-w-full mx-auto pb-20 text-left min-h-full bg-background">
-      {/* Center Court Hero Header */}
+    <div className="pb-24 min-h-full bg-background">
       <PageHero
-        eyebrow="Live Tournament Feed"
-        title={<>Court <br /> Activity</>}
-        className="mb-4 md:mb-8"
+        eyebrow={['Movers', activeTab === 'doubles' ? 'Doubles' : 'Singles', latestDate ? `Latest change ${shortDate(latestDate)}` : 'Loading']}
+        kicker="This week's"
+        title="Movers"
+        lead={pulseStats ? <>{pulseStats.activeCount} players moved in the latest round of changes.</> : undefined}
       >
-        <ModeSwitcher activeTab={activeTab} onTabChange={onTabChange} />
+        {segmented}
+        <ModeSwitcher activeTab={activeTab} onTabChange={onTabChange} size="lg" />
       </PageHero>
 
-      <div className="max-w-6xl mx-auto px-6">
-        {/* Daily Pulse */}
-        {pulseStats && (
-          <div className="mb-6 md:mb-12 flex items-center gap-4 bg-muted rounded-2xl px-8 py-6 shadow-sm">
-            <TrendingUp className="w-5 h-5 text-primary" />
-            <p className="text-xs md:text-sm font-sans font-bold tracking-tight text-foreground/40 uppercase">
-              <span className="text-foreground">{pulseStats.activeCount} Athletes</span> active this session
-              <span className="mx-4 text-foreground/10">|</span>
-              Biggest Gainer: <Link href={`/player/${slugify(pulseStats.topGainerName)}?tab=${activeTab}&sort=${activitySort}&from=activity`} className="text-foreground hover:text-primary transition-colors underline decoration-primary/20 underline-offset-4 font-black">{pulseStats.topGainerName}</Link> 
-              <span className="ml-3 text-primary">+{pulseStats.topGainerValue.toFixed(3)}</span>
-            </p>
-          </div>
-        )}
-
-        {/* Sort & Jump Section with Bridge */}
-        <div className="bg-muted/50 rounded-2xl p-6 md:p-8 mb-10 md:mb-16">
-          <div className="flex flex-col gap-6 md:gap-8">
-            <div className="flex items-center gap-6 text-[9px] font-sans font-bold tracking-widest text-foreground/30">
-              <span className="uppercase">Filter by:</span>
-              <div className="flex gap-2">
-                <button 
-                  onClick={() => onSortChange('date')}
-                  className={cn(
-                    "px-4 py-2 rounded-full transition-all font-bold",
-                    activitySort === 'date' ? "bg-primary text-secondary" : "bg-muted text-foreground/40 hover:text-foreground"
-                  )}
-                >
-                  Latest Matches
-                </button>
-                <button 
-                  onClick={() => onSortChange('rating')}
-                  className={cn(
-                    "px-4 py-2 rounded-full transition-all font-bold",
-                    activitySort === 'rating' ? "bg-primary text-secondary" : "bg-muted text-foreground/40 hover:text-foreground"
-                  )}
-                >
-                  Biggest Movers
-                </button>
-              </div>
-            </div>
-
-            {!loading && tiers.length > 0 && (
-              <div className="flex flex-wrap items-center gap-6 text-[9px] font-sans font-bold tracking-[0.2em]">
-                {tiers.map((tier) => (
-                  <button
-                    key={tier.title}
-                    onClick={() => {
-                      const element = document.getElementById(`tier-${tier.title.replace(/\s+/g, '-').toLowerCase()}`);
-                      if (element) {
-                        const container = element.closest('.overflow-y-auto');
-                        if (container) {
-                          const offset = 80;
-                          const elementTop = element.offsetTop;
-                          container.scrollTo({
-                            top: elementTop - offset,
-                            behavior: 'smooth'
-                          });
-                        }
-                      }
-                    }}
-                    className="text-foreground/30 hover:text-primary transition-all uppercase py-1 border-b-2 border-transparent hover:border-primary"
-                  >
-                    {tier.title}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div className="space-y-12 md:space-y-16">
+      <div className="px-4 md:px-10 mt-6 md:mt-8">
+        <div className="max-w-6xl mx-auto flex flex-col gap-6 md:gap-8">
           {loading ? (
-            <div className="flex flex-col bg-muted rounded-3xl">
+            <div className="bg-secondary rounded-lg">
               <Spinner />
             </div>
           ) : (
-            <div className="flex flex-col gap-12 md:gap-16">
-              {tiers.map((tier) => (
-                <div 
-                  key={`${activeTab}-${tier.title}-${activitySort}`}
-                  id={`tier-${tier.title.replace(/\s+/g, '-').toLowerCase()}`} 
-                  className="space-y-6 md:space-y-8 scroll-mt-32"
+            <>
+              {pulseStats && (
+                <Link
+                  href={profileHref(pulseStats.topGainerName)}
+                  className="bg-primary text-primary-foreground rounded-lg p-4 md:p-6 flex flex-col md:flex-row md:items-end md:justify-between gap-3 md:gap-6 hover:opacity-95 transition-opacity"
                 >
-                  <div className="flex items-center gap-6">
-                    <h2 className="font-display italic text-2xl md:text-4xl tracking-tighter text-foreground whitespace-nowrap">{tier.title}</h2>
-                    <div className="h-0.5 w-full bg-muted" />
+                  <span className="flex flex-col gap-1.5 min-w-0">
+                    <span className="font-display font-bold text-[13px] md:text-[15px] uppercase tracking-[0.2em] text-[#2f3a1a]">Gainer of the week</span>
+                    <span className="font-sans font-semibold text-2xl md:text-[28px] leading-tight tracking-tight">{pulseStats.topGainerName}</span>
+                    {gainer && (
+                      <span className="text-[13px] md:text-[15px] text-[#2f3a1a]">
+                        Rank {gainer.previous.rank_position} → {gainer.current.rank_position} · now {gainer.current.rating.toFixed(3)} · {gainer.current.rounds_played} rounds · {shortDate(gainer.date)}
+                      </span>
+                    )}
+                  </span>
+                  <span className="numeral text-[56px] md:text-[96px] whitespace-nowrap">+{pulseStats.topGainerValue.toFixed(3)}</span>
+                </Link>
+              )}
+
+              {tiers.length > 1 && (
+                <nav aria-label="Jump to tier" className="flex gap-2 overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
+                  {tiers.map((tier) => (
+                    <a
+                      key={tier.title}
+                      href={`#tier-${tier.title.replace(/\s+/g, '-').toLowerCase()}`}
+                      className="shrink-0 h-9 px-3 rounded-md shadow-outline flex items-center font-display font-bold text-[13px] uppercase tracking-[0.14em] text-muted-foreground hover:text-foreground whitespace-nowrap"
+                    >
+                      {tier.title} <span className="ml-1.5 text-foreground/60 tabular-nums">{tier.items.length}</span>
+                    </a>
+                  ))}
+                </nav>
+              )}
+
+              {tiers.map((tier) => (
+                <section
+                  key={`${activeTab}-${tier.title}-${activitySort}`}
+                  id={`tier-${tier.title.replace(/\s+/g, '-').toLowerCase()}`}
+                  className="flex flex-col gap-3 scroll-mt-20"
+                >
+                  <div className="flex items-center gap-3">
+                    <h2 className="font-display font-bold uppercase tracking-[0.14em] text-base md:text-xl whitespace-nowrap">{tier.title}</h2>
+                    <span className="h-px flex-1 bg-border" aria-hidden="true" />
+                    <span className="text-xs text-muted-foreground tabular-nums">{tier.items.length}</span>
                   </div>
-                  
-                  <div className="space-y-1 bg-muted p-1 rounded-[2.5rem] overflow-hidden">
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
                     {tier.items.map((item, idx) => (
-                      <div 
-                        key={`${item.player_name}-${item.date}-${idx}`}
-                        className="bg-secondary p-6 md:p-10 hover:bg-background transition-all duration-500 group relative overflow-hidden hover:scale-[1.01] hover:shadow-2xl hover:shadow-primary/5 active:scale-100"
-                      >
-                        <div className="flex items-center justify-between mb-8 md:mb-12">
-                          <h3 className="font-sans font-bold text-2xl md:text-4xl tracking-tight text-foreground group-hover:text-primary transition-colors">
-                            <Link href={`/player/${slugify(item.player_name)}?tab=${activeTab}&sort=${activitySort}&from=activity`} className="hover:text-primary transition-colors">
-                              {item.player_name}
-                            </Link>
-                          </h3>
-                        </div>
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-                          {/* Rating Shift */}
-                          <div className="space-y-2 md:space-y-4">
-                            <span className="text-[9px] font-sans font-bold text-foreground/20 tracking-[0.3em] uppercase">Rating Shift</span>
-                            <div className="flex items-center gap-3">
-                              <span className="text-foreground font-display italic text-2xl md:text-3xl tracking-tighter tabular-nums">{item.current.rating.toFixed(3)}</span>
-                              <span className={cn(
-                                "text-[9px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest",
-                                item.ratingDiff > 0 ? "bg-primary/10 text-primary" : 
-                                item.ratingDiff < 0 ? "bg-destructive/10 text-destructive" : 
-                                "bg-muted text-foreground/40"
-                              )}>
-                                {item.ratingDiff > 0 ? `+${item.ratingDiff.toFixed(3)}` : 
-                                 item.ratingDiff < 0 ? item.ratingDiff.toFixed(3) : 
-                                 'Stable'}
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* Rounds Played */}
-                          {item.roundsDiff !== 0 && (
-                            <div className="space-y-2 md:space-y-4">
-                              <span className="text-[9px] font-sans font-bold text-foreground/20 tracking-[0.3em] uppercase">Rounds Played</span>
-                              <div className="flex items-center gap-3">
-                                <span className="text-foreground font-display italic text-2xl md:text-3xl tracking-tighter tabular-nums">{item.current.rounds_played}</span>
-                                <span className="text-[9px] font-bold px-3 py-1.5 rounded-full bg-primary/10 text-primary uppercase tracking-widest">
-                                  +{item.roundsDiff} Sets
-                                </span>
-                              </div>
-                            </div>
-                          )}
-
-                          {/* Rank Movement */}
-                          <div className="space-y-2 md:space-y-4">
-                            <span className="text-[9px] font-sans font-bold text-foreground/20 tracking-[0.3em] uppercase">Rank Movement</span>
-                            <div className="flex items-center gap-3">
-                              <span className="text-foreground font-display italic text-2xl md:text-3xl tracking-tighter tabular-nums">#{item.current.rank_position}</span>
-                              <span className={cn(
-                                "text-[9px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest",
-                                item.rankDiff > 0 ? "bg-primary/10 text-primary" : 
-                                item.rankDiff < 0 ? "bg-destructive/10 text-destructive" : 
-                                "bg-muted text-foreground/40"
-                              )}>
-                                {item.rankDiff > 0 ? `Up ${item.rankDiff}` : 
-                                 item.rankDiff < 0 ? `Down ${Math.abs(item.rankDiff)}` : 
-                                 'Stable'}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Asymmetric Date: Absolute positioned on desktop */}
-                        <div className="mt-8 md:mt-0 md:absolute md:bottom-10 md:right-10">
-                          <span className="font-sans text-[9px] font-bold text-foreground/40 group-hover:text-foreground/60 transition-colors uppercase tracking-[0.4em]">
-                            {new Date(item.date).toLocaleDateString(LOCALE, { month: 'short', day: 'numeric', year: 'numeric' })}
-                          </span>
-                        </div>                      </div>
+                      <MoverTile key={`${item.player_name}-${item.date}-${idx}`} item={item} href={profileHref(item.player_name)} />
                     ))}
                   </div>
-                </div>
+                </section>
               ))}
-            </div>
-          )}
-          {!loading && tiers.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-20 bg-muted rounded-2xl">
-              <History className="w-12 h-12 text-foreground/5 mb-4" />
-              <p className="font-sans font-bold text-foreground/20 tracking-[0.4em] text-[9px] uppercase">Archive empty</p>
-            </div>
+
+              {tiers.length === 0 && (
+                <div className="flex flex-col items-center justify-center gap-3 py-20 bg-secondary rounded-lg text-center">
+                  <History className="w-8 h-8 text-muted-foreground" />
+                  <span className="font-display font-bold uppercase tracking-[0.12em] text-lg">No moves yet</span>
+                  <p className="text-sm text-muted-foreground max-w-sm">Changes appear here as soon as a rating on pickleball.ky moves.</p>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>

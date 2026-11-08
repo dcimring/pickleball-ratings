@@ -13,11 +13,7 @@ export function ScrollToTop() {
     if (!container) return;
 
     const toggleVisibility = () => {
-      if (container.scrollTop > 400) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
+      setIsVisible(container.scrollTop > 400);
     };
 
     container.addEventListener('scroll', toggleVisibility);
@@ -27,10 +23,7 @@ export function ScrollToTop() {
   const scrollToTop = () => {
     const container = document.querySelector('.overflow-y-auto');
     if (container) {
-      container.scrollTo({
-        top: 0,
-        behavior: 'smooth',
-      });
+      container.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -38,14 +31,14 @@ export function ScrollToTop() {
     <AnimatePresence>
       {isVisible && (
         <motion.button
-          initial={{ opacity: 0, scale: 0.5, y: 20 }}
+          initial={{ opacity: 0, scale: 0.8, y: 12 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.5, y: 20 }}
+          exit={{ opacity: 0, scale: 0.8, y: 12 }}
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 z-[100] p-4 rounded-full bg-primary text-primary-foreground shadow-2xl shadow-primary/20 hover:scale-110 active:scale-95 transition-transform"
+          className="fixed bottom-6 right-4 md:right-8 z-[100] w-12 h-12 rounded-md bg-primary text-primary-foreground flex items-center justify-center shadow-glow hover:opacity-90 active:scale-95 transition-all"
           aria-label="Scroll to top"
         >
-          <ArrowUp className="w-6 h-6 stroke-[3px]" />
+          <ArrowUp className="w-5 h-5 stroke-[2.5px]" />
         </motion.button>
       )}
     </AnimatePresence>

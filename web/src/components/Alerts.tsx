@@ -1,81 +1,96 @@
 "use client";
 
-import { MessageCircle, Zap, Users, Trophy } from 'lucide-react';
 import Image from 'next/image';
+import { ArrowUpRight, Bell, Star, TrendingUp } from 'lucide-react';
 import { WHATSAPP_GROUP_URL } from '@/lib/site-config';
 import { PageHero } from '@/components/PageHero';
 
+const PERKS = [
+  {
+    icon: TrendingUp,
+    title: 'Weekly movers digest',
+    body: 'Every week: top risers, fallers and anyone who cracked the top 20.',
+  },
+  {
+    icon: Star,
+    title: 'Milestones',
+    body: 'New leaders, personal bests and first-time rankings.',
+  },
+  {
+    icon: Bell,
+    title: 'One message a week, at most',
+    body: 'Ratings only change daily, so there is nothing to spam you with.',
+  },
+];
+
 export function Alerts() {
-  const groupUrl = WHATSAPP_GROUP_URL;
-  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=224x224&data=${encodeURIComponent(groupUrl)}`;
+  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=224x224&bgcolor=141b18&color=f2f5f3&data=${encodeURIComponent(WHATSAPP_GROUP_URL)}`;
 
   return (
-    <div className="max-w-full mx-auto pb-20 text-center min-h-full bg-background">
-      {/* Center Court Hero Header */}
+    <div className="pb-24 min-h-full bg-background">
       <PageHero
-        eyebrow="Community Network"
-        title={<>Community <br /> Alerts</>}
-        className="mb-8"
+        eyebrow={['Alerts', 'WhatsApp', 'Free']}
+        kicker="Never miss a move"
+        title="Alerts"
+        lead="Rating changes land once a day. Get the ones that matter in the place Cayman pickleball already lives: WhatsApp."
       />
 
-      <div className="max-w-2xl mx-auto px-6">
-        <p className="text-foreground/40 max-w-lg mx-auto font-medium text-lg text-balance mb-12">
-          Join our official WhatsApp dispatch to receive instant notifications on seed changes and match logs.
-        </p>
-
-        <div className="bg-muted p-1 rounded-[2.5rem] overflow-hidden shadow-2xl shadow-primary/5">
-          <div className="bg-secondary p-10 md:p-20 flex flex-col items-center">
-            {/* Desktop/Tablet View: QR Code */}
-            <div className="hidden md:flex flex-col items-center gap-12">
-              <div className="bg-white p-8 rounded-[2rem] shadow-2xl shadow-primary/10 border-8 border-background">
-                <Image 
-                  src={qrCodeUrl}
-                  alt="WhatsApp Group QR Code"
-                  width={224}
-                  height={224}
-                  className="w-56 h-56"
-                  unoptimized
-                />
-              </div>
-              <div className="space-y-4">
-                <p className="text-foreground font-display italic text-4xl tracking-tighter">Scan to Join</p>
-                <p className="text-foreground/40 font-bold text-[10px] tracking-widest uppercase">Open camera to scan</p>
-              </div>
+      <div className="px-4 md:px-10 mt-6 md:mt-8">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-3.5 md:gap-6 md:items-start">
+          {/* Join card */}
+          <div className="bg-secondary rounded-lg p-4 md:p-6 flex flex-col gap-4 md:flex-[1_1_380px]">
+            <div className="flex items-center gap-3.5">
+              <span className="w-13 h-13 w-[52px] h-[52px] rounded-lg bg-primary text-primary-foreground flex items-center justify-center shrink-0">
+                <svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 12a8.5 8.5 0 0 1-12.6 7.4L4 21l1.6-4.4A8.5 8.5 0 1 1 21 12z" />
+                  <path d="M9 10h.01M12 10h.01M15 10h.01" />
+                </svg>
+              </span>
+              <span className="flex flex-col gap-0.5">
+                <span className="kicker text-[13px] text-primary">WhatsApp group</span>
+                <span className="font-sans font-semibold text-lg leading-tight">Cayman Pickleball Alerts</span>
+              </span>
             </div>
 
-            {/* Mobile View: Join Button */}
-            <div className="md:hidden flex flex-col items-center gap-10 w-full">
-              <div className="w-24 h-24 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20">
-                <MessageCircle className="w-12 h-12 text-secondary" />
-              </div>
-              <div className="space-y-4">
-                <h3 className="text-foreground font-display italic text-4xl tracking-tighter">Stay in the Loop</h3>
-                <p className="text-foreground/40 text-sm font-medium">Tap below to join the Cayman Pickleball Alerts group.</p>
-              </div>
-              <a 
-                href={groupUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full bg-primary hover:opacity-95 text-secondary font-sans font-bold py-6 rounded-2xl transition-all tracking-[0.2em] text-xs text-center shadow-xl shadow-primary/10 uppercase"
-              >
-                Join Dispatch
-              </a>
-            </div>
-          </div>
-        </div>
+            <a
+              href={WHATSAPP_GROUP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="h-[52px] rounded-md bg-primary text-primary-foreground font-display font-bold text-[15px] uppercase tracking-[0.16em] flex items-center justify-center gap-2.5 hover:opacity-90 active:scale-[0.99] transition-all"
+            >
+              Join on WhatsApp
+              <ArrowUpRight className="w-4 h-4" />
+            </a>
 
-        <div className="mt-16 flex items-center justify-center gap-12 opacity-30">
-          <div className="flex flex-col items-center gap-3">
-            <Zap className="w-5 h-5" />
-            <span className="text-[9px] font-sans font-bold tracking-[0.3em] uppercase">Instant</span>
+            {/* QR for laptop visitors */}
+            <div className="hidden md:flex items-center gap-5 pt-2">
+              <div className="bg-secondary rounded-md shadow-outline p-2 shrink-0">
+                <Image src={qrCodeUrl} alt="QR code for the WhatsApp group invite" width={144} height={144} className="w-36 h-36 rounded" unoptimized />
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">Scan with your phone camera to open the invite in WhatsApp.</p>
+            </div>
+            <p className="md:hidden text-xs text-muted-foreground text-center">On a laptop? The desktop page shows a QR code to scan.</p>
           </div>
-          <div className="flex flex-col items-center gap-3">
-            <Users className="w-5 h-5" />
-            <span className="text-[9px] font-sans font-bold tracking-[0.3em] uppercase">Community</span>
-          </div>
-          <div className="flex flex-col items-center gap-3">
-            <Trophy className="w-5 h-5" />
-            <span className="text-[9px] font-sans font-bold tracking-[0.3em] uppercase">Elite</span>
+
+          {/* What you get */}
+          <div className="flex flex-col gap-2.5 md:flex-[999_1_480px]">
+            <h2 className="font-display font-bold uppercase tracking-[0.14em] text-base md:text-xl">What lands in the group</h2>
+            <div className="bg-secondary rounded-lg flex flex-col">
+              {PERKS.map(({ icon: Icon, title, body }) => (
+                <div key={title} className="grid grid-cols-[44px_minmax(0,1fr)] gap-3 items-center px-3 py-3.5 shadow-hairline last:shadow-none">
+                  <span className="w-11 h-11 rounded-md bg-muted flex items-center justify-center">
+                    <Icon className="w-5 h-5 text-primary" aria-hidden="true" />
+                  </span>
+                  <span className="flex flex-col gap-0.5">
+                    <span className="font-sans font-semibold text-[15px]">{title}</span>
+                    <span className="text-xs md:text-[13px] text-muted-foreground">{body}</span>
+                  </span>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs md:text-[13px] text-muted-foreground leading-relaxed pt-1">
+              Prefer a link? Every player page has a Share card you can post to any group yourself.
+            </p>
           </div>
         </div>
       </div>

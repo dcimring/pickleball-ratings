@@ -4,29 +4,31 @@
 
 @layer base {
   :root {
-    /* 
+    /*
      * BRAND SOURCE OF TRUTH: web/src/lib/brand-config.ts
-     * Colors are now automatically injected via Tailwind plugin.
+     * Colors are injected as CSS variables by the Tailwind plugin.
+     * "Broadcast" system: small radii, hairlines, condensed numerals.
      */
-    --radius: 1rem;
+    --radius: 0.625rem;
   }
 }
 
 @layer base {
   * {
-    /* "No-Line" Rule: Borders are 0 by default, use background shifts instead */
+    /* Borders are off by default; sections are separated by hairline
+       inset shadows (shadow-hairline) or surface shifts. */
     @apply border-0;
   }
   body {
     @apply bg-background text-foreground font-sans antialiased relative;
-    color-scheme: light;
-  }
-  
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-display tracking-[-0.04em];
+    color-scheme: dark;
   }
 
-  /* Data precision: Use tabular numbers for metrics */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-extrabold uppercase tracking-[-0.02em];
+  }
+
+  /* Data precision: tabular numbers for every metric */
   .tabular-nums {
     font-variant-numeric: tabular-nums;
   }
@@ -35,12 +37,17 @@
     outline: none;
   }
 
-  /* Visible focus for keyboard users — the "No-Line" rule strips borders,
-     so provide a consistent focus-visible ring instead */
+  /* Visible focus for keyboard users — borders are stripped above, so
+     provide a consistent focus-visible ring instead */
   :focus-visible {
     outline: 2px solid oklch(var(--primary));
     outline-offset: 2px;
     border-radius: 4px;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: oklch(var(--muted-foreground) / 0.7);
   }
 }
 
@@ -56,8 +63,19 @@
 }
 
 @layer utilities {
-  .bg-pressed-grass {
-    background: linear-gradient(180deg, oklch(var(--primary)) 0%, oklch(0.30 0.08 145) 100%);
+  /* Kicker: small condensed caps used for labels and column headers */
+  .kicker {
+    @apply font-display font-bold uppercase tracking-[0.18em] text-muted-foreground;
+  }
+
+  /* Big board numeral */
+  .numeral {
+    @apply font-display font-extrabold tabular-nums leading-none tracking-[-0.02em];
+  }
+
+  /* Live dot with Volt glow */
+  .live-dot {
+    @apply inline-block w-2 h-2 rounded-full bg-primary shadow-glow;
   }
 
   .text-balance {

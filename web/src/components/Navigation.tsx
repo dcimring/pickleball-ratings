@@ -7,108 +7,119 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, RefreshCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useData } from '@/context/DataContext';
+import { SITE_NAME } from '@/lib/site-config';
+
+export const NAV_ITEMS = [
+  { label: 'Rankings', href: '/' },
+  { label: 'Activity', href: '/activity' },
+  { label: 'Alerts', href: '/alerts' },
+  { label: 'Tourney Check', href: '/tourney' },
+  { label: 'Suggest', href: '/suggest' },
+];
+
+/** Volt square mark + condensed wordmark. */
+export function Wordmark({ className }: { className?: string }) {
+  return (
+    <span className={cn('flex items-center gap-2.5 font-display font-extrabold uppercase tracking-[0.02em] text-foreground', className)}>
+      <span className="w-7 h-7 md:w-8 md:h-8 rounded bg-primary text-primary-foreground flex items-center justify-center font-display font-extrabold text-base md:text-lg leading-none">
+        C
+      </span>
+      {SITE_NAME}
+    </span>
+  );
+}
 
 export function Navigation() {
   const { fetchData, refreshing } = useData();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
-  const navItems = [
-    { label: 'Rankings', href: '/' },
-    { label: 'Activity', href: '/activity' },
-    { label: 'Alerts', href: '/alerts' },
-    { label: 'Tourney Check', href: '/tourney' },
-    { label: 'Suggest Feature', href: '/suggest' },
-  ];
-
   const isActive = (href: string) => {
-    if (href === '/') return pathname === '/';
+    if (href === '/') return pathname === '/' || pathname.startsWith('/player');
     return pathname.startsWith(href);
   };
 
   return (
-    <nav className="fixed top-0 z-[100] w-full h-16 md:h-20 bg-background backdrop-blur-md px-4 sm:px-6 lg:px-8 flex items-center justify-between transition-all duration-200">
-      <div className="max-w-7xl mx-auto w-full flex items-center justify-between">
-        <Link 
-          href="/"
-          className="font-sans font-normal text-xl tracking-tighter text-foreground cursor-pointer flex items-center gap-3 group"
-        >
-          <div className="w-8 h-8 rounded-sm bg-primary flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
-            <span className="text-secondary font-sans text-lg font-normal leading-none pt-0.5">D</span>
-          </div>
-          DinkDash
+    <nav className="fixed top-0 z-[100] w-full h-14 md:h-[68px] bg-background shadow-hairline px-4 md:px-10 flex items-center">
+      <div className="max-w-6xl mx-auto w-full flex items-center justify-between gap-4">
+        <Link href="/" className="text-[22px] md:text-2xl" aria-label={`${SITE_NAME} home`}>
+          <Wordmark />
         </Link>
 
-        <div className="hidden md:flex items-center gap-10">
-          {navItems.map((item) => (
+        {/* Desktop */}
+        <div className="hidden md:flex items-center gap-8">
+          {NAV_ITEMS.map((item) => (
             <Link
               key={item.href}
               href={item.href}
+              aria-current={isActive(item.href) ? 'page' : undefined}
               className={cn(
-                "text-xs font-sans font-bold transition-all duration-300 uppercase tracking-[0.2em] relative py-2 group/nav",
-                isActive(item.href) ? "text-primary" : "text-foreground/40 hover:text-primary"
+                'font-display font-bold text-[15px] uppercase tracking-[0.18em] py-[22px] transition-colors',
+                isActive(item.href)
+                  ? 'text-primary shadow-[inset_0_-3px_0_oklch(var(--primary))]'
+                  : 'text-muted-foreground hover:text-foreground'
               )}
             >
               {item.label}
-              <div className={cn(
-                "absolute bottom-0 left-0 h-[2px] bg-tertiary transition-all duration-300",
-                isActive(item.href) ? "w-full opacity-100" : "w-0 opacity-0 group-hover/nav:w-4 group-hover/nav:opacity-50"
-              )} />
             </Link>
           ))}
-          <button 
+          <button
             onClick={() => fetchData(true)}
             disabled={refreshing}
-            className="ml-4 p-2 text-foreground/40 hover:text-primary transition-colors disabled:opacity-50"
-            title="Refresh Data"
+            className="ml-2 w-11 h-11 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors disabled:opacity-50"
+            title="Refresh data"
+            aria-label="Refresh data"
           >
-            <RefreshCw className={cn("w-4 h-4", refreshing ? "animate-spin text-primary" : "")} />
+            <RefreshCw className={cn('w-4 h-4', refreshing && 'animate-spin text-primary')} />
           </button>
         </div>
 
-        {/* Mobile Actions */}
-        <div className="md:hidden flex items-center gap-2">
-          <button 
+        {/* Mobile */}
+        <div className="md:hidden flex items-center gap-1">
+          <button
             onClick={() => fetchData(true)}
             disabled={refreshing}
-            className="p-2 text-foreground/40 active:text-primary transition-colors"
-            title="Refresh Data"
+            className="w-11 h-11 flex items-center justify-center text-muted-foreground active:text-primary transition-colors disabled:opacity-50"
+            title="Refresh data"
+            aria-label="Refresh data"
           >
-            <RefreshCw className={cn("w-5 h-5", refreshing ? "animate-spin text-primary" : "")} />
+            <RefreshCw className={cn('w-5 h-5', refreshing && 'animate-spin text-primary')} />
           </button>
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={isMobileMenuOpen}
-            className="text-primary p-2"
+            className="w-11 h-11 flex items-center justify-center text-foreground"
           >
             {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Nav Overlay */}
+      {/* Mobile overlay */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
+          <motion.div
+            initial={{ opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="absolute top-16 left-0 w-full bg-secondary backdrop-blur-xl md:hidden z-40"
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.18 }}
+            className="absolute top-14 left-0 w-full bg-secondary shadow-hairline md:hidden z-40"
           >
-            <div className="flex flex-col p-8 gap-6">
-              {navItems.map((item) => (
+            <div className="flex flex-col p-4 gap-1">
+              {NAV_ITEMS.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsMobileMenuOpen(false)}
+                  aria-current={isActive(item.href) ? 'page' : undefined}
                   className={cn(
-                    "text-xl font-sans font-normal uppercase tracking-tight flex items-center gap-3",
-                    isActive(item.href) ? "text-primary" : "text-foreground"
+                    'flex items-center justify-between h-12 px-3 rounded-md font-display font-bold text-lg uppercase tracking-[0.12em]',
+                    isActive(item.href) ? 'text-primary bg-muted' : 'text-foreground'
                   )}
                 >
-                  {isActive(item.href) && <div className="w-2 h-2 rounded-full bg-tertiary shadow-[0_0_10px_rgba(204,255,0,0.5)]" />}
                   {item.label}
+                  {isActive(item.href) && <span className="live-dot" aria-hidden="true" />}
                 </Link>
               ))}
             </div>

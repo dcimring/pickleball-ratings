@@ -21,7 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
     : 'Weekly movers in the Cayman Islands pickleball rankings — every rating change, tracked daily.';
 
   return {
-    title: 'Weekly Movers | DinkDash',
+    title: 'Weekly Movers | CAYMANDINK',
     description,
     openGraph: {
       title: 'Cayman Pickleball Weekly Movers',

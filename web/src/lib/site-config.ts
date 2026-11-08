@@ -3,8 +3,8 @@
  * previously hardcoded across pages and components.
  */
 
-export const SITE_URL = 'https://dinkdash.xyz';
-export const SITE_NAME = 'DinkDash';
+export const SITE_URL = 'https://caymandink.com';
+export const SITE_NAME = 'CAYMANDINK';
 
 /** Locale used for date formatting throughout the app */
 export const LOCALE = 'en-KY';

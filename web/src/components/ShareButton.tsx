@@ -3,18 +3,23 @@
 import { useState } from 'react';
 import { Share2, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { SITE_NAME } from '@/lib/site-config';
 
 interface ShareButtonProps {
   name: string;
+  /** Button copy; the status copy replaces it briefly after a copy */
+  label?: string;
+  className?: string;
 }
 
-export function ShareButton({ name }: ShareButtonProps) {
+/** Volt share button: native share sheet where available, clipboard fallback. */
+export function ShareButton({ name, label = 'Share card', className }: ShareButtonProps) {
   const [status, setStatus] = useState<'idle' | 'copied' | 'error'>('idle');
 
   const handleShare = async () => {
     const shareData = {
-      title: `${name} | DinkDash Rating`,
-      text: `DinkDash Profile: ${name}`,
+      title: `${name} | ${SITE_NAME} rating`,
+      text: `${SITE_NAME} profile: ${name}`,
       url: window.location.href,
     };
 
@@ -66,21 +71,13 @@ export function ShareButton({ name }: ShareButtonProps) {
   return (
     <button
       onClick={handleShare}
-      className="group flex items-center gap-2 py-2 px-0 border-b border-secondary/10 hover:border-secondary transition-all duration-300"
+      className={cn(
+        'h-11 px-4 rounded-md bg-primary text-primary-foreground font-display font-bold text-sm uppercase tracking-[0.14em] inline-flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all',
+        className
+      )}
     >
-      <div className="relative">
-        {status === 'copied' ? (
-          <Check className="w-3.5 h-3.5 text-secondary animate-in zoom-in duration-300" />
-        ) : (
-          <Share2 className="w-3.5 h-3.5 text-secondary/40 group-hover:text-secondary transition-colors" />
-        )}
-      </div>
-      <span className={cn(
-        "font-sans text-[10px] font-bold tracking-[0.2em] uppercase transition-colors",
-        status === 'copied' ? "text-secondary" : "text-secondary/60 group-hover:text-secondary"
-      )}>
-        {status === 'copied' ? 'Link Copied' : 'Share Profile'}
-      </span>
+      {status === 'copied' ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
+      {status === 'copied' ? 'Link copied' : status === 'error' ? 'Copy failed' : label}
     </button>
   );
 }

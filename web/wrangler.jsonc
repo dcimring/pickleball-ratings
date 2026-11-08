@@ -1,0 +1,38 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "caymandink",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2025-03-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "observability": {
+    "enabled": true
+  },
+  // Lets the Worker call itself for ISR revalidation.
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "caymandink"
+    }
+  ],
+  // Incremental (ISR) cache. Create once: npx wrangler r2 bucket create caymandink-cache
+  "r2_buckets": [
+    {
+      "binding": "NEXT_INC_CACHE_R2_BUCKET",
+      "bucket_name": "caymandink-cache"
+    }
+  ],
+  // Custom domain is attached in the Cloudflare dashboard (Workers → caymandink → Domains & Routes),
+  // or uncomment once the zone is on this account:
+  // "routes": [
+  //   { "pattern": "caymandink.com", "custom_domain": true },
+  //   { "pattern": "www.caymandink.com", "custom_domain": true }
+  // ],
+  // Public build-time vars. Secrets (SUPABASE_SERVICE_ROLE_KEY) go in via `wrangler secret put`.
+  "vars": {
+    "NEXTJS_ENV": "production"
+  }
+}

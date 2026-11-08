@@ -7,9 +7,9 @@
 
 ## Project overview
 
-Cayman Islands pickleball ratings site, live at dinkdash.xyz (planned migration to caymandink.com).
+Cayman Islands pickleball ratings site, live at caymandink.com (formerly dinkdash.xyz). Brand name is written CAYMANDINK.
 
-- `web/` — Next.js app (App Router), data from Supabase (`pickleball_ratings` schema).
+- `web/` — Next.js 15 app (App Router), data from Supabase (`pickleball_ratings` schema). Deployed to Cloudflare Workers via OpenNext (`web/wrangler.jsonc`, `web/open-next.config.ts`); `npm run deploy` in `web/`. No edge runtime exports (unsupported on Workers).
 - `scraper.gs` — Google Apps Script that scrapes pickleball.ky daily. The moat is the *history*: pickleball.ky only keeps latest ratings; this project stores every change (`singles_ratings_deltas` / `doubles_ratings_deltas`, snapshot rows with `valid_from` / `is_current`).
 - `supabase/` — schema dump.
 - `docs/` — strategy and brainstorm docs. See `docs/brainstorm-2026-08-08-growth-strategy.md` for the growth strategy, decisions, and roadmap priorities.
@@ -17,5 +17,5 @@ Cayman Islands pickleball ratings site, live at dinkdash.xyz (planned migration 
 ## Conventions
 
 - Server-side data access goes through `web/src/lib/rankings-api.ts` and `web/src/lib/metadata-api.ts` (React `cache()`-wrapped Supabase queries).
-- Brand colors come from `web/src/lib/brand-config.ts` — don't hardcode hexes in components.
+- Brand colors come from `web/src/lib/brand-config.ts` — don't hardcode hexes in components. Design system is the dark "Broadcast" board (Volt #ccff00 for up/live, coral for down; Barlow Condensed numerals via `font-display`, Barlow body). Shared page header is `PageHero`; movement chips are `DeltaChip`.
 - Run `npx tsc --noEmit` and `npm run lint` in `web/` before committing.

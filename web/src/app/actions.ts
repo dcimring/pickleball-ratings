@@ -8,7 +8,7 @@ export type FeatureRequestState = {
   error?: string;
 };
 
-// Per-instance sliding-window rate limit. Serverless instances don't share
+// Per-isolate sliding-window rate limit. Worker isolates don't share
 // this map, so it's a soft cap — enough to stop casual abuse of a public action.
 const RATE_LIMIT_MAX = 5;
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
@@ -43,7 +43,11 @@ export async function submitFeatureRequest(prevState: FeatureRequestState, formD
   }
 
   // 2. Rate limit by IP
-  const ip = headers().get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  const requestHeaders = await headers();
+  const ip =
+    requestHeaders.get("cf-connecting-ip") ||
+    requestHeaders.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    "unknown";
   if (isRateLimited(ip)) {
     return { error: "Too many submissions. Please try again later." };
   }

@@ -14,3 +14,8 @@ node_modules/
 *.log
 public/version.json
 tsconfig.tsbuildinfo
+
+# Cloudflare / OpenNext
+.open-next/
+.wrangler/
+.dev.vars

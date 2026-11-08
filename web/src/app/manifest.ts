@@ -3,8 +3,8 @@ import { BRAND_COLORS } from '@/lib/brand-config';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'DinkDash | Your Pickleball Dashboard',
-    short_name: 'DinkDash',
+    name: 'CAYMANDINK | Cayman Islands Pickleball Rankings',
+    short_name: 'CAYMANDINK',
     description: 'Real-time rank tracking and analytics for the Cayman Islands Pickleball community.',
     start_url: '/',
     display: 'standalone',

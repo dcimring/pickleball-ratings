@@ -1,6 +1,6 @@
-# DinkDash — Cayman Islands Pickleball Rankings
+# CAYMANDINK — Cayman Islands Pickleball Rankings
 
-Real-time rank tracking and analytics for the Cayman Islands pickleball community, live at [dinkdash.xyz](https://dinkdash.xyz).
+Cayman Islands pickleball rankings with every rating change recorded daily, live at [caymandink.com](https://caymandink.com) (formerly dinkdash.xyz).
 
 ## How it works
 
@@ -15,7 +15,7 @@ Supabase Postgres — schema `pickleball_ratings`
         ├─ doubles_ratings_deltas
         └─ feature_requests
         ▼
-Next.js 14 app in web/ → Vercel
+Next.js 15 app in web/ → Cloudflare Workers (OpenNext)
 ```
 
 Rankings history is stored as versioned rows (SCD-2 style): each scrape that changes a
@@ -25,7 +25,7 @@ Supabase (not yet committed to this repo).
 
 ## Repo layout
 
-- `web/` — Next.js 14 (App Router) frontend. Server-rendered rankings + player pages with hourly ISR, seeded client context for interactivity.
+- `web/` — Next.js 15 (App Router) frontend. Server-rendered rankings + player pages with hourly ISR, seeded client context for interactivity.
 - `scraper.gs` — Google Apps Script scraper. Deployed by pasting into [script.google.com](https://script.google.com); see the header comment for setup (script properties + daily trigger). Emails on scrape failure.
 - `.github/workflows/ci.yml` — lint, typecheck, and build on PRs and pushes.
 
@@ -48,9 +48,30 @@ See [web/.env.example](web/.env.example). The scraper needs `SUPABASE_URL` and
 
 ## Deployment
 
-The web app deploys to Vercel (project root: `web/`). Set the three env vars from
-`.env.example` in Vercel. `prebuild` stamps `public/version.json`, which the client
-polls to prompt users to refresh after a deploy.
+The web app deploys to **Cloudflare Workers** via [OpenNext](https://opennext.js.org/cloudflare)
+(config: `web/wrangler.jsonc`, `web/open-next.config.ts`). `prebuild` stamps `public/version.json`,
+which the client polls to show the "New board live" prompt.
+
+One-time setup (Cloudflare account that owns caymandink.com):
+
+```bash
+cd web
+npx wrangler login
+npx wrangler r2 bucket create caymandink-cache        # ISR cache (NEXT_INC_CACHE_R2_BUCKET)
+npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY      # used by the suggest-feature server action
+```
+
+`NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are inlined at build time from
+`web/.env.local` (or CI secrets). Then:
+
+```bash
+npm run preview   # build + run the Worker locally in workerd
+npm run deploy    # build + deploy to Cloudflare
+```
+
+Attach `caymandink.com` to the Worker under Workers → caymandink → Domains & Routes (or uncomment
+`routes` in `wrangler.jsonc`). Keep `dinkdash.xyz` redirecting to the new domain with a Cloudflare
+Bulk Redirect (301, preserve path) so WhatsApp links and search results keep working.
 
 ## Design
 

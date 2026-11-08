@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!player) {
     return {
-      title: 'Player Profile | DinkDash',
+      title: 'Player Profile | CAYMANDINK',
       description: 'View player statistics and rankings on the Cayman Islands pickleball data platform.'
     };
   }
@@ -35,13 +35,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const playerName = player.name;
 
   return {
-    title: `${playerName} | ${formattedRating} Rating | DinkDash`,
+    title: `${playerName} | ${formattedRating} Rating | CAYMANDINK`,
     description: `Check out ${playerName}'s latest ratings, global rankings, and performance history on the official Cayman Islands pickleball hub.`,
     openGraph: {
-      title: `${playerName} | ${formattedRating} Rating | DinkDash`,
+      title: `${playerName} | ${formattedRating} Rating | CAYMANDINK`,
       description: `Check out ${playerName}'s latest pickleball stats and rankings on the Cayman Islands data platform.`,
-      url: `https://dinkdash.xyz/player/${slug}`,
-      siteName: 'DinkDash',
+      url: `https://caymandink.com/player/${slug}`,
+      siteName: 'CAYMANDINK',
       locale: 'en_US',
       type: 'profile',
       images: [
@@ -55,7 +55,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${playerName} | ${formattedRating} Rating | DinkDash`,
+      title: `${playerName} | ${formattedRating} Rating | CAYMANDINK`,
       description: `Performance history and real-time rankings for ${playerName} on the Cayman Islands hub.`,
       images: [`/player/${slug}/opengraph-image`],
     }

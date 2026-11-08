@@ -147,7 +147,7 @@ function sendFailureAlert(failures) {
       || Session.getEffectiveUser().getEmail();
     MailApp.sendEmail(
       recipient,
-      'DinkDash scraper failure',
+      'CAYMANDINK scraper failure',
       'The daily pickleball rankings scrape had problems:\n\n- '
         + failures.join('\n- ')
         + '\n\nCheck the Apps Script execution log at https://script.google.com for details.'

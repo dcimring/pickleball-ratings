@@ -36,7 +36,7 @@ export function PlayerProfileClient({ slug, playerName, initialHistory }: Player
   }, []);
 
   useEffect(() => {
-    // Warm the Vercel Edge Cache with an active fetch
+    // Warm the edge cache with an active fetch
     fetch(`/player/${slug}/opengraph-image`, { mode: 'no-cors' }).catch(() => {});
   }, [slug]);
 

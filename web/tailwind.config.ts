@@ -50,15 +50,8 @@ const config: Config = {
         ghost: {
           DEFAULT: "oklch(var(--ghost) / <alpha-value>)",
         },
-        dinkdash: {
-          blue: BRAND_COLORS.background.hex,
-          surface: BRAND_COLORS.secondary.hex,
-          white: BRAND_COLORS.foreground.hex,
-          green: BRAND_COLORS.primary.hex,
-        },
-        // Legacy colors kept for compatibility during transition
-        volt: "oklch(var(--primary))",
-        surface: "oklch(var(--secondary))",
+        volt: "oklch(var(--primary) / <alpha-value>)",
+        coral: "oklch(var(--destructive) / <alpha-value>)",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -66,8 +59,14 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        display: ["var(--font-display)", "system-ui", "sans-serif"],
-        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+        display: ["var(--font-display)", "Barlow Condensed", "Arial Narrow", "sans-serif"],
+        sans: ["var(--font-sans)", "Barlow", "system-ui", "sans-serif"],
+      },
+      boxShadow: {
+        hairline: "inset 0 -1px 0 oklch(var(--border))",
+        "hairline-top": "inset 0 1px 0 oklch(var(--border))",
+        outline: "inset 0 0 0 1px oklch(var(--border))",
+        glow: "0 0 10px oklch(var(--primary))",
       },
     },
   },

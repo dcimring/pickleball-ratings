@@ -1,9 +1,7 @@
 import { ImageResponse } from 'next/og';
 import { getWeeklyMovers } from '@/lib/rankings-api';
-import { BRAND_COLORS } from '@/lib/brand-config';
-
-// Route segment config
-export const runtime = 'edge';
+import { OG_COLORS } from '@/lib/brand-config';
+import { SITE_NAME, SITE_URL } from '@/lib/site-config';
 
 // Image metadata
 export const alt = 'Cayman Pickleball Weekly Movers';
@@ -14,33 +12,24 @@ export const size = {
 
 export const contentType = 'image/png';
 
+const condensed = {
+  fontFamily: 'sans-serif',
+  fontWeight: 800 as const,
+  letterSpacing: '-0.03em',
+  lineHeight: 0.9,
+};
+
 export default async function Image() {
   const movers = await getWeeklyMovers().catch(() => null);
 
-  const weekOf = new Date().toLocaleDateString('en-US', {
+  const weekOf = new Date().toLocaleDateString('en-GB', {
     day: 'numeric',
     month: 'short',
     year: 'numeric',
   });
 
-  const stats: { label: string; value: string; accent: boolean }[] = [];
-  if (movers && movers.count > 0) {
-    stats.push({ label: 'Players Moved', value: `${movers.count}`, accent: false });
-    if (movers.topGainer) {
-      stats.push({
-        label: `Biggest Climb · ${movers.topGainer.name}`,
-        value: `+${movers.topGainer.ratingDiff.toFixed(3)}`,
-        accent: true,
-      });
-    }
-    if (movers.milestone) {
-      stats.push({
-        label: `Crossed ${movers.milestone.threshold.toFixed(1)} · ${movers.milestone.name}`,
-        value: movers.milestone.rating.toFixed(3),
-        accent: true,
-      });
-    }
-  }
+  const gainer = movers?.topGainer ?? null;
+  const milestone = movers?.milestone ?? null;
 
   return new ImageResponse(
     (
@@ -49,165 +38,111 @@ export default async function Image() {
           height: '100%',
           width: '100%',
           display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'flex-start',
-          justifyContent: 'space-between',
-          backgroundColor: BRAND_COLORS.primary.hex,
-          padding: '80px',
+          backgroundColor: OG_COLORS.ground,
+          color: OG_COLORS.text,
+          padding: '56px 72px',
+          gap: '56px',
           fontFamily: 'sans-serif',
           position: 'relative',
           overflow: 'hidden',
         }}
       >
-        {/* Atmosphere: Subtle Light Beams */}
-        <div
-          style={{
-            position: 'absolute',
-            top: '-20%',
-            right: '-10%',
-            width: '800px',
-            height: '800px',
-            background: `radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%)`,
-          }}
-        />
-        <div
-          style={{
-            position: 'absolute',
-            bottom: '-30%',
-            left: '-10%',
-            width: '600px',
-            height: '600px',
-            background: `radial-gradient(circle, rgba(204,255,0,0.05) 0%, transparent 70%)`,
-          }}
-        />
+        {/* Left: headline + gainer */}
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flex: 1, minWidth: 0 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+              <div
+                style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '5px',
+                  backgroundColor: OG_COLORS.volt,
+                  color: OG_COLORS.ground,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '22px',
+                  fontWeight: 800,
+                }}
+              >
+                C
+              </div>
+              <span style={{ fontSize: '30px', fontWeight: 800, letterSpacing: '0.02em', textTransform: 'uppercase' }}>{SITE_NAME}</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: OG_COLORS.muted, fontSize: '20px', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', marginTop: '10px' }}>
+              <div style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: OG_COLORS.volt, boxShadow: `0 0 12px ${OG_COLORS.volt}` }} />
+              Week of {weekOf} · Doubles
+            </div>
+            <div style={{ ...condensed, fontSize: '120px', lineHeight: 0.84, textTransform: 'uppercase', display: 'flex', flexDirection: 'column' }}>
+              <span>Weekly</span>
+              <span>Movers</span>
+            </div>
+          </div>
 
-        {/* Outer Ghost Border Frame */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: '40px',
-            border: `1px solid rgba(255,255,255,0.1)`,
-            borderRadius: '32px',
-          }}
-        />
+          {gainer ? (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'flex-end',
+                justifyContent: 'space-between',
+                gap: '20px',
+                backgroundColor: OG_COLORS.volt,
+                color: OG_COLORS.ground,
+                borderRadius: '10px',
+                padding: '20px 24px',
+              }}
+            >
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', minWidth: 0 }}>
+                <span style={{ fontSize: '18px', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: OG_COLORS.voltInk }}>Gainer of the week</span>
+                <span style={{ fontSize: gainer.name.length > 18 ? '26px' : '32px', fontWeight: 700, lineHeight: 1.05, letterSpacing: '-0.01em' }}>{gainer.name}</span>
+                <span style={{ fontSize: '17px', color: OG_COLORS.voltInk }}>
+                  {gainer.rankDiff > 0 ? `Up ${gainer.rankDiff} to No. ${gainer.rank}` : `No. ${gainer.rank}`} · now {gainer.rating.toFixed(3)}
+                </span>
+              </div>
+              <span style={{ ...condensed, fontSize: '72px', letterSpacing: '-0.02em', whiteSpace: 'nowrap' }}>+{gainer.ratingDiff.toFixed(3)}</span>
+            </div>
+          ) : (
+            <span style={{ color: OG_COLORS.muted, fontSize: '28px', lineHeight: 1.3 }}>Every rating change on the island, tracked daily.</span>
+          )}
+        </div>
 
-        {/* Top row: branding left, site right */}
+        {/* Right: board */}
         <div
           style={{
             display: 'flex',
-            width: '100%',
-            alignItems: 'center',
-            justifyContent: 'space-between',
+            flexDirection: 'column',
+            width: '420px',
+            backgroundColor: OG_COLORS.surface,
+            borderRadius: '10px',
+            overflow: 'hidden',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-            <div
-              style={{
-                width: '64px',
-                height: '64px',
-                borderRadius: '16px',
-                backgroundColor: BRAND_COLORS.secondary.hex,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)',
-              }}
-            >
-              <span style={{ color: BRAND_COLORS.primary.hex, fontSize: '32px', fontWeight: '400' }}>D</span>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <span style={{ color: BRAND_COLORS.secondary.hex, fontSize: '24px', fontWeight: '400', letterSpacing: '0.2em' }}>
-                WEEKLY DIGEST
-              </span>
-              <span style={{ color: BRAND_COLORS.secondary.hex, opacity: 0.5, fontSize: '16px', fontWeight: '700', letterSpacing: '0.1em' }}>
-                CAYMAN ISLANDS PICKLEBALL
-              </span>
-            </div>
+          <div style={{ display: 'flex', padding: '16px 20px', color: OG_COLORS.muted, fontSize: '16px', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', borderBottom: `1px solid ${OG_COLORS.hairline}` }}>
+            This week
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <span style={{ color: BRAND_COLORS.secondary.hex, fontSize: '34px', fontWeight: '400', letterSpacing: '-0.02em' }}>dinkdash</span>
-            <span style={{ color: BRAND_COLORS.tertiary.hex, fontSize: '34px', fontWeight: '400' }}>.xyz</span>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', padding: '18px 20px', borderBottom: `1px solid ${OG_COLORS.hairline}` }}>
+            <span style={{ color: OG_COLORS.muted, fontSize: '16px', fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase' }}>Players moved</span>
+            <span style={{ ...condensed, fontSize: '72px' }}>{movers?.count ?? '—'}</span>
+          </div>
+
+          {milestone ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', padding: '18px 20px', borderBottom: `1px solid ${OG_COLORS.hairline}` }}>
+              <span style={{ color: OG_COLORS.muted, fontSize: '16px', fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase' }}>Crossed {milestone.threshold.toFixed(1)}</span>
+              <span style={{ fontSize: '24px', fontWeight: 700 }}>{milestone.name}</span>
+              <span style={{ ...condensed, fontSize: '48px', color: OG_COLORS.volt }}>{milestone.rating.toFixed(3)}</span>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', padding: '18px 20px', borderBottom: `1px solid ${OG_COLORS.hairline}` }}>
+              <span style={{ color: OG_COLORS.muted, fontSize: '16px', fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase' }}>Risers and fallers</span>
+              <span style={{ fontSize: '20px', color: OG_COLORS.muted, lineHeight: 1.4 }}>Open the link for the full board and every player&apos;s trajectory.</span>
+            </div>
+          )}
+
+          <div style={{ display: 'flex', marginTop: 'auto', padding: '16px 20px', color: OG_COLORS.muted, fontSize: '17px', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase' }}>
+            {SITE_URL.replace('https://', '')}/weekly
           </div>
         </div>
-
-        {/* Title */}
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <h1
-            style={{
-              fontSize: '116px',
-              fontWeight: '900',
-              color: BRAND_COLORS.secondary.hex,
-              margin: '0',
-              textTransform: 'uppercase',
-              letterSpacing: '-0.05em',
-              lineHeight: '0.9',
-            }}
-          >
-            Weekly Movers
-          </h1>
-          <span
-            style={{
-              color: BRAND_COLORS.secondary.hex,
-              opacity: 0.5,
-              fontSize: '26px',
-              fontWeight: '700',
-              letterSpacing: '0.3em',
-              textTransform: 'uppercase',
-              marginTop: '18px',
-            }}
-          >
-            Week of {weekOf}
-          </span>
-        </div>
-
-        {/* Stat row */}
-        {stats.length > 0 ? (
-          <div style={{ display: 'flex', width: '100%', gap: '36px', alignItems: 'flex-end' }}>
-            {stats.map((stat, i) => (
-              <div key={stat.label} style={{ display: 'flex', alignItems: 'flex-end', gap: '36px' }}>
-                {i > 0 && (
-                  <div style={{ width: '1px', height: '90px', backgroundColor: 'rgba(255,255,255,0.1)' }} />
-                )}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  <span
-                    style={{
-                      color: BRAND_COLORS.secondary.hex,
-                      opacity: 0.5,
-                      fontSize: '18px',
-                      fontWeight: '700',
-                      letterSpacing: '0.08em',
-                      textTransform: 'uppercase',
-                    }}
-                  >
-                    {stat.label}
-                  </span>
-                  <span
-                    style={{
-                      color: stat.accent ? BRAND_COLORS.tertiary.hex : BRAND_COLORS.secondary.hex,
-                      fontSize: '72px',
-                      fontWeight: '900',
-                      lineHeight: '1',
-                      fontVariantNumeric: 'tabular-nums',
-                    }}
-                  >
-                    {stat.value}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <span
-            style={{
-              color: BRAND_COLORS.secondary.hex,
-              opacity: 0.7,
-              fontSize: '32px',
-              fontWeight: '400',
-            }}
-          >
-            Every rating change on the island, tracked daily.
-          </span>
-        )}
       </div>
     ),
     {

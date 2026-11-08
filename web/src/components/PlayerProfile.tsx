@@ -1,25 +1,40 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { Users, User, Activity, History, ArrowLeft, Star } from 'lucide-react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { ArrowLeft } from 'lucide-react';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceDot } from 'recharts';
 import { Ranking, RatingMode } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { LOCALE, HERO_TEXTURE_URL } from '@/lib/site-config';
+import { LOCALE } from '@/lib/site-config';
+import { BRAND_COLORS } from '@/lib/brand-config';
 import { ShareButton } from './ShareButton';
 import { RankingHistoryTable } from './RankingHistoryTable';
 import { ModeSwitcher } from './ModeSwitcher';
+import { PageHero } from './PageHero';
+import { DeltaChip } from './DeltaChip';
 
 interface PlayerProfileProps {
   playerName: string;
-  playerHistory: { singles: Ranking[], doubles: Ranking[] };
+  playerHistory: { singles: Ranking[]; doubles: Ranking[] };
   activeTab: RatingMode;
   onTabChange: (tab: RatingMode) => void;
   loading: boolean;
   backUrl?: string;
   backLabel?: string;
+}
+
+const shortDate = (iso: string) => new Date(iso).toLocaleDateString(LOCALE, { day: 'numeric', month: 'short' });
+const longDate = (iso: string) => new Date(iso).toLocaleDateString(LOCALE, { day: 'numeric', month: 'long', year: 'numeric' });
+
+function Tile({ label, value, sub, accent }: { label: string; value: React.ReactNode; sub?: React.ReactNode; accent?: boolean }) {
+  return (
+    <div className="bg-secondary rounded-lg px-3.5 py-3 flex flex-col gap-1 min-w-0">
+      <span className="kicker text-[11px] md:text-xs">{label}</span>
+      <span className={cn('numeral text-[26px] md:text-[30px] flex items-baseline gap-1.5', accent && 'text-primary')}>{value}</span>
+      {sub && <span className="text-[11px] md:text-xs text-muted-foreground truncate">{sub}</span>}
+    </div>
+  );
 }
 
 export function PlayerProfile({
@@ -29,235 +44,232 @@ export function PlayerProfile({
   onTabChange,
   loading,
   backUrl = "/",
-  backLabel = "Back to Rankings",
+  backLabel = "Back to rankings",
 }: PlayerProfileProps) {
   const [showChart, setShowChart] = useState(false);
   const hasData = playerHistory.singles.length > 0 || playerHistory.doubles.length > 0;
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowChart(true), 500);
+    const timer = setTimeout(() => setShowChart(true), 300);
     return () => clearTimeout(timer);
   }, []);
 
-  return (
-    <div className="min-h-full bg-background relative overflow-hidden pb-20">
-      {/* Center Court Hero Header */}
-      <header className="relative pt-24 pb-12 md:pt-28 md:pb-12 px-6 text-left bg-pressed-grass overflow-hidden mb-8">
-        {/* Editorial Pattern Overlay */}
-        <div
-          className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay"
-          style={{ backgroundImage: `url('${HERO_TEXTURE_URL}')` }}
-        />
+  const history = useMemo(
+    () => [...playerHistory[activeTab]].sort((a, b) => new Date(a.valid_from).getTime() - new Date(b.valid_from).getTime()),
+    [playerHistory, activeTab]
+  );
+  const current = history[history.length - 1];
+  const previous = history.length > 1 ? history[history.length - 2] : undefined;
+  const ratingDiff = previous && current ? current.rating - previous.rating : undefined;
+  const rankDiff = previous && current ? previous.rank_position - current.rank_position : 0;
 
-        <div className="max-w-6xl mx-auto relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <Link 
-              href={backUrl}
-              className="flex items-center gap-2 text-secondary/40 hover:text-secondary transition-colors mb-6 md:mb-8 group w-fit"
-            >
-              <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-              <span className="font-sans text-[10px] font-bold tracking-[0.2em] uppercase">{backLabel}</span>
-            </Link>
+  const peak = useMemo(() => (history.length ? history.reduce((best, r) => (r.rating > best.rating ? r : best), history[0]) : undefined), [history]);
+  const bestRank = useMemo(() => (history.length ? history.reduce((best, r) => (r.rank_position < best.rank_position ? r : best), history[0]) : undefined), [history]);
 
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-8">
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 mb-4">
-                  <Star className="w-3.5 h-3.5 text-tertiary fill-tertiary" />
-                  <span className="text-tertiary font-sans font-bold tracking-[0.3em] text-xs uppercase">Player Profile</span>
-                </div>
-                <div className="flex flex-col items-start gap-4 md:gap-6">
-                  <h1 className="text-6xl md:text-[8rem] font-display italic tracking-[-0.06em] text-secondary leading-[0.8] drop-shadow-sm">
-                    {playerName}
-                  </h1>
-                  <ShareButton name={playerName} />
-                </div>
-              </div>
+  const otherMode: RatingMode = activeTab === 'doubles' ? 'singles' : 'doubles';
+  const otherCurrent = playerHistory[otherMode][playerHistory[otherMode].length - 1];
 
-              <ModeSwitcher activeTab={activeTab} onTabChange={onTabChange} size="lg" />
-            </div>
-          </motion.div>
+  const modeLabels = {
+    doubles: playerHistory.doubles.length ? playerHistory.doubles[playerHistory.doubles.length - 1].rating.toFixed(3) : undefined,
+    singles: playerHistory.singles.length ? playerHistory.singles[playerHistory.singles.length - 1].rating.toFixed(3) : undefined,
+  };
+
+  const backLink = (
+    <Link
+      href={backUrl}
+      className="inline-flex items-center gap-2 h-10 -ml-1 w-fit kicker text-sm hover:text-foreground transition-colors group"
+    >
+      <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
+      {backLabel}
+    </Link>
+  );
+
+  if (!loading && !hasData) {
+    return (
+      <div className="min-h-full bg-background pb-24">
+        <PageHero topSlot={backLink} eyebrow={['Player profile']} title={playerName} />
+        <div className="px-4 md:px-10 mt-6">
+          <div className="max-w-6xl mx-auto bg-secondary rounded-lg py-20 text-center flex flex-col items-center gap-2">
+            <span className="font-display font-extrabold uppercase text-3xl">Not on the board</span>
+            <p className="text-muted-foreground max-w-md">We have no rated games for this player yet. Ratings appear after the first rated round on pickleball.ky.</p>
+          </div>
         </div>
-      </header>
+      </div>
+    );
+  }
 
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-1 mb-20 bg-muted p-1 rounded-[2.5rem] overflow-hidden">
+  return (
+    <div className="min-h-full bg-background pb-24">
+      <PageHero
+        topSlot={backLink}
+        eyebrow={current ? ['Player', `${activeTab} No. ${current.rank_position}`, `${current.rounds_played} rounds`] : ['Player', `Unranked in ${activeTab}`]}
+        title={playerName}
+        titleClassName="text-[56px] md:text-[104px] break-words"
+      >
+        <ShareButton name={playerName} className="order-2 md:order-1" />
+        <ModeSwitcher activeTab={activeTab} onTabChange={onTabChange} size="lg" labels={modeLabels} className="order-1 md:order-2" />
+      </PageHero>
+
+      <div className="px-4 md:px-10 mt-5 md:mt-8">
+        <div className="max-w-6xl mx-auto flex flex-col gap-3.5 md:gap-6">
           {loading ? (
-            <>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="bg-secondary p-10 animate-pulse">
-                  <div className="h-4 w-24 bg-muted rounded mb-10" />
-                  <div className="h-16 w-32 bg-muted rounded mb-6" />
-                </div>
+                <div key={i} className="bg-secondary rounded-lg h-40 animate-pulse" />
               ))}
-            </>
-          ) : !hasData ? (
-            <div className="col-span-full py-32 text-center bg-secondary">
-              <h2 className="text-5xl font-display italic tracking-tight text-foreground mb-6">Player Not Found</h2>
-              <p className="text-foreground/40 max-w-md mx-auto font-medium">We couldn&apos;t find any match history for this athlete.</p>
+            </div>
+          ) : !current ? (
+            <div className="bg-secondary rounded-lg p-6 md:p-10 flex flex-col gap-3">
+              <span className="kicker text-[13px]">{activeTab} rating</span>
+              <span className="font-display font-extrabold uppercase text-4xl text-muted-foreground">Unranked</span>
+              <p className="text-muted-foreground text-sm max-w-md">
+                No rated {activeTab} games yet.
+                {otherCurrent && (
+                  <>
+                    {' '}Rated {otherCurrent.rating.toFixed(3)} in {otherMode}, No. {otherCurrent.rank_position}.{' '}
+                    <button onClick={() => onTabChange(otherMode)} className="text-primary underline underline-offset-4">Show {otherMode}</button>
+                  </>
+                )}
+              </p>
             </div>
           ) : (
             <>
-              {(['doubles', 'singles'] as const).map((type) => {
-                const data = type === 'doubles' ? playerHistory.doubles : playerHistory.singles;
-                const current = data[data.length - 1];
-                const isActive = activeTab === type;
-
-                return (
-                  <div 
-                    key={type}
-                    className={cn(
-                      "bg-secondary p-10 transition-all duration-500 flex flex-col justify-between h-[300px]",
-                      isActive ? "z-10 shadow-xl" : "opacity-40 grayscale"
-                    )}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-sans text-[10px] font-bold tracking-[0.4em] text-foreground/30 uppercase">{type} Rating</span>
-                      {type === 'doubles' ? <Users className="w-4 h-4 text-foreground/10" /> : <User className="w-4 h-4 text-foreground/10" />}
+              {/* Hero row: big number + stat tiles | chart */}
+              <div className="flex flex-col md:flex-row gap-3.5 md:gap-6 md:items-stretch">
+                <div className="flex flex-col gap-2 md:gap-3 md:flex-[1_1_380px] min-w-0">
+                  <div className="bg-secondary rounded-lg p-4 md:p-6 flex flex-col gap-4">
+                    <div className="flex items-end justify-between gap-4">
+                      <div className="flex flex-col gap-1">
+                        <span className="kicker text-[13px]">{activeTab} rating</span>
+                        <span className="numeral text-[84px] md:text-[96px] text-foreground">{current.rating.toFixed(3)}</span>
+                      </div>
+                      <div className="flex flex-col items-end gap-1.5 pb-1">
+                        <DeltaChip value={ratingDiff} size="lg" />
+                        <span className="text-[11px] md:text-xs text-muted-foreground text-right">
+                          {previous ? `since ${shortDate(previous.valid_from)}` : `since ${shortDate(current.valid_from)}`}
+                        </span>
+                      </div>
                     </div>
-                    {current ? (
-                      <div className="space-y-8 text-right self-end w-full">
-                        <div className="flex items-end justify-between">
-                           <span className="text-primary font-sans font-bold text-[10px] uppercase tracking-[0.3em]">Official</span>
-                           <span className="text-7xl font-display italic tracking-tighter text-foreground leading-none tabular-nums">{current.rating.toFixed(3)}</span>
-                        </div>
-                        <div className="flex items-center justify-end gap-10 text-foreground/40">
-                          <div className="flex flex-col items-end gap-1">
-                            <span className="text-[9px] font-bold uppercase tracking-[0.4em] opacity-30">Rank</span>
-                            <span className="text-foreground font-bold text-2xl tracking-tighter tabular-nums">#{current.rank_position}</span>
-                          </div>
-                          <div className="flex flex-col items-end gap-1">
-                            <span className="text-[9px] font-bold uppercase tracking-[0.4em] opacity-30">Rounds</span>
-                            <span className="text-foreground font-bold text-2xl tracking-tighter tabular-nums">{current.rounds_played}</span>
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="flex-1 flex items-center justify-center text-foreground/5 italic">
-                        <span className="font-display text-4xl tracking-tighter">Unranked</span>
-                      </div>
+                    {!previous && (
+                      <p className="text-sm text-muted-foreground -mt-1">
+                        Held at {current.rating.toFixed(3)} since {longDate(current.valid_from)}. The trajectory appears after the next rated change.
+                      </p>
                     )}
                   </div>
-                );
-              })}
 
-              <div className="bg-secondary p-10 flex flex-col justify-between h-[300px]">
-                <div className="flex items-center justify-between">
-                  <span className="font-sans text-[10px] font-bold tracking-[0.4em] text-foreground/30 uppercase">Performance</span>
-                </div>
-                <div className="space-y-8 text-right">
-                  <div className="flex flex-col items-end gap-2">
-                    <span className="text-[9px] text-foreground/30 font-bold uppercase tracking-[0.4em]">Tracking Since</span>
-                    <span className="text-foreground font-bold text-2xl tracking-tighter italic font-display">
-                      {playerHistory[activeTab][0]?.valid_from 
-                        ? new Date(playerHistory[activeTab][0].valid_from).toLocaleDateString(LOCALE, { month: 'long', year: 'numeric' })
-                        : 'N/A'
+                  <div className="grid grid-cols-4 gap-1.5 md:gap-2">
+                    <Tile
+                      label="Rank"
+                      value={
+                        <>
+                          {current.rank_position}
+                          {rankDiff !== 0 && (
+                            <span className={cn('text-sm font-bold', rankDiff > 0 ? 'text-primary' : 'text-destructive')}>
+                              {rankDiff > 0 ? '▲' : '▼'}{Math.abs(rankDiff)}
+                            </span>
+                          )}
+                        </>
                       }
+                    />
+                    <Tile label="Peak" value={peak?.rating.toFixed(3)} sub={peak && shortDate(peak.valid_from)} accent={!!peak && peak.rating === current.rating && history.length > 1} />
+                    <Tile label="Best rank" value={bestRank?.rank_position} sub={bestRank && shortDate(bestRank.valid_from)} />
+                    <Tile label="Rounds" value={current.rounds_played} sub={otherCurrent ? `${otherMode} ${otherCurrent.rounds_played}` : undefined} />
+                  </div>
+                </div>
+
+                {/* Chart */}
+                <div className="bg-secondary rounded-lg p-4 md:p-6 flex flex-col gap-3 md:flex-[999_1_560px] min-w-0">
+                  <div className="flex items-baseline justify-between gap-3 flex-wrap">
+                    <h2 className="font-display font-bold uppercase tracking-[0.14em] text-base md:text-xl">Rating trajectory</h2>
+                    <span className="text-xs md:text-[13px] text-muted-foreground">
+                      {history.length} snapshot{history.length === 1 ? '' : 's'} · since {shortDate(history[0].valid_from)}
                     </span>
                   </div>
-                  <div className="pt-8">
-                    <p className="text-[10px] text-foreground/20 leading-relaxed font-bold uppercase tracking-widest">
-                      Cayman Islands Proprietary <br /> Rating System
-                    </p>
+                  <div className="h-[220px] md:h-[300px] w-full">
+                    {!showChart ? (
+                      <div className="h-full w-full bg-muted animate-pulse rounded-md" />
+                    ) : history.length >= 2 ? (
+                      <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+                        <AreaChart data={history} margin={{ top: 10, right: 12, left: -16, bottom: 0 }}>
+                          <defs>
+                            <linearGradient id="voltFill" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="0%" stopColor={BRAND_COLORS.primary.hex} stopOpacity={0.18} />
+                              <stop offset="100%" stopColor={BRAND_COLORS.primary.hex} stopOpacity={0} />
+                            </linearGradient>
+                          </defs>
+                          <CartesianGrid stroke="rgba(255,255,255,0.08)" vertical={false} />
+                          <XAxis
+                            dataKey="valid_from"
+                            stroke="transparent"
+                            tick={{ fill: '#9fb0a8', fontSize: 11, fontWeight: 600 }}
+                            tickFormatter={(str) => new Date(str).toLocaleDateString(LOCALE, { month: 'short' })}
+                            axisLine={false}
+                            tickLine={false}
+                            minTickGap={24}
+                            dy={8}
+                          />
+                          <YAxis
+                            stroke="transparent"
+                            tick={{ fill: '#9fb0a8', fontSize: 11, fontWeight: 600 }}
+                            domain={['auto', 'auto']}
+                            axisLine={false}
+                            tickLine={false}
+                            tickFormatter={(val: number) => val.toFixed(2)}
+                            width={64}
+                          />
+                          <Tooltip
+                            cursor={{ stroke: 'rgba(255,255,255,0.2)' }}
+                            contentStyle={{
+                              backgroundColor: BRAND_COLORS.muted.hex,
+                              border: '1px solid rgba(255,255,255,0.08)',
+                              borderRadius: '6px',
+                              fontSize: '12px',
+                              fontWeight: 600,
+                              color: BRAND_COLORS.foreground.hex,
+                            }}
+                            itemStyle={{ color: BRAND_COLORS.primary.hex }}
+                            labelStyle={{ color: '#9fb0a8', marginBottom: '4px' }}
+                            labelFormatter={(label) => longDate(String(label))}
+                            formatter={(value) => [Number(value).toFixed(3), 'Rating']}
+                          />
+                          <Area
+                            type="linear"
+                            dataKey="rating"
+                            stroke={BRAND_COLORS.primary.hex}
+                            strokeWidth={2.5}
+                            fill="url(#voltFill)"
+                            dot={false}
+                            activeDot={{ r: 5, fill: BRAND_COLORS.primary.hex, stroke: BRAND_COLORS.background.hex, strokeWidth: 2 }}
+                            animationDuration={900}
+                          />
+                          {peak && history.length > 2 && (
+                            <ReferenceDot x={peak.valid_from} y={peak.rating} r={4} fill={BRAND_COLORS.background.hex} stroke={BRAND_COLORS.primary.hex} strokeWidth={2} />
+                          )}
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    ) : (
+                      <div className="h-full flex flex-col items-center justify-center text-center gap-2 px-4">
+                        <span className="numeral text-5xl text-muted-foreground">{current.rating.toFixed(3)}</span>
+                        <p className="text-sm text-muted-foreground max-w-xs">
+                          One snapshot so far. The line draws itself as soon as the rating moves.
+                        </p>
+                      </div>
+                    )}
                   </div>
+                  {peak && history.length >= 2 && (
+                    <div className="flex justify-between kicker text-xs">
+                      <span>{shortDate(history[0].valid_from)}</span>
+                      <span className="text-primary">Peak {peak.rating.toFixed(3)} · {shortDate(peak.valid_from)}</span>
+                      <span>{shortDate(current.valid_from)}</span>
+                    </div>
+                  )}
                 </div>
               </div>
+
+              <RankingHistoryTable history={history} activeTab={activeTab} />
             </>
           )}
         </div>
-
-        {/* Performance Chart */}
-        {!loading && hasData && (
-          <div className="bg-muted p-1 rounded-3xl overflow-hidden shadow-2xl shadow-primary/5">
-            <div className="bg-secondary p-12">
-              <div className="flex items-center justify-between mb-20">
-                <div className="space-y-4">
-                  <h3 className="font-display text-4xl italic tracking-tighter text-foreground">Rating Trend</h3>
-                  <div className="w-12 h-1 bg-primary rounded-full" />
-                </div>
-                <Activity className="w-8 h-8 text-primary/20" />
-              </div>
-
-              <div className="h-[450px] min-h-[450px] w-full">
-                {!showChart ? (
-                  <div className="h-full w-full flex items-center justify-center">
-                    <div className="w-full h-full bg-muted animate-pulse rounded-2xl" />
-                  </div>
-                ) : playerHistory[activeTab].length >= 2 ? (
-                  <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-                    <AreaChart data={playerHistory[activeTab]}>
-                      <defs>
-                        <linearGradient id="colorRating" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="oklch(var(--primary))" stopOpacity={0.1}/>
-                          <stop offset="95%" stopColor="oklch(var(--primary))" stopOpacity={0}/>
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="oklch(var(--foreground) / 0.05)" vertical={false} />
-                      <XAxis 
-                        dataKey="valid_from" 
-                        stroke="oklch(var(--foreground) / 0.2)" 
-                        fontSize={10}
-                        fontWeight={700}
-                        tickFormatter={(str) => new Date(str).toLocaleDateString(LOCALE, { month: 'short' })}
-                        axisLine={false}
-                        tickLine={false}
-                        dy={20}
-                      />
-                      <YAxis 
-                        stroke="oklch(var(--foreground) / 0.2)" 
-                        fontSize={10}
-                        fontWeight={700}
-                        domain={['auto', 'auto']}
-                        axisLine={false}
-                        tickLine={false}
-                        tickFormatter={(val) => val.toFixed(2)}
-                        dx={-20}
-                      />
-                      <Tooltip 
-                        contentStyle={{ 
-                          backgroundColor: 'oklch(var(--secondary))', 
-                          border: 'none',
-                          borderRadius: '12px',
-                          fontSize: '12px',
-                          fontWeight: 'bold',
-                          boxShadow: '0 20px 50px rgba(0,0,0,0.1)'
-                        }}
-                        itemStyle={{ color: 'oklch(var(--primary))' }}
-                        labelStyle={{ color: 'oklch(var(--foreground) / 0.4)', marginBottom: '4px' }}
-                        labelFormatter={(label) => new Date(label).toLocaleDateString(LOCALE, { month: 'long', day: 'numeric', year: 'numeric' })}
-                      />
-                      <Area 
-                        type="monotone" 
-                        dataKey="rating" 
-                        stroke="oklch(var(--primary))" 
-                        strokeWidth={3}
-                        fillOpacity={1} 
-                        fill="url(#colorRating)" 
-                        animationDuration={1500}
-                      />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                ) : (
-                  <div className="h-full flex flex-col items-center justify-center text-foreground/5 gap-6">
-                    <History className="w-16 h-16" />
-                    <p className="font-sans text-[10px] tracking-[0.4em] font-bold uppercase opacity-30">Historical analysis pending more data</p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Ranking History Table */}
-        {!loading && hasData && (
-          <RankingHistoryTable 
-            history={playerHistory[activeTab]} 
-            activeTab={activeTab} 
-          />
-        )}
       </div>
     </div>
   );

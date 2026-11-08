@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle2 } from 'lucide-react';
 import { PageHero } from '@/components/PageHero';
 import { Spinner } from '@/components/Spinner';
+import { SITE_NAME } from '@/lib/site-config';
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -12,9 +13,9 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="w-full bg-primary hover:opacity-95 text-secondary font-sans font-bold py-6 rounded-2xl transition-all tracking-[0.2em] text-xs uppercase shadow-xl shadow-primary/10 flex items-center justify-center mt-4 disabled:opacity-60"
+      className="h-[50px] rounded-md bg-primary text-primary-foreground font-display font-bold text-[15px] uppercase tracking-[0.16em] hover:opacity-90 active:scale-[0.99] transition-all disabled:opacity-60 mt-1"
     >
-      {pending ? 'Submitting…' : 'Submit Feature Request'}
+      {pending ? 'Sending…' : 'Send suggestion'}
     </button>
   );
 }
@@ -38,93 +39,99 @@ export function SuggestFeature({
   nameSuggestions,
   loading,
 }: SuggestFeatureProps) {
+  const fieldClass =
+    'w-full bg-background rounded-md px-3 outline-none font-sans font-medium text-[15px] text-foreground focus:shadow-[inset_0_0_0_1px_oklch(var(--primary))] transition-shadow';
+
   return (
-    <div className="max-w-full mx-auto pb-20 text-left min-h-full bg-background">
-      {/* Center Court Hero Header */}
+    <div className="pb-24 min-h-full bg-background">
       <PageHero
-        eyebrow="Community Roadmap"
-        title={<>Suggest a <br /> Feature</>}
-        className="mb-8"
-        align="center"
+        eyebrow={['Roadmap', 'Built for Cayman players']}
+        kicker="Tell us what to build"
+        title={<>Suggest<br />a feature</>}
+        lead={`What would make ${SITE_NAME} more useful on court, in the group chat, or the night before a tournament?`}
       />
 
-      <div className="max-w-xl mx-auto px-6">
-        <p className="text-foreground/40 max-w-xl mx-auto font-medium text-lg text-balance text-center mb-12">
-          Have an idea to make DinkDash better? Let us know what tools or data you want to see next.
-        </p>
-
-        <div className="bg-muted p-1 rounded-[2.5rem] overflow-hidden shadow-2xl shadow-primary/5 min-h-[500px] flex flex-col">
-          {loading ? (
-            <div className="flex-1 flex flex-col bg-secondary">
+      <div className="px-4 md:px-10 mt-6 md:mt-8">
+        <div className="max-w-xl md:mx-auto flex flex-col gap-3.5">
+          <div className="bg-secondary rounded-lg p-4 md:p-6 min-h-[420px] flex flex-col">
+            {loading ? (
               <Spinner />
-            </div>
-          ) : formState.success ? (
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="flex-1 py-20 text-center flex flex-col items-center justify-center bg-secondary"
-            >
-              <CheckCircle2 className="w-20 h-20 text-primary mb-8" />
-              <h3 className="font-display italic text-4xl text-foreground mb-4 tracking-tighter">Dink Received!</h3>
-              <p className="text-foreground/40 font-medium">Thanks for the suggestion. Redirecting you back...</p>
-            </motion.div>
-          ) : (
-            <form action={formAction} className="flex-1 flex flex-col bg-secondary p-10 space-y-8">
-              {/* Honeypot */}
-              <input type="text" name="website" className="hidden" tabIndex={-1} autoComplete="off" />
-              
-              <div className="space-y-4 relative">
-                <label className="block font-sans text-[10px] font-bold tracking-[0.4em] text-foreground/30 uppercase ml-1">Your Name</label>
-                <input 
-                  name="user_name"
-                  required
-                  value={nameInput}
-                  onChange={(e) => onNameInputChange(e.target.value)}
-                  placeholder="Enter your name"
-                  className="w-full bg-background rounded-2xl p-6 outline-none focus:ring-4 focus:ring-primary/5 transition-all font-sans text-foreground placeholder:text-foreground/20 font-medium text-lg"
-                />
-                
-                {/* Autocomplete Suggestions */}
-                <AnimatePresence>
-                  {nameSuggestions.length > 0 && (
-                    <motion.div 
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      className="absolute z-20 left-0 right-0 top-full mt-2 bg-secondary rounded-2xl overflow-hidden shadow-2xl backdrop-blur-xl border border-muted"
-                    >
-                      {nameSuggestions.map((name) => (
-                        <button
-                          key={name}
-                          type="button"
-                          onClick={() => onSelectSuggestion(name)}
-                          className="w-full px-8 py-5 text-left hover:bg-muted text-foreground/60 hover:text-primary transition-colors font-sans text-sm font-bold border-b border-muted last:border-0"
-                        >
-                          {name}
-                        </button>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+            ) : formState.success ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="flex-1 py-16 text-center flex flex-col items-center justify-center gap-3"
+              >
+                <CheckCircle2 className="w-14 h-14 text-primary" />
+                <h2 className="font-display font-extrabold uppercase text-3xl">Got it</h2>
+                <p className="text-muted-foreground text-sm">Thanks for the suggestion. Taking you back to the board.</p>
+              </motion.div>
+            ) : (
+              <form action={formAction} className="flex-1 flex flex-col gap-4">
+                {/* Honeypot */}
+                <input type="text" name="website" className="hidden" tabIndex={-1} autoComplete="off" />
 
-              <div className="space-y-4">
-                <label className="block font-sans text-[10px] font-bold tracking-[0.4em] text-foreground/30 uppercase ml-1">The Feature Idea</label>
-                <textarea 
-                  name="details"
-                  required
-                  placeholder="Describe the feature and how it helps players..."
-                  className="w-full h-64 bg-background rounded-2xl p-6 outline-none focus:ring-4 focus:ring-primary/5 transition-all font-sans text-foreground placeholder:text-foreground/20 resize-none font-medium text-lg"
-                />
-              </div>
+                <div className="flex flex-col gap-1.5 relative">
+                  <label htmlFor="user_name" className="kicker text-[13px]">Your name</label>
+                  <input
+                    id="user_name"
+                    name="user_name"
+                    required
+                    value={nameInput}
+                    onChange={(e) => onNameInputChange(e.target.value)}
+                    placeholder="As it appears in the rankings"
+                    autoComplete="off"
+                    className={`${fieldClass} h-12`}
+                  />
+                  <span className="text-xs text-muted-foreground">We match it to a player so we can follow up.</span>
 
-              {formState.error && (
-                <p className="text-destructive text-xs font-sans font-bold text-center">{formState.error}</p>
-              )}
+                  <AnimatePresence>
+                    {nameSuggestions.length > 0 && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -6 }}
+                        className="absolute z-20 left-0 right-0 top-[76px] bg-muted rounded-md overflow-hidden shadow-outline shadow-2xl"
+                      >
+                        {nameSuggestions.map((name) => (
+                          <button
+                            key={name}
+                            type="button"
+                            onClick={() => onSelectSuggestion(name)}
+                            className="w-full h-11 px-3 text-left hover:bg-secondary text-foreground font-sans font-medium text-sm shadow-hairline last:shadow-none transition-colors"
+                          >
+                            {name}
+                          </button>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
 
-              <SubmitButton />
-            </form>
-          )}
+                <div className="flex flex-col gap-1.5">
+                  <label htmlFor="details" className="kicker text-[13px]">The idea</label>
+                  <textarea
+                    id="details"
+                    name="details"
+                    required
+                    rows={7}
+                    placeholder="Describe the feature and who it helps"
+                    className={`${fieldClass} py-3 leading-relaxed resize-none`}
+                  />
+                </div>
+
+                {formState.error && (
+                  <p className="text-destructive text-sm font-semibold" role="alert">{formState.error}</p>
+                )}
+
+                <SubmitButton />
+              </form>
+            )}
+          </div>
+          <p className="flex items-start gap-2.5 text-xs md:text-[13px] text-muted-foreground leading-relaxed px-1">
+            <CheckCircle2 className="w-4 h-4 text-primary shrink-0 mt-0.5" aria-hidden="true" />
+            Suggestions go straight to the person who builds the site. Expect a reply, not a ticket number.
+          </p>
         </div>
       </div>
     </div>

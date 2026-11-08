@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Newsreader } from "next/font/google";
+import { Barlow, Barlow_Condensed } from "next/font/google";
 import "./globals.css";
 
 import { DataProvider } from "@/context/DataContext";
@@ -13,24 +13,24 @@ import { SITE_URL } from "@/lib/site-config";
 // matching the daily scrape cadence with headroom.
 export const revalidate = 3600;
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
-const newsreader = Newsreader({ subsets: ["latin"], variable: "--font-display", style: "italic" });
+const barlow = Barlow({ subsets: ["latin"], weight: ["400", "500", "600"], variable: "--font-sans" });
+const barlowCondensed = Barlow_Condensed({ subsets: ["latin"], weight: ["600", "700", "800"], variable: "--font-display" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "DinkDash | Your Pickleball Dashboard",
-  description: "Real-time rank tracking and analytics for the Cayman Islands Pickleball community.",
+  title: "CAYMANDINK | Cayman Islands Pickleball Rankings",
+  description: "Cayman Islands pickleball rankings with every rating change recorded daily. Doubles and singles boards, player trajectories and weekly movers.",
   openGraph: {
-    title: "DinkDash | Your Pickleball Dashboard",
-    description: "Real-time rank tracking and analytics for the Cayman Islands Pickleball community.",
+    title: "CAYMANDINK | Cayman Islands Pickleball Rankings",
+    description: "Cayman Islands pickleball rankings with every rating change recorded daily. Doubles and singles boards, player trajectories and weekly movers.",
     url: SITE_URL,
-    siteName: "DinkDash",
+    siteName: "CAYMANDINK",
     images: [
       {
         url: "/og-image.jpg",
         width: 2760,
         height: 1504,
-        alt: "DinkDash Pickleball Rankings",
+        alt: "CAYMANDINK Cayman Islands Pickleball Rankings",
       },
     ],
     locale: "en_US",
@@ -38,8 +38,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "DinkDash | Your Pickleball Dashboard",
-    description: "Real-time rank tracking and analytics for the Cayman Islands Pickleball community.",
+    title: "CAYMANDINK | Cayman Islands Pickleball Rankings",
+    description: "Cayman Islands pickleball rankings with every rating change recorded daily. Doubles and singles boards, player trajectories and weekly movers.",
     images: ["/og-image.jpg"],
   },
 };
@@ -61,7 +61,7 @@ export default async function RootLayout({
   const initialData = await getCurrentRankings();
 
   return (
-    <html lang="en" className={`${inter.variable} ${newsreader.variable}`}>
+    <html lang="en" className={`${barlow.variable} ${barlowCondensed.variable}`}>
       <body className="font-sans antialiased text-foreground bg-background overflow-x-hidden">
         <DataProvider initialData={initialData}>
           <main className="h-[100dvh] flex flex-col overflow-hidden relative overscroll-none">

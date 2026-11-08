@@ -14,16 +14,15 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] px-6 text-center">
-      <p className="font-display italic text-3xl text-primary mb-2">Something went wrong</p>
-      <p className="text-foreground/60 mb-6 max-w-sm">
-        We couldn&apos;t load this page. Please try again.
-      </p>
+    <div className="flex flex-col items-center justify-center min-h-[60vh] px-6 text-center gap-3">
+      <span className="kicker text-[13px] text-destructive">Error</span>
+      <p className="font-display font-extrabold uppercase text-3xl md:text-4xl text-foreground">Something went wrong</p>
+      <p className="text-muted-foreground max-w-sm">We couldn&apos;t load this page. Please try again.</p>
       <button
         onClick={reset}
-        className="px-8 py-3 bg-primary text-white rounded-full font-bold tracking-widest text-sm uppercase"
+        className="mt-3 h-11 px-5 rounded-md bg-primary text-primary-foreground font-display font-bold text-sm uppercase tracking-[0.14em]"
       >
-        Try Again
+        Try again
       </button>
     </div>
   );

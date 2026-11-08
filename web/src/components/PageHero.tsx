@@ -2,51 +2,69 @@
 
 import { ReactNode } from 'react';
 import { motion } from 'framer-motion';
-import { Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { HERO_TEXTURE_URL } from '@/lib/site-config';
 
 interface PageHeroProps {
-  eyebrow: string;
+  /** Ticker-strip text, e.g. "Live board · Doubles · Updated 8 Nov". Segments are joined with middots. */
+  eyebrow: string | string[];
+  /** Small caps line directly above the headline */
+  kicker?: string;
   title: ReactNode;
-  /** Optional content rendered to the right of the title (e.g. a ModeSwitcher) */
+  /** Short lead paragraph under the headline */
+  lead?: ReactNode;
+  /** Controls rendered under the headline on mobile and to its right on desktop */
   children?: ReactNode;
   className?: string;
   titleClassName?: string;
-  align?: 'left' | 'center';
+  /** Rendered above the ticker strip, e.g. a back link */
+  topSlot?: ReactNode;
 }
 
 /**
- * Shared "Center Court" hero header used across all pages: pressed-grass
- * background, texture overlay, starred eyebrow, and display-italic title.
+ * Shared "Broadcast" page header: live ticker strip, condensed headline,
+ * optional lead copy and a controls row that never shares a line with the
+ * headline on phones.
  */
-export function PageHero({ eyebrow, title, children, className, titleClassName, align = 'left' }: PageHeroProps) {
-  return (
-    <header className={cn('relative pt-24 pb-12 md:pt-28 md:pb-12 px-6 bg-pressed-grass overflow-hidden', align === 'center' ? 'text-center' : 'text-left', className)}>
-      {/* Editorial Pattern Overlay */}
-      <div
-        className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay"
-        style={{ backgroundImage: `url('${HERO_TEXTURE_URL}')` }}
-      />
+export function PageHero({ eyebrow, kicker, title, lead, children, className, titleClassName, topSlot }: PageHeroProps) {
+  const segments = Array.isArray(eyebrow) ? eyebrow : [eyebrow];
 
-      <div className="max-w-6xl mx-auto relative z-10">
+  return (
+    <header className={cn('pt-[72px] md:pt-[100px] px-4 md:px-10', className)}>
+      <div className="max-w-6xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className={cn(children ? 'flex flex-col md:flex-row md:items-end justify-between gap-10 text-left' : 'space-y-4')}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col gap-5 md:gap-7"
         >
-          <div className="space-y-4">
-            <div className={cn('flex items-center gap-2 mb-6', align === 'center' && 'justify-center')}>
-              <Star className="w-3.5 h-3.5 text-tertiary fill-tertiary" />
-              <span className="text-tertiary font-sans font-bold tracking-[0.3em] text-xs uppercase">{eyebrow}</span>
-            </div>
-            <h1 className={cn('text-6xl md:text-[7rem] font-display italic tracking-[-0.06em] text-secondary leading-[0.85] drop-shadow-sm', titleClassName)}>
-              {title}
-            </h1>
+          {topSlot}
+
+          <div className="min-h-[30px] md:min-h-8 py-1 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 px-3 bg-secondary rounded-md kicker text-[13px] md:text-sm w-fit max-w-full">
+            <span className="live-dot shrink-0" aria-hidden="true" />
+            {segments.map((seg, i) => (
+              <span key={i} className="flex items-center gap-2.5">
+                {i > 0 && <span aria-hidden="true">·</span>}
+                <span className={i === 0 ? 'text-primary' : undefined}>{seg}</span>
+              </span>
+            ))}
           </div>
 
-          {children}
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-5 md:gap-8">
+            <div className="flex flex-col gap-2 min-w-0">
+              {kicker && <span className="kicker text-sm md:text-base tracking-[0.24em] font-semibold">{kicker}</span>}
+              <h1
+                className={cn(
+                  'text-[64px] md:text-[120px] leading-[0.86] md:leading-[0.84] text-foreground',
+                  titleClassName
+                )}
+              >
+                {title}
+              </h1>
+              {lead && <p className="mt-2 text-[15px] md:text-base leading-relaxed text-muted-foreground max-w-xl">{lead}</p>}
+            </div>
+
+            {children && <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-3 w-full md:w-auto shrink-0">{children}</div>}
+          </div>
         </motion.div>
       </div>
     </header>

@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from 'react';
-import { useFormState } from 'react-dom';
+import { useState, useEffect, useMemo, useActionState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useData } from '@/context/DataContext';
 import { SuggestFeature } from '@/components/SuggestFeature';
@@ -12,7 +11,7 @@ export function SuggestClient() {
   const { singles, doubles, loading } = useData();
   const [nameInput, setNameInput] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(true);
-  const [formState, formAction] = useFormState(submitFeatureRequest, {});
+  const [formState, formAction] = useActionState(submitFeatureRequest, {});
 
   const allUniqueNames = useMemo(() => {
     const names = new Set([...singles, ...doubles].map(p => p.player_name));

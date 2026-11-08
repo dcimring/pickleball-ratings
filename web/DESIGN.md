@@ -1,88 +1,58 @@
-# Design System Specification: The Grand Slam Editorial
+# Design System: Broadcast
 
-## 1. Overview & Creative North Star
-The Creative North Star for this design system is **"The Prestigious Spectator."**
+Adopted 2026-11-08 with the CAYMANDINK rebrand, replacing the "Grand Slam Editorial"
+light theme. Mockups and the two reference directions live on the design canvas
+(see memory / project notes). Tokens are defined once in `src/lib/brand-config.ts`
+and injected as CSS variables by the Tailwind plugin in `tailwind.config.ts`.
 
-This is not a generic sports tracker; it is a high-end digital program. We are moving away from the "app-grid" aesthetic toward an editorial layout that mirrors the heritage of championship tennis. We achieve this through a "High-End Editorial" lens—utilizing intentional asymmetry, generous white space (the "Wimbledon White"), and a sophisticated interplay between modern functionalism (Sans-Serif) and traditional prestige (Serif).
+## North star
 
-To break the template look, elements should occasionally "overhang" or bleed off the grid. For instance, a player’s ranking number might overlap the edge of a stats card, or a background "Court Green" section might feature a 15-degree angled cut to evoke the kinetic energy of a serve.
+A dark sports-data board: the numbers are the design. Condensed numerals carry the
+hierarchy, Volt marks what is live or rising, coral marks what fell, and everything
+else recedes into near-black surfaces. Mobile first: controls never share a row with
+a headline on phones.
 
----
+## Colour
 
-## 2. Colors & Surface Philosophy
-The palette is rooted in tradition but executed with digital depth. We utilize the Material Design 3 tonal approach to ensure the UI feels layered and tactile.
+| Token | Hex | Use |
+| --- | --- | --- |
+| `background` | `#0b100e` | Ground |
+| `secondary` | `#141b18` | Cards, boards, inputs on ground |
+| `muted` | `#1b2420` | Nested tiles, hover rows |
+| `foreground` | `#f2f5f3` | Text |
+| `muted-foreground` | `#9fb0a8` | Labels, secondary text (7:1 on ground) |
+| `primary` / `tertiary` / `accent` | `#ccff00` | Volt: primary actions, live dot, up moves, active tab |
+| `destructive` | `#ff7a5c` | Coral: down moves, errors |
+| `border` | `rgba(242,245,243,0.08)` | Hairlines (via `shadow-hairline`, `shadow-outline`) |
 
-### The Palette
-* **Primary (Court Green):** `#004b24` to `#006633`. This is our anchor. Use it for high-impact brand moments and primary actions.
-* **Secondary (Wimbledon White):** `#ffffff`. Not just a background, but a structural element.
-* **Tertiary (Volt Green):** `#ccff00`. A high-energy digital accent used for data highlights, ranking gains, and high-impact branding moments (e.g., in OpenGraph images).
-* **Quaternary (Classic Purple):** `#533072`. Used sparingly for "Royal" accents—notifications, active states, or premium tier indicators.
+Volt and coral always differ in lightness as well as hue, so up/down is readable without
+colour. Text on Volt uses `primary-foreground` (ground) or `#2f3a1a` for secondary copy.
 
-### The "No-Line" Rule
-**Explicit Instruction:** Do not use 1px solid borders to define sections. Sectioning must be achieved through background shifts. For example, a `surface_container_low` (#f3f3f3) list should sit directly on a `surface` (#f9f9f9) background. Let the tonal difference create the boundary.
+## Type
 
-### Surface Hierarchy & Nesting
-Treat the interface as a series of physical layers.
-* **Level 0 (Base):** `surface` (#f9f9f9)
-* **Level 1 (Sections):** `surface_container_low` (#f3f3f3)
-* **Level 2 (Cards/Interaction):** `surface_container_lowest` (#ffffff)
-This creates a "nested" depth where the most important interactive elements (Cards) feel like they are floating slightly above the structural sections.
+- **Display / numerals:** Barlow Condensed 600–800 (`font-display`, `--font-display`), uppercase for
+  headlines, `tabular-nums` for every metric. Utilities: `.numeral`, `.kicker`.
+- **Body / names:** Barlow 400–600 (`font-sans`).
+- Scale: page headline 64px phone / 120px desktop; board rating 24–30px; hero rating 84–96px;
+  kicker 11–15px with 0.14–0.24em tracking.
 
----
+## Surfaces and shape
 
-## 3. Typography: The Tension of Eras
-The system relies on the contrast between the functional `Inter` and the authoritative `Newsreader`.
+- Radii: 4px (chips, segmented buttons), 6px (inputs, buttons), 10px (cards). `--radius: 0.625rem`.
+- No 1px borders. Rows separate with `shadow-hairline`; outlined controls use `shadow-outline`.
+- Glow only on the live dot and the scroll-to-top button (`shadow-glow`).
 
-* **Display & Headlines (Newsreader):** Use these for player names, tournament titles, and major rankings. The serif evokes the "All England Club" prestige.
-* *Scale:* `display-lg` (3.5rem) to `headline-sm` (1.5rem).
-* **Titles & Body (Inter):** Use for stats, data labels, and UI controls. It provides the "Sport-Tech" readability required for rapid data consumption.
-* *Scale:* `title-lg` (1.375rem) down to `label-sm` (0.6875rem).
+## Components
 
-**Editorial Tip:** Use "Optical Sizing." Headlines should have tighter letter-spacing (-0.02em) to feel like a printed journal.
+- `PageHero` — ticker strip (live dot + segments), kicker, headline, lead, controls row.
+- `ModeSwitcher` — doubles/singles segmented control; fills the row on phones.
+- `DeltaChip` — ▲/▼ movement chip; dash when unknown or unchanged.
+- Leader tile, board rows, mover tiles and stat tiles are `bg-secondary rounded-lg` blocks.
+- OG images (`opengraph-image.tsx`) use `OG_COLORS` and the same layout language.
 
----
+## Do / don't
 
-## 4. Elevation & Depth
-We eschew heavy drop shadows in favor of **Tonal Layering** and **Ambient Light**.
-
-* **The Layering Principle:** A card (Surface Lowest) placed on a container (Surface Low) provides enough contrast to be "read" as elevated without a shadow.
-* **Ambient Shadows:** If an element must float (e.g., a Modal or a Floating Action Button), use a highly diffused shadow: `box-shadow: 0 12px 32px rgba(0, 75, 36, 0.06);`. Note the green tint in the shadow—this mimics natural light hitting a green court.
-* **Glassmorphism:** For the navigation bar or top stats header, use `surface_container_lowest` at 80% opacity with a `backdrop-blur: 12px`. This prevents the UI from feeling "blocked in" and allows the rich Court Green to peak through.
-* **The Ghost Border:** If a border is required for accessibility, use `outline_variant` at 15% opacity. Never use 100% opaque borders.
-
----
-
-## 5. Components
-
-### Prominent Search Bar
-* **Style:** `surface_container_lowest` background, `xl` (1.5rem) roundedness.
-* **Execution:** Large padding (`spacing-4`). Instead of a standard "Search" label, use "Find a Player or Tournament..." in `body-lg`. Use a subtle `primary` tint for the icon.
-
-### Stats Cards
-* **Style:** `surface_container_lowest` background, `DEFAULT` (0.5rem) roundedness.
-* **Rule:** Forbid divider lines. Use `spacing-4` vertical gaps between data points.
-* **Visuals:** Use small `primary_container` sparklines for performance trends.
-
-### Data Tables (The Ranking Grid)
-* **Separation:** Use alternating row colors: `surface` and `surface_container_low`.
-* **Typography:** Rank numbers in `headline-md` (Newsreader); player names in `title-md` (Inter).
-* **The "Wimbledon Stripe":** A 4px vertical accent of `tertiary` (Volt Green) on the left edge of the "Top Seed" or "Current User" row.
-
-### Buttons
-* **Primary:** `primary` background (#004b24), `on_primary` text. Use a subtle linear gradient from `primary` to `primary_container` to give it a "pressed grass" texture.
-* **Secondary:** `outline` ghost button with a `sm` (0.25rem) radius.
-* **Tertiary:** Text-only with `tertiary` (#ccff00) coloring, reserved for "View All" or "Filter" actions.
-
----
-
-## 6. Do’s and Don’ts
-
-### Do:
-* **Use White Space as a Luxury:** Give stats room to breathe. High-end design is defined by what you *don't* cram onto the screen.
-* **Embrace Asymmetry:** Align headline text to the left but place secondary stats in the bottom-right of a card to create a dynamic visual path.
-* **Use Tonal Transitions:** Transition from `primary` to `primary_dark` for hero sections to create a sense of stadium depth.
-
-### Don’t:
-* **Don't use 1px Dividers:** They clutter the "spectator" experience. Use `spacing-8` or a subtle background shift instead.
-* **Don't use Pure Black:** Use `on_surface` (#1a1c1c) for text to maintain a softer, more sophisticated contrast.
-* **Don't Over-Round:** Stick to the `DEFAULT` (8px) for cards. Avoid "Pill" shapes for everything except Search Bars and Chips to maintain a professional, architectural feel.
+- Do keep deltas honest: show a dash when the previous snapshot is unknown, never a fake zero.
+- Do keep tap targets at 44px and labels at 4.5:1 contrast.
+- Don't reintroduce gradients, italics or serif display type.
+- Don't put a headline and a control group on the same row below `md`.

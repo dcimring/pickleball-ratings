@@ -2,17 +2,20 @@
 
 import { useMemo, useState, useEffect } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Search, TrendingUp, TrendingDown, Minus, X, Star, ChevronDown } from 'lucide-react';
+import { Search, X, ArrowUp, ArrowDown, Minus } from 'lucide-react';
 import { Ranking, RatingMode } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { slugify } from '@/lib/slugify';
+import { LOCALE } from '@/lib/site-config';
 import { PageHero } from '@/components/PageHero';
 import { ModeSwitcher } from '@/components/ModeSwitcher';
 import { Spinner } from '@/components/Spinner';
+import { DeltaChip } from '@/components/DeltaChip';
 
 interface RankingTableProps {
   data: Ranking[];
+  /** Previous snapshot per player name (from lazily loaded history); undefined until loaded */
+  previous?: Record<string, Ranking | undefined>;
   activeTab: RatingMode;
   onTabChange: (tab: RatingMode) => void;
   searchQuery: string;
@@ -22,8 +25,15 @@ interface RankingTableProps {
   loading: boolean;
 }
 
+const PAGE_SIZE = 50;
+
+export function formatShortDate(iso: string) {
+  return new Date(iso).toLocaleDateString(LOCALE, { day: 'numeric', month: 'short' });
+}
+
 export function RankingTable({
   data,
+  previous,
   activeTab,
   onTabChange,
   searchQuery,
@@ -32,31 +42,23 @@ export function RankingTable({
   onSort,
   loading,
 }: RankingTableProps) {
-  const [visibleCount, setVisibleCount] = useState(50);
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   // Reset pagination when filter/sort state changes
   useEffect(() => {
-    setVisibleCount(50);
+    setVisibleCount(PAGE_SIZE);
   }, [activeTab, searchQuery, sortConfig]);
-
-  const SortIndicator = ({ column }: { column: keyof Ranking }) => {
-    if (sortConfig.key !== column) return <Minus className="w-3 h-3 opacity-20" />;
-    return sortConfig.direction === 'asc' ? <TrendingUp className="w-3 h-3 text-primary" /> : <TrendingDown className="w-3 h-3 text-primary" />;
-  };
 
   const sortedAndFilteredData = useMemo(() => {
     let filtered = [...data];
-    
+
     if (searchQuery) {
-      filtered = filtered.filter(p => 
-        p.player_name.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+      filtered = filtered.filter((p) => p.player_name.toLowerCase().includes(searchQuery.toLowerCase()));
     }
 
     filtered.sort((a, b) => {
       const aValue = a[sortConfig.key];
       const bValue = b[sortConfig.key];
-
       if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
       if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
       return 0;
@@ -65,174 +67,182 @@ export function RankingTable({
     return filtered;
   }, [data, searchQuery, sortConfig]);
 
-  const visibleData = useMemo(() => {
-    return sortedAndFilteredData.slice(0, visibleCount);
-  }, [sortedAndFilteredData, visibleCount]);
+  const lastUpdated = useMemo(() => {
+    if (data.length === 0) return null;
+    const latest = data.reduce((max, r) => (r.valid_from > max ? r.valid_from : max), data[0].valid_from);
+    return formatShortDate(latest);
+  }, [data]);
 
+  const isDefaultView = !searchQuery && sortConfig.key === 'rank_position' && sortConfig.direction === 'asc';
+  const leader = isDefaultView ? sortedAndFilteredData[0] : undefined;
+  const boardRows = leader ? sortedAndFilteredData.slice(1, visibleCount) : sortedAndFilteredData.slice(0, visibleCount);
   const hasMore = visibleCount < sortedAndFilteredData.length;
+  const shownCount = Math.min(visibleCount, sortedAndFilteredData.length);
+
+  const SortIndicator = ({ column }: { column: keyof Ranking }) => {
+    if (sortConfig.key !== column) return <Minus className="w-3 h-3 opacity-30" aria-hidden="true" />;
+    return sortConfig.direction === 'asc' ? (
+      <ArrowUp className="w-3 h-3 text-primary" aria-hidden="true" />
+    ) : (
+      <ArrowDown className="w-3 h-3 text-primary" aria-hidden="true" />
+    );
+  };
+
+  const headerButton = (key: keyof Ranking, label: string, className?: string) => (
+    <button
+      onClick={() => onSort(key)}
+      className={cn('flex items-center gap-1.5 hover:text-foreground transition-colors', className)}
+      aria-label={`Sort by ${label.toLowerCase()}${sortConfig.key === key ? `, currently ${sortConfig.direction === 'asc' ? 'ascending' : 'descending'}` : ''}`}
+    >
+      {label} <SortIndicator column={key} />
+    </button>
+  );
+
+  const gridCols = 'grid-cols-[36px_minmax(0,1fr)_76px_72px] md:grid-cols-[80px_minmax(0,2fr)_minmax(0,1.4fr)_120px_100px_130px]';
 
   return (
-    <div className="pb-20 min-h-full bg-background">
-      {/* Center Court Hero Header */}
+    <div className="pb-24 min-h-full bg-background">
       <PageHero
-        eyebrow="Cayman Islands"
-        title={<>Pickleball <br /> Rankings</>}
-        className="pt-24 pb-16 md:pt-32 md:pb-20"
-        titleClassName="leading-[0.8]"
+        eyebrow={['Live board', activeTab === 'doubles' ? 'Doubles' : 'Singles', lastUpdated ? `Updated ${lastUpdated}` : 'Updating']}
+        kicker="Cayman Islands"
+        title="Rankings"
+        lead={
+          <>
+            Every rating change since February, for all {data.length.toLocaleString()} rated players. Updated daily from pickleball.ky.
+          </>
+        }
       >
-        <ModeSwitcher activeTab={activeTab} onTabChange={onTabChange} size="lg" />
+        <ModeSwitcher activeTab={activeTab} onTabChange={onTabChange} size="lg" className="order-1 md:order-2" />
+        <div className="order-2 md:order-1 relative flex items-center h-12 md:h-[42px] md:w-72 px-3.5 gap-2.5 bg-secondary rounded-md shadow-outline focus-within:shadow-[inset_0_0_0_1px_oklch(var(--primary))] transition-shadow">
+          <Search className="w-[18px] h-[18px] text-primary shrink-0" aria-hidden="true" />
+          <input
+            type="search"
+            aria-label="Search by player name"
+            placeholder="Search by player name"
+            value={searchQuery}
+            onKeyDown={(e) => {
+              if (e.key === 'Escape') onSearchChange('');
+            }}
+            onChange={(e) => onSearchChange(e.target.value)}
+            className="flex-1 min-w-0 h-full bg-transparent outline-none font-sans font-medium text-[15px] text-foreground [&::-webkit-search-cancel-button]:hidden"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => onSearchChange('')}
+              aria-label="Clear search"
+              className="w-8 h-8 -mr-1.5 flex items-center justify-center rounded text-muted-foreground hover:text-foreground"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
+        </div>
       </PageHero>
 
-      {/* Floating Search Bridge */}
-      <section className="sticky top-16 md:top-20 z-40 px-6 py-0 -mt-6 md:-mt-8 text-left transition-all overflow-visible mb-4">
-        <div className="max-w-6xl mx-auto relative z-10">
-          <motion.div 
-            initial={{ scale: 0.95 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="relative group shadow-2xl shadow-primary/10 rounded-[2.5rem]"
-          >
-            <div className="absolute left-8 inset-y-0 flex items-center pointer-events-none z-10">
-              <Search className="w-6 h-6 text-primary group-focus-within:scale-110 transition-transform duration-500 opacity-80" />
+      <section className="px-4 md:px-10 mt-6 md:mt-8">
+        <div className="max-w-6xl mx-auto flex flex-col gap-3.5">
+          {loading ? (
+            <div className="bg-secondary rounded-lg">
+              <Spinner />
             </div>
-            <input
-              type="text"
-              aria-label="Search by player name"
-              placeholder="Search by player name"
-              value={searchQuery}
-              onKeyDown={(e) => {
-                if (e.key === 'Escape') {
-                  onSearchChange('');
-                }
-              }}
-              onChange={(e) => onSearchChange(e.target.value)}
-              className="w-full bg-secondary/90 backdrop-blur-xl rounded-[2.5rem] py-6 md:py-7 pl-16 md:pl-20 pr-12 md:pr-14 outline-none focus:ring-8 focus:ring-primary/5 transition-all duration-500 font-sans text-base md:text-xl text-foreground placeholder:text-foreground/20 shadow-inner relative z-0"
-            />
-            <AnimatePresence>
-              {searchQuery && (
-                <div className="absolute right-3 inset-y-0 flex items-center">
-                  <motion.button
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
-                    onClick={() => onSearchChange('')}
-                    aria-label="Clear search"
-                    className="w-12 h-12 flex items-center justify-center hover:bg-muted rounded-full transition-colors group/clear"
+          ) : (
+            <>
+              {leader && (
+                <Link
+                  href={`/player/${slugify(leader.player_name)}?tab=${activeTab}`}
+                  className="relative overflow-hidden bg-secondary rounded-lg p-4 md:p-6 flex flex-col gap-2.5 hover:bg-muted transition-colors group"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="absolute -right-2 -top-6 md:-top-10 font-display font-extrabold text-[150px] md:text-[260px] leading-none text-muted select-none pointer-events-none"
                   >
-                    <X className="w-5 h-5 text-foreground/40 group-hover/clear:text-primary transition-colors" />
-                  </motion.button>
-                </div>
+                    1
+                  </span>
+                  <span className="relative kicker text-[13px] text-primary">No. 1 · Leader</span>
+                  <span className="relative font-sans font-semibold text-2xl md:text-3xl tracking-tight">{leader.player_name}</span>
+                  <span className="relative flex items-end justify-between gap-4">
+                    <span className="numeral text-[64px] md:text-[88px] text-foreground">{leader.rating.toFixed(3)}</span>
+                    <span className="flex flex-col items-end gap-0.5 text-right text-xs md:text-sm text-muted-foreground">
+                      <span className="text-foreground font-semibold">{leader.rounds_played} rounds</span>
+                      <span>Rating unchanged<br className="md:hidden" /> since {formatShortDate(leader.valid_from)}</span>
+                    </span>
+                  </span>
+                </Link>
               )}
-            </AnimatePresence>
-          </motion.div>
-        </div>
-      </section>
 
-      {/* Table Section */}
-      <section className="px-6 text-left">
-        <div className="max-w-6xl mx-auto">
-          <div className="overflow-hidden">
-            {/* Layered Header Container */}
-            <div className="bg-muted/50 rounded-t-[2.5rem] -mt-2 relative z-0">
-              <div className="grid grid-cols-12 gap-2 md:gap-4 px-8 py-5 font-sans text-[9px] font-bold tracking-[0.3em] text-foreground/30 select-none uppercase">
-                <button 
-                  onClick={() => onSort('rank_position')}
-                  className="col-span-3 md:col-span-2 flex items-center gap-2 hover:text-foreground transition-colors group"
-                >
-                  Rank <SortIndicator column="rank_position" />
-                </button>
-                <button 
-                  onClick={() => onSort('player_name')}
-                  className="col-span-5 md:col-span-5 flex items-center gap-2 hover:text-foreground transition-colors group"
-                >
-                  Player <SortIndicator column="player_name" />
-                </button>
-                <button 
-                  onClick={() => onSort('rounds_played')}
-                  className="hidden md:flex col-span-2 items-center justify-end gap-2 hover:text-foreground transition-colors group px-4"
-                >
-                  <span className="text-right">Rounds</span> <SortIndicator column="rounds_played" />
-                </button>
-                <button 
-                  onClick={() => onSort('rating')}
-                  className="col-span-4 md:col-span-3 flex items-center justify-end gap-2 hover:text-foreground transition-colors group text-right pr-4"
-                >
-                  Rating <SortIndicator column="rating" />
-                </button>
+              {/* Column header */}
+              <div className={cn('grid gap-2.5 md:gap-4 px-3 md:px-6 pb-1 kicker text-xs select-none', gridCols)}>
+                {headerButton('rank_position', 'Pos')}
+                {headerButton('player_name', 'Player')}
+                <span className="hidden md:block">Last change</span>
+                <span className="text-right md:text-right">Move</span>
+                {headerButton('rounds_played', 'Rounds', 'hidden md:flex justify-end')}
+                {headerButton('rating', 'Rating', 'justify-end')}
               </div>
-            </div>
 
-            <div className="min-h-[400px] flex flex-col gap-2 relative mt-2">
-              {loading ? (
-                <Spinner />
-              ) : (
-                <div className="flex flex-col gap-2">
-                  {visibleData.map((player, idx) => (
-                    <div
+              {/* Board */}
+              <div className="bg-secondary rounded-lg flex flex-col -mt-1.5">
+                {boardRows.map((player) => {
+                  const prev = previous?.[player.player_name];
+                  const ratingDiff = prev ? player.rating - prev.rating : undefined;
+                  const rankDiff = prev ? prev.rank_position - player.rank_position : 0;
+                  const top3 = player.rank_position <= 3;
+                  return (
+                    <Link
                       key={`${activeTab}-${player.player_name}`}
+                      href={`/player/${slugify(player.player_name)}?tab=${activeTab}`}
                       className={cn(
-                        "grid grid-cols-12 gap-2 md:gap-4 px-8 py-8 items-center group transition-all duration-300 relative rounded-2xl",
-                        idx % 2 !== 0 ? "bg-muted/50" : "bg-secondary"
+                        'grid gap-2.5 md:gap-4 items-center px-3 md:px-6 min-h-[60px] md:min-h-[64px] py-2 shadow-hairline last:shadow-none hover:bg-muted transition-colors',
+                        gridCols
                       )}
                     >
-                      <div className="col-span-3 md:col-span-2 flex items-center gap-4 relative">
-                        {/* Grid Breaking Rank Number: Overhang on Desktop */}
-                        <span className={cn(
-                          "font-display text-3xl md:text-6xl tracking-tighter tabular-nums italic transition-transform duration-500 group-hover:scale-110 md:-translate-x-4",
-                          player.rank_position <= 3 ? "text-primary" : "text-foreground/10"
-                        )}>
-                          {player.rank_position}
-                        </span>
-                      </div>
-                      <div className="col-span-5 md:col-span-5">
-                        <Link 
-                          href={`/player/${slugify(player.player_name)}?tab=${activeTab}`}
-                          className="font-sans text-lg md:text-xl font-semibold text-foreground hover:text-primary transition-colors text-left tracking-tight flex items-center gap-2"
-                        >
-                          {player.player_name}
-                          {player.rank_position === 1 && <Star className="w-3.5 h-3.5 text-tertiary fill-tertiary shrink-0" />}
-                        </Link>
-                      </div>                      <div className="hidden md:flex col-span-2 items-center justify-end px-4">
-                        <div className="flex items-center gap-2">
-                          <div className="font-sans font-medium text-xl text-foreground/40 group-hover:text-foreground transition-colors duration-500 tabular-nums text-right">
-                            {player.rounds_played}
-                          </div>
-                          {/* Ghost spacer to match SortIndicator width in header */}
-                          <div className="w-3 h-3" />
-                        </div>
-                      </div>
-                      <div className="col-span-4 md:col-span-3 text-right pr-4">
-                        <div className="font-sans font-bold text-xl md:text-3xl text-foreground tabular-nums tracking-tighter">
-                          {player.rating.toFixed(3)}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* Show More Button */}
-              {!loading && hasMore && (
-                <div className="py-12 flex justify-center">
-                  <button
-                    onClick={() => setVisibleCount(prev => prev + 50)}
-                    className="group flex flex-col items-center gap-4 transition-all"
-                  >
-                    <div className="px-10 py-5 bg-primary text-secondary font-sans font-bold text-xs tracking-[0.2em] uppercase rounded-2xl shadow-xl shadow-primary/10 group-hover:opacity-95 active:scale-95 transition-all">
-                      Show More Results
-                    </div>
-                    <div className="flex flex-col items-center gap-1 opacity-20 group-hover:opacity-40 transition-opacity">
-                      <ChevronDown className="w-5 h-5 animate-bounce" />
-                      <span className="text-[10px] font-sans font-bold tracking-widest uppercase">
-                        {sortedAndFilteredData.length - visibleCount} more athletes remaining
+                      <span className={cn('numeral text-[26px] md:text-[34px]', top3 ? 'text-primary' : 'text-muted-foreground')}>
+                        {player.rank_position}
                       </span>
-                    </div>
-                  </button>
-                </div>
-              )}
-            </div>
+                      <span className="flex flex-col gap-0.5 min-w-0">
+                        <span className="font-sans font-semibold text-base md:text-lg truncate">{player.player_name}</span>
+                        <span className="text-[11px] text-muted-foreground md:hidden">
+                          {player.rounds_played} rounds · {formatShortDate(player.valid_from)}
+                          {rankDiff > 0 && ` · up ${rankDiff}`}
+                          {rankDiff < 0 && ` · down ${Math.abs(rankDiff)}`}
+                        </span>
+                      </span>
+                      <span className="hidden md:block text-[13px] text-muted-foreground">
+                        {formatShortDate(player.valid_from)}
+                        {rankDiff > 0 && ` · up ${rankDiff} place${rankDiff === 1 ? '' : 's'}`}
+                        {rankDiff < 0 && ` · down ${Math.abs(rankDiff)} place${rankDiff === -1 ? '' : 's'}`}
+                      </span>
+                      <span className="justify-self-end">
+                        <DeltaChip value={ratingDiff} />
+                      </span>
+                      <span className="hidden md:block text-right text-base text-muted-foreground tabular-nums">{player.rounds_played}</span>
+                      <span className="numeral text-2xl md:text-[30px] text-right">{player.rating.toFixed(3)}</span>
+                    </Link>
+                  );
+                })}
 
-          </div>
+                {boardRows.length === 0 && !leader && (
+                  <div className="py-16 text-center flex flex-col items-center gap-2">
+                    <span className="font-display font-bold uppercase tracking-[0.12em] text-lg">No players match</span>
+                    <span className="text-sm text-muted-foreground">Try a shorter name, or clear the search.</span>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex items-center justify-between gap-4 pt-1 px-1">
+                <span className="text-xs md:text-sm text-muted-foreground">
+                  {shownCount} of {sortedAndFilteredData.length} rated players
+                </span>
+                {hasMore && (
+                  <button
+                    onClick={() => setVisibleCount((prev) => prev + PAGE_SIZE)}
+                    className="h-11 px-4 rounded-md shadow-outline text-foreground font-display font-bold text-[13px] uppercase tracking-[0.16em] hover:bg-secondary transition-colors"
+                  >
+                    Show {Math.min(PAGE_SIZE, sortedAndFilteredData.length - visibleCount)} more
+                  </button>
+                )}
+              </div>
+            </>
+          )}
         </div>
       </section>
     </div>

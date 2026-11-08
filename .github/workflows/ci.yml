@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, staging]
+    branches: [main]
   pull_request:
 
 jobs:
@@ -29,8 +29,8 @@ jobs:
       - name: Type check
         run: npm run typecheck
 
-      - name: Build
-        run: npm run build
+      - name: Build (Next + OpenNext Worker bundle)
+        run: npx opennextjs-cloudflare build
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
