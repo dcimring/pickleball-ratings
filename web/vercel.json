@@ -2,6 +2,18 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "redirects": [
     {
+      "source": "/",
+      "has": [{ "type": "host", "value": "dinkdash.xyz" }],
+      "destination": "https://caymandink.com/",
+      "permanent": true
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "www.dinkdash.xyz" }],
+      "destination": "https://caymandink.com/",
+      "permanent": true
+    },
+    {
       "source": "/:path*",
       "has": [{ "type": "host", "value": "dinkdash.xyz" }],
       "destination": "https://caymandink.com/:path*",
