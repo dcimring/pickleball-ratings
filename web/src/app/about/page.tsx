@@ -104,7 +104,8 @@ export default async function AboutPage() {
                     <Leader player={singlesLeader} mode="singles" />
                   </>
                 )}{' '}
-                See the <Link href="/" className={inlineLink}>full rankings</Link>.
+                See the <Link href="/" className={inlineLink}>full rankings</Link> and{' '}
+                <Link href="/records" className={inlineLink}>records</Link>.
               </p>
             </Question>
           )}

@@ -30,6 +30,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.4,
     },
     {
+      url: `${BASE_URL}/records`,
+      changeFrequency: 'daily',
+      priority: 0.8,
+    },
+    {
       url: `${BASE_URL}/about`,
       changeFrequency: 'monthly',
       priority: 0.5,
@@ -78,7 +83,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // The board and movers feed change whenever any rating does
     const datedStaticRoutes = staticRoutes.map((route) =>
-      newestChange && (route.url === BASE_URL || route.url === `${BASE_URL}/activity`)
+      newestChange && ([BASE_URL, `${BASE_URL}/activity`, `${BASE_URL}/records`].includes(route.url))
         ? { ...route, lastModified: newestChange }
         : route
     );

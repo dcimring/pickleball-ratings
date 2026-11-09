@@ -2,6 +2,8 @@ import { cache } from 'react';
 import { supabase } from './supabase';
 import { resolvePlayerNames } from './player-names';
 import { Ranking } from './types';
+import { computeDoublesRecords, DoublesRecords, RecordRow } from './records';
+import { HIDDEN_PLAYER_SLUGS } from './site-config';
 
 export interface CurrentRankings {
   singles: Ranking[];
@@ -148,6 +150,36 @@ export const getWeeklyMovers = cache(async (): Promise<WeeklyMovers | null> => {
     };
   } catch (err) {
     console.error('WEEKLY_MOVERS_FETCH_ERROR:', err);
+    return null;
+  }
+});
+
+const PAGE_SIZE = 1000;
+
+/** Leaderboards for /records. Pages through every snapshot; null on failure. */
+export const getDoublesRecords = cache(async (): Promise<DoublesRecords | null> => {
+  try {
+    const rows: RecordRow[] = [];
+    for (let from = 0; ; from += PAGE_SIZE) {
+      const { data, error } = await supabase
+        .schema('pickleball_ratings')
+        .from('doubles_ratings_deltas')
+        .select('player_name, valid_from, rating, rounds_played, is_active')
+        .order('valid_from', { ascending: true })
+        .order('id', { ascending: true })
+        .range(from, from + PAGE_SIZE - 1);
+
+      if (error) {
+        console.error('RECORDS_FETCH_ERROR:', error);
+        return null;
+      }
+      rows.push(...(data ?? []));
+      if (!data || data.length < PAGE_SIZE) break;
+    }
+
+    return computeDoublesRecords(rows, HIDDEN_PLAYER_SLUGS);
+  } catch (err) {
+    console.error('RECORDS_FETCH_ERROR:', err);
     return null;
   }
 });

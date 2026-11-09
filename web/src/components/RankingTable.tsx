@@ -255,6 +255,8 @@ export function RankingTable({
               <div className="flex items-center justify-between gap-4 pt-1 px-1">
                 <span className="text-xs md:text-sm text-muted-foreground">
                   {shownCount} of {sortedAndFilteredData.length} rated players
+                  {' · '}
+                  <Link href="/records" className="text-primary underline underline-offset-4">Records</Link>
                 </span>
                 {hasMore && (
                   <button
