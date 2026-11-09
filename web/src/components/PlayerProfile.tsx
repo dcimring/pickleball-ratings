@@ -6,7 +6,7 @@ import { ArrowLeft } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceDot } from 'recharts';
 import { Ranking, RatingMode } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { LOCALE } from '@/lib/site-config';
+import { LOCALE, OWNER_NAME } from '@/lib/site-config';
 import { BRAND_COLORS } from '@/lib/brand-config';
 import { ShareButton } from './ShareButton';
 import { RankingHistoryTable } from './RankingHistoryTable';
@@ -306,7 +306,8 @@ export function PlayerProfile({
           )}
 
           <p className="text-xs text-muted-foreground">
-            Independent tracker using ratings published on pickleball.ky.{' '}
+            Independent tracker by{' '}
+            <Link href="/about" className="underline underline-offset-4 hover:text-foreground">{OWNER_NAME}</Link>, using ratings published on pickleball.ky.{' '}
             <Link href="/about" className="underline underline-offset-4 hover:text-foreground">How this works</Link>
             {' · '}
             <Link href="/remove" className="underline underline-offset-4 hover:text-foreground">Request removal</Link>

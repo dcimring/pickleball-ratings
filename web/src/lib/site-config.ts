@@ -12,6 +12,10 @@ export const SITE_NAME = 'CAYMANDINK';
  */
 export const HIDDEN_PLAYER_SLUGS: readonly string[] = [];
 
+/** The person who builds and runs the site */
+export const OWNER_NAME = 'Daniel Cimring';
+export const OWNER_URL = 'https://danielcimring.com';
+
 /** Locale used for date formatting throughout the app */
 export const LOCALE = 'en-KY';
 

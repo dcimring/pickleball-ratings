@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { PageHero } from '@/components/PageHero';
 import { getCurrentRankings, getTrackingStats } from '@/lib/rankings-api';
-import { LOCALE, SITE_NAME, SITE_URL } from '@/lib/site-config';
+import { LOCALE, OWNER_NAME, OWNER_URL, SITE_NAME, SITE_URL } from '@/lib/site-config';
 import { slugify } from '@/lib/slugify';
 import type { Ranking } from '@/lib/types';
 
@@ -59,6 +59,7 @@ export default async function AboutPage() {
     description: DESCRIPTION,
     url: `${SITE_URL}/about`,
     isPartOf: { '@type': 'WebSite', name: SITE_NAME, url: SITE_URL },
+    author: { '@type': 'Person', name: OWNER_NAME, url: OWNER_URL, sameAs: [OWNER_URL] },
   };
 
   return (
@@ -78,6 +79,18 @@ export default async function AboutPage() {
               {SITE_NAME} is an independent tracker of Cayman Islands pickleball ratings. It is not an official ranking
               and is not run by Pickleball Cayman. Pickleball Cayman publishes each player&apos;s latest rating;{' '}
               {SITE_NAME} keeps the history of how those ratings change.
+            </p>
+          </Question>
+
+          <Question title="Who runs CAYMANDINK?">
+            <p>
+              {SITE_NAME} is built and run by {OWNER_NAME}, a pickleball player in the Cayman Islands. He started tracking
+              rating changes in February 2026 because Pickleball Cayman publishes only each player&apos;s latest rating. He
+              also built the Corporate League leaderboard for Pickleball Cayman. {SITE_NAME} itself is an independent
+              project and is not run by Pickleball Cayman.{' '}
+              <a href={OWNER_URL} className={inlineLink} rel="author noopener">
+                More about Daniel
+              </a>
             </p>
           </Question>
 

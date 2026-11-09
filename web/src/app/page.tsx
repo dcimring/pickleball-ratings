@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { getCurrentRankings } from '@/lib/rankings-api';
 import { slugify } from '@/lib/slugify';
-import { SITE_NAME, SITE_URL as BASE_URL } from '@/lib/site-config';
+import { OWNER_NAME, OWNER_URL, SITE_NAME, SITE_URL as BASE_URL } from '@/lib/site-config';
 import { HomeClient } from './HomeClient';
 
 export const metadata: Metadata = {
@@ -19,6 +19,7 @@ const siteJsonLd = {
       image: `${BASE_URL}/og-image.jpg`,
       description: 'Independent tracker of Cayman Islands pickleball ratings and rating history.',
       areaServed: { '@type': 'Country', name: 'Cayman Islands' },
+      founder: { '@type': 'Person', name: OWNER_NAME, url: OWNER_URL, sameAs: [OWNER_URL] },
     },
     {
       '@type': 'WebSite',
