@@ -12,9 +12,9 @@ import { SITE_NAME } from '@/lib/site-config';
 export const NAV_ITEMS = [
   { label: 'Rankings', href: '/' },
   { label: 'Activity', href: '/activity' },
+  { label: 'Records', href: '/records' },
   { label: 'Alerts', href: '/alerts' },
   { label: 'Tourney Check', href: '/tourney' },
-  { label: 'Suggest', href: '/suggest' },
   { label: 'About', href: '/about' },
 ];
 

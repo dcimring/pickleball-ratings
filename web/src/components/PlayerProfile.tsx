@@ -311,6 +311,8 @@ export function PlayerProfile({
             <Link href="/about" className="underline underline-offset-4 hover:text-foreground">How this works</Link>
             {' · '}
             <Link href="/remove" className="underline underline-offset-4 hover:text-foreground">Request removal</Link>
+            {' · '}
+            <Link href="/suggest" className="underline underline-offset-4 hover:text-foreground">Suggest a feature</Link>
           </p>
         </div>
       </div>

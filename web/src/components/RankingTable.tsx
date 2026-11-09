@@ -252,20 +252,18 @@ export function RankingTable({
                 </tbody>
               </table>
 
-              <div className="flex items-center justify-between gap-4 pt-1 px-1">
-                <span className="text-xs md:text-sm text-muted-foreground">
-                  {shownCount} of {sortedAndFilteredData.length} rated players
-                  {' · '}
-                  <Link href="/records" className="text-primary underline underline-offset-4">Records</Link>
-                </span>
+              <div className="flex flex-col items-center gap-3 pt-2">
                 {hasMore && (
                   <button
                     onClick={() => setVisibleCount((prev) => prev + PAGE_SIZE)}
-                    className="h-11 px-4 rounded-md shadow-outline text-foreground font-display font-bold text-[13px] uppercase tracking-[0.16em] hover:bg-secondary transition-colors"
+                    className="w-full h-14 rounded-md bg-primary text-primary-foreground font-display font-bold text-base uppercase tracking-[0.16em] hover:opacity-90 transition-opacity"
                   >
-                    Show {Math.min(PAGE_SIZE, sortedAndFilteredData.length - visibleCount)} more
+                    Show {Math.min(PAGE_SIZE, sortedAndFilteredData.length - visibleCount)} more players
                   </button>
                 )}
+                <span className="text-xs md:text-sm text-muted-foreground">
+                  {shownCount} of {sortedAndFilteredData.length} rated players
+                </span>
               </div>
             </>
           )}
