@@ -6,6 +6,12 @@
 export const SITE_URL = 'https://caymandink.com';
 export const SITE_NAME = 'CAYMANDINK';
 
+/**
+ * Slugs of players who asked to have their profile removed (via /remove).
+ * Listed slugs return 404 and are left out of the sitemap.
+ */
+export const HIDDEN_PLAYER_SLUGS: readonly string[] = [];
+
 /** Locale used for date formatting throughout the app */
 export const LOCALE = 'en-KY';
 

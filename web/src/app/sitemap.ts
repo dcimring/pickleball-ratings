@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { supabase } from '@/lib/supabase';
 import { slugify } from '@/lib/slugify';
 
-import { SITE_URL as BASE_URL } from '@/lib/site-config';
+import { HIDDEN_PLAYER_SLUGS, SITE_URL as BASE_URL } from '@/lib/site-config';
 
 // Regenerate the sitemap at most once per hour
 export const revalidate = 3600;
@@ -28,6 +28,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${BASE_URL}/alerts`,
       changeFrequency: 'monthly',
       priority: 0.4,
+    },
+    {
+      url: `${BASE_URL}/about`,
+      changeFrequency: 'monthly',
+      priority: 0.5,
     },
     {
       url: `${BASE_URL}/suggest`,
@@ -58,6 +63,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     for (const row of [...(singlesRes.data ?? []), ...(doublesRes.data ?? [])]) {
       if (!row.player_name) continue;
       const slug = slugify(row.player_name);
+      if (HIDDEN_PLAYER_SLUGS.includes(slug)) continue;
       const known = lastChangeBySlug.get(slug);
       if (!known || row.valid_from > known) lastChangeBySlug.set(slug, row.valid_from);
       if (!newestChange || row.valid_from > newestChange) newestChange = row.valid_from;

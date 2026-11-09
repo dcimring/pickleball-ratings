@@ -2,8 +2,9 @@ import { Suspense } from 'react';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getPlayerData, PlayerMetadata } from '@/lib/metadata-api';
-import { getPlayerHistory } from '@/lib/rankings-api';
-import { PlayerProfileClient } from './PlayerProfileClient';
+import { getCurrentRankings, getPlayerHistory, PlayerHistory } from '@/lib/rankings-api';
+import type { Ranking } from '@/lib/types';
+import { NearbyPlayer, PlayerProfileClient } from './PlayerProfileClient';
 import { SITE_URL as BASE_URL } from '@/lib/site-config';
 import { slugify } from '@/lib/slugify';
 
@@ -18,6 +19,23 @@ export function generateStaticParams() {
 
 interface Props {
   params: Promise<{ slug: string }>;
+}
+
+/** Players no longer listed who only ever had one snapshot have nothing worth indexing. */
+function hasMeaningfulHistory(history: PlayerHistory) {
+  const isListed = [history.doubles, history.singles].some((rows) => rows[rows.length - 1]?.is_active);
+  return isListed || Math.max(history.doubles.length, history.singles.length) >= 2;
+}
+
+function nearbyOnBoard(board: Ranking[], slug: string): NearbyPlayer[] {
+  const index = board.findIndex((row) => slugify(row.player_name) === slug);
+  if (index === -1) return [];
+  return [...board.slice(Math.max(0, index - 2), index), ...board.slice(index + 1, index + 3)].map((row) => ({
+    name: row.player_name,
+    slug: slugify(row.player_name),
+    rank: row.rank_position,
+    rating: row.rating,
+  }));
 }
 
 function describePlayer(player: PlayerMetadata) {
@@ -36,8 +54,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
 
   let player = null;
+  let history: PlayerHistory | null = null;
   try {
     player = await getPlayerData(slug);
+    history = await getPlayerHistory(slug);
   } catch {
     // Fall through to generic metadata on fetch failure
   }
@@ -60,6 +80,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: `${playerName} – Cayman Islands Pickleball Rating & History | CAYMANDINK`,
     description,
     alternates: { canonical: canonicalPath },
+    ...(history && !hasMeaningfulHistory(history) ? { robots: { index: false, follow: true } } : {}),
     openGraph: {
       title: shareTitle,
       description,
@@ -97,9 +118,19 @@ export default async function PlayerProfilePage({ params }: Props) {
   const latestSingles = history.singles[history.singles.length - 1];
   const rating = latestDoubles?.rating ?? latestSingles?.rating;
 
+  const lastChange = [latestDoubles?.valid_from, latestSingles?.valid_from].filter(Boolean).sort().at(-1);
+
+  const canonicalSlug = slugify(history.name);
+  const rankings = await getCurrentRankings();
+  const nearby = {
+    doubles: nearbyOnBoard(rankings?.doubles ?? [], canonicalSlug),
+    singles: nearbyOnBoard(rankings?.singles ?? [], canonicalSlug),
+  };
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'ProfilePage',
+    dateModified: lastChange,
     mainEntity: {
       '@type': 'Person',
       name: history.name,
@@ -121,6 +152,7 @@ export default async function PlayerProfilePage({ params }: Props) {
           slug={slug}
           playerName={history.name}
           initialHistory={{ singles: history.singles, doubles: history.doubles }}
+          nearby={nearby}
         />
       </Suspense>
     </>

@@ -1,11 +1,33 @@
 import type { Metadata } from 'next';
 import { getCurrentRankings } from '@/lib/rankings-api';
 import { slugify } from '@/lib/slugify';
-import { SITE_URL as BASE_URL } from '@/lib/site-config';
+import { SITE_NAME, SITE_URL as BASE_URL } from '@/lib/site-config';
 import { HomeClient } from './HomeClient';
 
 export const metadata: Metadata = {
   alternates: { canonical: '/' },
+};
+
+const siteJsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${BASE_URL}/#organization`,
+      name: SITE_NAME,
+      url: BASE_URL,
+      image: `${BASE_URL}/og-image.jpg`,
+      description: 'Independent tracker of Cayman Islands pickleball ratings and rating history.',
+      areaServed: { '@type': 'Country', name: 'Cayman Islands' },
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${BASE_URL}/#website`,
+      name: SITE_NAME,
+      url: BASE_URL,
+      publisher: { '@id': `${BASE_URL}/#organization` },
+    },
+  ],
 };
 
 export default async function RankingsPage() {
@@ -30,6 +52,7 @@ export default async function RankingsPage() {
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd) }} />
       {jsonLd && (
         <script
           type="application/ld+json"

@@ -17,6 +17,8 @@ import { DeltaChip } from './DeltaChip';
 interface PlayerProfileProps {
   playerName: string;
   playerHistory: { singles: Ranking[]; doubles: Ranking[] };
+  /** Players just above and below on the active board */
+  nearby?: { name: string; slug: string; rank: number; rating: number }[];
   activeTab: RatingMode;
   onTabChange: (tab: RatingMode) => void;
   loading: boolean;
@@ -40,6 +42,7 @@ function Tile({ label, value, sub, accent }: { label: string; value: React.React
 export function PlayerProfile({
   playerName,
   playerHistory,
+  nearby = [],
   activeTab,
   onTabChange,
   loading,
@@ -74,6 +77,18 @@ export function PlayerProfile({
     singles: playerHistory.singles.length ? playerHistory.singles[playerHistory.singles.length - 1].rating.toFixed(3) : undefined,
   };
 
+  // Plain-language facts in the server HTML, for search engines and AI answers
+  const roundsText = current ? `${current.rounds_played} round${current.rounds_played === 1 ? '' : 's'}` : '';
+  const summary = current
+    ? `${playerName} ${
+        current.is_active
+          ? `is ranked No. ${current.rank_position} in Cayman Islands ${activeTab} pickleball with a ${current.rating.toFixed(3)} rating from ${roundsText}`
+          : `is not currently listed in Cayman Islands ${activeTab} pickleball; their last recorded rating was ${current.rating.toFixed(3)} from ${roundsText}`
+      }, last updated ${longDate(current.valid_from)}.${
+        peak && history.length > 1 ? ` Peak recorded rating: ${peak.rating.toFixed(3)} on ${longDate(peak.valid_from)}.` : ''
+      }`
+    : undefined;
+
   const backLink = (
     <Link
       href={backUrl}
@@ -102,9 +117,10 @@ export function PlayerProfile({
     <div className="min-h-full bg-background pb-24">
       <PageHero
         topSlot={backLink}
-        eyebrow={current ? ['Player', current.is_active ? `${activeTab} No. ${current.rank_position}` : `Not currently listed in ${activeTab}`, `${current.rounds_played} rounds`] : ['Player', `Unranked in ${activeTab}`]}
+        eyebrow={current ? ['Player', current.is_active ? `${activeTab} No. ${current.rank_position}` : `Not currently listed in ${activeTab}`, roundsText] : ['Player', `Unranked in ${activeTab}`]}
         title={playerName}
         titleClassName="text-[56px] md:text-[104px] break-words"
+        lead={summary}
       >
         <ShareButton name={playerName} className="order-2 md:order-1" />
         <ModeSwitcher activeTab={activeTab} onTabChange={onTabChange} size="lg" labels={modeLabels} className="order-1 md:order-2" />
@@ -267,8 +283,34 @@ export function PlayerProfile({
               </div>
 
               <RankingHistoryTable history={history} activeTab={activeTab} />
+
+              {nearby.length > 0 && (
+                <section className="flex flex-col gap-3">
+                  <h2 className="font-display font-bold uppercase tracking-[0.14em] text-base md:text-xl">Nearby in the {activeTab} rankings</h2>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
+                    {nearby.map((player) => (
+                      <Link
+                        key={player.slug}
+                        href={`/player/${player.slug}${activeTab === 'singles' ? '?tab=singles' : ''}`}
+                        className="bg-secondary rounded-lg p-3.5 flex flex-col gap-1 hover:bg-muted transition-colors min-w-0"
+                      >
+                        <span className="kicker text-xs">No. {player.rank}</span>
+                        <span className="font-sans font-semibold text-base leading-tight truncate">{player.name}</span>
+                        <span className="numeral text-2xl text-muted-foreground">{player.rating.toFixed(3)}</span>
+                      </Link>
+                    ))}
+                  </div>
+                </section>
+              )}
             </>
           )}
+
+          <p className="text-xs text-muted-foreground">
+            Independent tracker using ratings published on pickleball.ky.{' '}
+            <Link href="/about" className="underline underline-offset-4 hover:text-foreground">How this works</Link>
+            {' · '}
+            <Link href="/remove" className="underline underline-offset-4 hover:text-foreground">Request removal</Link>
+          </p>
         </div>
       </div>
     </div>

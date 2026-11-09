@@ -152,6 +152,36 @@ export const getWeeklyMovers = cache(async (): Promise<WeeklyMovers | null> => {
   }
 });
 
+export interface TrackingStats {
+  firstRecorded: string;
+  snapshots: number;
+}
+
+/** Totals for the methodology page. Returns null on failure so the page still renders. */
+export const getTrackingStats = cache(async (): Promise<TrackingStats | null> => {
+  try {
+    const table = (name: string) => supabase.schema('pickleball_ratings').from(name);
+    const [firstRes, singlesCount, doublesCount] = await Promise.all([
+      table('doubles_ratings_deltas').select('valid_from').order('valid_from', { ascending: true }).limit(1).maybeSingle(),
+      table('singles_ratings_deltas').select('*', { count: 'exact', head: true }),
+      table('doubles_ratings_deltas').select('*', { count: 'exact', head: true }),
+    ]);
+
+    if (firstRes.error || singlesCount.error || doublesCount.error || !firstRes.data) {
+      console.error('TRACKING_STATS_ERROR:', firstRes.error, singlesCount.error, doublesCount.error);
+      return null;
+    }
+
+    return {
+      firstRecorded: firstRes.data.valid_from,
+      snapshots: (singlesCount.count ?? 0) + (doublesCount.count ?? 0),
+    };
+  } catch (err) {
+    console.error('TRACKING_STATS_ERROR:', err);
+    return null;
+  }
+});
+
 /**
  * Seeds the server-rendered /activity page with the same doubles rows the
  * client feed loads. Only each player's two newest snapshots affect the feed,

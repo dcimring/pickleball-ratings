@@ -32,6 +32,61 @@ function isRateLimited(ip: string): boolean {
   return false;
 }
 
+async function clientIp(): Promise<string> {
+  const requestHeaders = await headers();
+  return (
+    requestHeaders.get("cf-connecting-ip") ||
+    requestHeaders.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    "unknown"
+  );
+}
+
+/** Stored alongside feature requests, marked so they're easy to find. */
+export async function submitRemovalRequest(prevState: FeatureRequestState, formData: FormData): Promise<FeatureRequestState> {
+  const playerName = ((formData.get("player_name") as string) ?? "").trim();
+  const contact = ((formData.get("contact") as string) ?? "").trim();
+  const note = ((formData.get("note") as string) ?? "").trim();
+
+  if (formData.get("website")) {
+    return { success: true }; // Silently ignore bot submissions
+  }
+
+  if (isRateLimited(await clientIp())) {
+    return { error: "Too many submissions. Please try again later." };
+  }
+
+  if (!playerName || playerName.length > 50) {
+    return { error: "Please provide a player name under 50 characters." };
+  }
+
+  if (contact.length < 5 || contact.length > 120) {
+    return { error: "Please provide an email address or WhatsApp number." };
+  }
+
+  if (note.length > 500) {
+    return { error: "Please keep the note under 500 characters." };
+  }
+
+  try {
+    const { error } = await adminSupabase
+      .schema('pickleball_ratings')
+      .from('feature_requests')
+      .insert([
+        {
+          user_name: playerName,
+          details: `[REMOVAL REQUEST] Contact: ${contact}${note ? ` | Note: ${note}` : ""}`,
+        },
+      ]);
+
+    if (error) throw error;
+
+    return { success: true };
+  } catch (err) {
+    console.error("Removal Request Error:", err);
+    return { error: "Failed to send your request. Please try again later." };
+  }
+}
+
 export async function submitFeatureRequest(prevState: FeatureRequestState, formData: FormData): Promise<FeatureRequestState> {
   const userName = formData.get("user_name") as string;
   const details = formData.get("details") as string;
@@ -43,12 +98,7 @@ export async function submitFeatureRequest(prevState: FeatureRequestState, formD
   }
 
   // 2. Rate limit by IP
-  const requestHeaders = await headers();
-  const ip =
-    requestHeaders.get("cf-connecting-ip") ||
-    requestHeaders.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    "unknown";
-  if (isRateLimited(ip)) {
+  if (isRateLimited(await clientIp())) {
     return { error: "Too many submissions. Please try again later." };
   }
 

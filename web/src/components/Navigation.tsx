@@ -15,6 +15,7 @@ export const NAV_ITEMS = [
   { label: 'Alerts', href: '/alerts' },
   { label: 'Tourney Check', href: '/tourney' },
   { label: 'Suggest', href: '/suggest' },
+  { label: 'About', href: '/about' },
 ];
 
 /** Volt square mark + condensed wordmark. */
@@ -47,14 +48,14 @@ export function Navigation() {
         </Link>
 
         {/* Desktop */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-3 lg:gap-8">
           {NAV_ITEMS.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               aria-current={isActive(item.href) ? 'page' : undefined}
               className={cn(
-                'font-display font-bold text-[15px] uppercase tracking-[0.18em] py-[22px] transition-colors',
+                'font-display font-bold text-[13px] lg:text-[15px] uppercase tracking-[0.1em] lg:tracking-[0.18em] whitespace-nowrap py-[22px] transition-colors',
                 isActive(item.href)
                   ? 'text-primary shadow-[inset_0_-3px_0_oklch(var(--primary))]'
                   : 'text-muted-foreground hover:text-foreground'
@@ -66,7 +67,7 @@ export function Navigation() {
           <button
             onClick={() => fetchData(true)}
             disabled={refreshing}
-            className="ml-2 w-11 h-11 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors disabled:opacity-50"
+            className="lg:ml-2 w-9 lg:w-11 h-11 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors disabled:opacity-50"
             title="Refresh data"
             aria-label="Refresh data"
           >

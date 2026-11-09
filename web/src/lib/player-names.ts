@@ -1,6 +1,7 @@
 import { cache } from 'react';
 import { supabase } from './supabase';
 import { slugify } from './slugify';
+import { HIDDEN_PLAYER_SLUGS } from './site-config';
 
 /**
  * Maps a URL slug back to the exact player_name value(s) stored in the database.
@@ -13,6 +14,8 @@ import { slugify } from './slugify';
  * errors rather than fake 404s.
  */
 export const resolvePlayerNames = cache(async (slug: string): Promise<string[]> => {
+  if (HIDDEN_PLAYER_SLUGS.includes(slug.toLowerCase())) return [];
+
   const [singlesRes, doublesRes] = await Promise.all([
     supabase
       .schema('pickleball_ratings')

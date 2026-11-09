@@ -4,13 +4,21 @@ import { useEffect, useState } from 'react';
 import { Ranking } from '@/lib/types';
 import { PlayerProfile } from '@/components/PlayerProfile';
 
+export interface NearbyPlayer {
+  name: string;
+  slug: string;
+  rank: number;
+  rating: number;
+}
+
 interface PlayerProfileClientProps {
   slug: string;
   playerName: string;
   initialHistory: { singles: Ranking[]; doubles: Ranking[] };
+  nearby: { singles: NearbyPlayer[]; doubles: NearbyPlayer[] };
 }
 
-export function PlayerProfileClient({ slug, playerName, initialHistory }: PlayerProfileClientProps) {
+export function PlayerProfileClient({ slug, playerName, initialHistory, nearby }: PlayerProfileClientProps) {
   const [activeTab, setActiveTab] = useState<'doubles' | 'singles'>(
     initialHistory.doubles.length > 0 ? 'doubles' : 'singles'
   );
@@ -46,6 +54,7 @@ export function PlayerProfileClient({ slug, playerName, initialHistory }: Player
     <PlayerProfile
       playerName={playerName}
       playerHistory={initialHistory}
+      nearby={nearby[activeTab]}
       activeTab={activeTab}
       onTabChange={setActiveTab}
       loading={false}
