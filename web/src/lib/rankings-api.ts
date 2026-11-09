@@ -1,6 +1,6 @@
 import { cache } from 'react';
 import { supabase } from './supabase';
-import { unslugify, escapeLike } from './slugify';
+import { resolvePlayerNames } from './player-names';
 import { Ranking } from './types';
 
 export interface CurrentRankings {
@@ -153,26 +153,57 @@ export const getWeeklyMovers = cache(async (): Promise<WeeklyMovers | null> => {
 });
 
 /**
+ * Seeds the server-rendered /activity page with the same doubles rows the
+ * client feed loads. Only each player's two newest snapshots affect the feed,
+ * so the rest are dropped to keep the page payload small.
+ */
+export const getInitialActivityHistory = cache(async (): Promise<Ranking[]> => {
+  try {
+    const { data, error } = await supabase
+      .schema('pickleball_ratings')
+      .from('doubles_ratings_deltas')
+      .select('*')
+      .order('valid_from', { ascending: false })
+      .limit(1000);
+
+    if (error) {
+      console.error('ACTIVITY_FETCH_ERROR:', error);
+      return [];
+    }
+
+    const seen = new Map<string, number>();
+    return (data ?? []).filter((row: Ranking) => {
+      const count = seen.get(row.player_name) ?? 0;
+      seen.set(row.player_name, count + 1);
+      return count < 2;
+    });
+  } catch (err) {
+    console.error('ACTIVITY_FETCH_ERROR:', err);
+    return [];
+  }
+});
+
+/**
  * Server-side fetch of a player's full rating history for both modes,
  * ascending by valid_from. Returns null when the player has no rows at all.
  * Throws on query errors so outages don't masquerade as 404s.
  */
 export const getPlayerHistory = cache(async (slug: string): Promise<PlayerHistory | null> => {
-  const name = unslugify(slug);
-  const pattern = escapeLike(name);
+  const names = await resolvePlayerNames(slug);
+  if (names.length === 0) return null;
 
   const [singlesRes, doublesRes] = await Promise.all([
     supabase
       .schema('pickleball_ratings')
       .from('singles_ratings_deltas')
       .select('*')
-      .ilike('player_name', pattern)
+      .in('player_name', names)
       .order('valid_from', { ascending: true }),
     supabase
       .schema('pickleball_ratings')
       .from('doubles_ratings_deltas')
       .select('*')
-      .ilike('player_name', pattern)
+      .in('player_name', names)
       .order('valid_from', { ascending: true }),
   ]);
 
@@ -189,7 +220,7 @@ export const getPlayerHistory = cache(async (slug: string): Promise<PlayerHistor
   }
 
   return {
-    name: singles[0]?.player_name || doubles[0]?.player_name || name,
+    name: singles[0]?.player_name || doubles[0]?.player_name || names[0],
     singles,
     doubles,
   };

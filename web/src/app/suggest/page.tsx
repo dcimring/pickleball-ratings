@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { SuggestClient } from './SuggestClient';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/suggest' },
   title: "Suggest a Feature | CAYMANDINK",
   description: "Have an idea to improve the Cayman Islands pickleball dashboard? Let us know what features or data you'd like to see next.",
   openGraph: {

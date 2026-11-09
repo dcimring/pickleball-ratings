@@ -64,7 +64,7 @@ export function RankingHistoryTable({ history, activeTab, limit = 6 }: RankingHi
               className={cn('grid gap-2 md:gap-4 items-center px-3 md:px-5 min-h-[48px] md:min-h-[54px] py-1.5 shadow-hairline last:shadow-none text-sm md:text-[15px]', gridCols)}
             >
               <span className="text-muted-foreground whitespace-nowrap">
-                {new Date(row.current.valid_from).toLocaleDateString(LOCALE, { day: 'numeric', month: 'short' })}
+                {new Date(row.current.valid_from).toLocaleDateString(LOCALE, { timeZone: 'UTC', day: 'numeric', month: 'short' })}
               </span>
               <span className={cn('numeral text-xl md:text-[22px]', isPeak && 'text-primary')}>
                 {row.current.rating.toFixed(3)}

@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { Alerts } from '@/components/Alerts';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/alerts' },
   title: "Performance Alerts | CAYMANDINK",
   description: "Stay updated on the biggest movers and latest ranking changes in the Cayman Islands pickleball scene.",
   openGraph: {

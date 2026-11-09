@@ -28,7 +28,7 @@ interface RankingTableProps {
 const PAGE_SIZE = 50;
 
 export function formatShortDate(iso: string) {
-  return new Date(iso).toLocaleDateString(LOCALE, { day: 'numeric', month: 'short' });
+  return new Date(iso).toLocaleDateString(LOCALE, { timeZone: 'UTC', day: 'numeric', month: 'short' });
 }
 
 export function RankingTable({
@@ -169,64 +169,88 @@ export function RankingTable({
                 </Link>
               )}
 
-              {/* Column header */}
-              <div className={cn('grid gap-2.5 md:gap-4 px-3 md:px-6 pb-1 kicker text-xs select-none', gridCols)}>
-                {headerButton('rank_position', 'Pos')}
-                {headerButton('player_name', 'Player')}
-                <span className="hidden md:block">Last change</span>
-                <span className="text-right md:text-right">Move</span>
-                {headerButton('rounds_played', 'Rounds', 'hidden md:flex justify-end')}
-                {headerButton('rating', 'Rating', 'justify-end')}
-              </div>
+              {/* Real table elements for crawlers and screen readers; ARIA roles restore
+                  the semantics that display:grid removes. */}
+              <table role="table" className="block">
+                <caption className="sr-only">Cayman Islands pickleball {activeTab} rankings</caption>
+                <thead role="rowgroup" className="block mb-2">
+                  <tr role="row" className={cn('grid gap-2.5 md:gap-4 px-3 md:px-6 pb-1 kicker text-xs select-none', gridCols)}>
+                    <th role="columnheader" scope="col" className="font-[inherit] text-left">{headerButton('rank_position', 'Pos')}</th>
+                    <th role="columnheader" scope="col" className="font-[inherit] text-left">{headerButton('player_name', 'Player')}</th>
+                    <th role="columnheader" scope="col" className="hidden md:block font-[inherit] text-left">Last change</th>
+                    <th role="columnheader" scope="col" className="font-[inherit] text-right">Move</th>
+                    <th role="columnheader" scope="col" className="hidden md:block font-[inherit]">{headerButton('rounds_played', 'Rounds', 'w-full justify-end')}</th>
+                    <th role="columnheader" scope="col" className="font-[inherit]">{headerButton('rating', 'Rating', 'w-full justify-end')}</th>
+                  </tr>
+                </thead>
 
-              {/* Board */}
-              <div className="bg-secondary rounded-lg flex flex-col -mt-1.5">
-                {boardRows.map((player) => {
-                  const prev = previous?.[player.player_name];
-                  const ratingDiff = prev ? player.rating - prev.rating : undefined;
-                  const rankDiff = prev ? prev.rank_position - player.rank_position : 0;
-                  const top3 = player.rank_position <= 3;
-                  return (
-                    <Link
-                      key={`${activeTab}-${player.player_name}`}
-                      href={`/player/${slugify(player.player_name)}?tab=${activeTab}`}
-                      className={cn(
-                        'grid gap-2.5 md:gap-4 items-center px-3 md:px-6 min-h-[60px] md:min-h-[64px] py-2 shadow-hairline last:shadow-none hover:bg-muted transition-colors',
-                        gridCols
-                      )}
-                    >
-                      <span className={cn('numeral text-[26px] md:text-[34px]', top3 ? 'text-primary' : 'text-muted-foreground')}>
-                        {player.rank_position}
-                      </span>
-                      <span className="flex flex-col gap-0.5 min-w-0">
-                        <span className="font-sans font-semibold text-base md:text-lg truncate">{player.player_name}</span>
-                        <span className="text-[11px] text-muted-foreground md:hidden">
-                          {player.rounds_played} rounds · {formatShortDate(player.valid_from)}
-                          {rankDiff > 0 && ` · up ${rankDiff}`}
-                          {rankDiff < 0 && ` · down ${Math.abs(rankDiff)}`}
-                        </span>
-                      </span>
-                      <span className="hidden md:block text-[13px] text-muted-foreground">
-                        {formatShortDate(player.valid_from)}
-                        {rankDiff > 0 && ` · up ${rankDiff} place${rankDiff === 1 ? '' : 's'}`}
-                        {rankDiff < 0 && ` · down ${Math.abs(rankDiff)} place${rankDiff === -1 ? '' : 's'}`}
-                      </span>
-                      <span className="justify-self-end">
-                        <DeltaChip value={ratingDiff} />
-                      </span>
-                      <span className="hidden md:block text-right text-base text-muted-foreground tabular-nums">{player.rounds_played}</span>
-                      <span className="numeral text-2xl md:text-[30px] text-right">{player.rating.toFixed(3)}</span>
-                    </Link>
-                  );
-                })}
+                <tbody role="rowgroup" className="block bg-secondary rounded-lg">
+                  {/* The leader is shown as the card above; keep No. 1 in the table data too */}
+                  {leader && (
+                    <tr aria-hidden="true" className="sr-only">
+                      <td>{leader.rank_position}</td>
+                      <td>{leader.player_name}</td>
+                      <td>{formatShortDate(leader.valid_from)}</td>
+                      <td />
+                      <td>{leader.rounds_played}</td>
+                      <td>{leader.rating.toFixed(3)}</td>
+                    </tr>
+                  )}
+                  {boardRows.map((player) => {
+                    const prev = previous?.[player.player_name];
+                    const ratingDiff = prev ? player.rating - prev.rating : undefined;
+                    const rankDiff = prev ? prev.rank_position - player.rank_position : 0;
+                    const top3 = player.rank_position <= 3;
+                    return (
+                      <tr
+                        role="row"
+                        key={`${activeTab}-${player.player_name}`}
+                        className={cn(
+                          'relative grid gap-2.5 md:gap-4 items-center px-3 md:px-6 min-h-[60px] md:min-h-[64px] py-2 shadow-hairline last:shadow-none hover:bg-muted transition-colors',
+                          gridCols
+                        )}
+                      >
+                        <td role="cell" className={cn('numeral text-[26px] md:text-[34px]', top3 ? 'text-primary' : 'text-muted-foreground')}>
+                          {player.rank_position}
+                        </td>
+                        <td role="cell" className="flex flex-col gap-0.5 min-w-0">
+                          {/* after:inset-0 stretches the link across the whole row */}
+                          <Link
+                            href={`/player/${slugify(player.player_name)}?tab=${activeTab}`}
+                            className="font-sans font-semibold text-base md:text-lg truncate after:absolute after:inset-0"
+                          >
+                            {player.player_name}
+                          </Link>
+                          <span className="text-[11px] text-muted-foreground md:hidden">
+                            {player.rounds_played} rounds · {formatShortDate(player.valid_from)}
+                            {rankDiff > 0 && ` · up ${rankDiff}`}
+                            {rankDiff < 0 && ` · down ${Math.abs(rankDiff)}`}
+                          </span>
+                        </td>
+                        <td role="cell" className="hidden md:block text-[13px] text-muted-foreground">
+                          {formatShortDate(player.valid_from)}
+                          {rankDiff > 0 && ` · up ${rankDiff} place${rankDiff === 1 ? '' : 's'}`}
+                          {rankDiff < 0 && ` · down ${Math.abs(rankDiff)} place${rankDiff === -1 ? '' : 's'}`}
+                        </td>
+                        <td role="cell" className="justify-self-end">
+                          <DeltaChip value={ratingDiff} />
+                        </td>
+                        <td role="cell" className="hidden md:block text-right text-base text-muted-foreground tabular-nums">{player.rounds_played}</td>
+                        <td role="cell" className="numeral text-2xl md:text-[30px] text-right">{player.rating.toFixed(3)}</td>
+                      </tr>
+                    );
+                  })}
 
-                {boardRows.length === 0 && !leader && (
-                  <div className="py-16 text-center flex flex-col items-center gap-2">
-                    <span className="font-display font-bold uppercase tracking-[0.12em] text-lg">No players match</span>
-                    <span className="text-sm text-muted-foreground">Try a shorter name, or clear the search.</span>
-                  </div>
-                )}
-              </div>
+                  {boardRows.length === 0 && !leader && (
+                    <tr role="row" className="block">
+                      <td role="cell" className="py-16 text-center flex flex-col items-center gap-2">
+                        <span className="font-display font-bold uppercase tracking-[0.12em] text-lg">No players match</span>
+                        <span className="text-sm text-muted-foreground">Try a shorter name, or clear the search.</span>
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
 
               <div className="flex items-center justify-between gap-4 pt-1 px-1">
                 <span className="text-xs md:text-sm text-muted-foreground">

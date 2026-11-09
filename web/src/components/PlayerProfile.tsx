@@ -24,8 +24,8 @@ interface PlayerProfileProps {
   backLabel?: string;
 }
 
-const shortDate = (iso: string) => new Date(iso).toLocaleDateString(LOCALE, { day: 'numeric', month: 'short' });
-const longDate = (iso: string) => new Date(iso).toLocaleDateString(LOCALE, { day: 'numeric', month: 'long', year: 'numeric' });
+const shortDate = (iso: string) => new Date(iso).toLocaleDateString(LOCALE, { timeZone: 'UTC', day: 'numeric', month: 'short' });
+const longDate = (iso: string) => new Date(iso).toLocaleDateString(LOCALE, { timeZone: 'UTC', day: 'numeric', month: 'long', year: 'numeric' });
 
 function Tile({ label, value, sub, accent }: { label: string; value: React.ReactNode; sub?: React.ReactNode; accent?: boolean }) {
   return (
@@ -202,7 +202,7 @@ export function PlayerProfile({
                             dataKey="valid_from"
                             stroke="transparent"
                             tick={{ fill: '#9fb0a8', fontSize: 11, fontWeight: 600 }}
-                            tickFormatter={(str) => new Date(str).toLocaleDateString(LOCALE, { month: 'short' })}
+                            tickFormatter={(str) => new Date(str).toLocaleDateString(LOCALE, { timeZone: 'UTC', month: 'short' })}
                             axisLine={false}
                             tickLine={false}
                             minTickGap={24}

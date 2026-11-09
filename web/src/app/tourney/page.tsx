@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { TourneyClient } from './TourneyClient';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/tourney' },
   title: "Tournament Bracket Check | CAYMANDINK",
   description: "Instantly check ratings and rankings for entire tournament brackets or player lists in the Cayman Islands.",
   openGraph: {

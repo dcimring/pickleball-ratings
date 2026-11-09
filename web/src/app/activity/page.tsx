@@ -1,8 +1,9 @@
-import { Suspense } from 'react';
 import { Metadata } from 'next';
+import { getInitialActivityHistory } from '@/lib/rankings-api';
 import { ActivityClient } from './ActivityClient';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/activity' },
   title: "Live Activity | CAYMANDINK",
   description: "Track the latest ranking changes, rating gains, and match activity across the Cayman Islands pickleball community.",
   openGraph: {
@@ -11,10 +12,8 @@ export const metadata: Metadata = {
   }
 };
 
-export default function ActivityPage() {
-  return (
-    <Suspense fallback={null}>
-      <ActivityClient />
-    </Suspense>
-  );
+export default async function ActivityPage() {
+  const initialDoubles = await getInitialActivityHistory();
+
+  return <ActivityClient initialDoubles={initialDoubles} renderedAt={Date.now()} />;
 }

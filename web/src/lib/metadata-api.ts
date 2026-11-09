@@ -1,6 +1,6 @@
 import { cache } from 'react';
 import { supabase } from './supabase';
-import { unslugify, escapeLike } from './slugify';
+import { resolvePlayerNames } from './player-names';
 import { Ranking } from './types';
 
 export interface PlayerMetadata {
@@ -20,8 +20,8 @@ export interface PlayerMetadata {
  * so outages surface as errors rather than fake 404s.
  */
 export const getPlayerData = cache(async (slug: string): Promise<PlayerMetadata | null> => {
-  const name = unslugify(slug);
-  const pattern = escapeLike(name);
+  const names = await resolvePlayerNames(slug);
+  if (names.length === 0) return null;
 
   // Fetch latest from both tables in parallel
   const [singlesRes, doublesRes] = await Promise.all([
@@ -29,7 +29,7 @@ export const getPlayerData = cache(async (slug: string): Promise<PlayerMetadata 
       .schema('pickleball_ratings')
       .from('singles_ratings_deltas')
       .select('*')
-      .ilike('player_name', pattern)
+      .in('player_name', names)
       .order('valid_from', { ascending: false })
       .limit(1)
       .maybeSingle(),
@@ -37,7 +37,7 @@ export const getPlayerData = cache(async (slug: string): Promise<PlayerMetadata 
       .schema('pickleball_ratings')
       .from('doubles_ratings_deltas')
       .select('*')
-      .ilike('player_name', pattern)
+      .in('player_name', names)
       .order('valid_from', { ascending: false })
       .limit(1)
       .maybeSingle()
@@ -53,7 +53,7 @@ export const getPlayerData = cache(async (slug: string): Promise<PlayerMetadata 
     return null;
   }
 
-  const actualName = singlesRes.data?.player_name || doublesRes.data?.player_name || name;
+  const actualName = singlesRes.data?.player_name || doublesRes.data?.player_name || names[0];
 
   return {
     name: actualName,

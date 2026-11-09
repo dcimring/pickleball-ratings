@@ -11,7 +11,9 @@ interface PlayerProfileClientProps {
 }
 
 export function PlayerProfileClient({ slug, playerName, initialHistory }: PlayerProfileClientProps) {
-  const [activeTab, setActiveTab] = useState<'doubles' | 'singles'>('doubles');
+  const [activeTab, setActiveTab] = useState<'doubles' | 'singles'>(
+    initialHistory.doubles.length > 0 ? 'doubles' : 'singles'
+  );
   const [backUrl, setBackUrl] = useState('/?tab=doubles');
   const [backLabel, setBackLabel] = useState('Back to Rankings');
 

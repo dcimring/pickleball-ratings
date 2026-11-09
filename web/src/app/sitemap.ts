@@ -41,27 +41,43 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       supabase
         .schema('pickleball_ratings')
         .from('singles_ratings_deltas')
-        .select('player_name')
-        .eq('is_current', true),
+        .select('player_name, valid_from')
+        .eq('is_current', true)
+        .eq('is_active', true),
       supabase
         .schema('pickleball_ratings')
         .from('doubles_ratings_deltas')
-        .select('player_name')
-        .eq('is_current', true),
+        .select('player_name, valid_from')
+        .eq('is_current', true)
+        .eq('is_active', true),
     ]);
 
-    const names = new Set<string>();
+    // Keyed by slug so spelling variants of one name produce a single URL
+    const lastChangeBySlug = new Map<string, string>();
+    let newestChange: string | undefined;
     for (const row of [...(singlesRes.data ?? []), ...(doublesRes.data ?? [])]) {
-      if (row.player_name) names.add(row.player_name);
+      if (!row.player_name) continue;
+      const slug = slugify(row.player_name);
+      const known = lastChangeBySlug.get(slug);
+      if (!known || row.valid_from > known) lastChangeBySlug.set(slug, row.valid_from);
+      if (!newestChange || row.valid_from > newestChange) newestChange = row.valid_from;
     }
 
-    const playerRoutes: MetadataRoute.Sitemap = Array.from(names).map((name) => ({
-      url: `${BASE_URL}/player/${slugify(name)}`,
+    const playerRoutes: MetadataRoute.Sitemap = Array.from(lastChangeBySlug).map(([slug, lastModified]) => ({
+      url: `${BASE_URL}/player/${slug}`,
+      lastModified,
       changeFrequency: 'daily',
       priority: 0.7,
     }));
 
-    return [...staticRoutes, ...playerRoutes];
+    // The board and movers feed change whenever any rating does
+    const datedStaticRoutes = staticRoutes.map((route) =>
+      newestChange && (route.url === BASE_URL || route.url === `${BASE_URL}/activity`)
+        ? { ...route, lastModified: newestChange }
+        : route
+    );
+
+    return [...datedStaticRoutes, ...playerRoutes];
   } catch (err) {
     console.error('SITEMAP_FETCH_ERROR:', err);
     return staticRoutes;

@@ -1,21 +1,35 @@
 "use client";
 
 import { useMemo, useState, useEffect } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
 import { useData } from '@/context/DataContext';
 import { ActivityFeed } from '@/components/ActivityFeed';
 import { Ranking, ActivityItem, ActivityTier } from '@/lib/types';
 
-export function ActivityClient() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  
-  const initialTab = (searchParams.get('tab') as 'doubles' | 'singles') || 'doubles';
-  const initialSort = (searchParams.get('sort') as 'rating' | 'date') || 'rating';
+interface ActivityClientProps {
+  /** Server-rendered doubles rows, shown until the full client history loads */
+  initialDoubles: Ranking[];
+  /** Server clock, so the first client render buckets tiers identically */
+  renderedAt: number;
+}
 
+export function ActivityClient({ initialDoubles, renderedAt }: ActivityClientProps) {
   const { singlesHistory, doublesHistory, loading, historyLoading, ensureHistory } = useData();
-  const [activeTab, setActiveTab] = useState<'doubles' | 'singles'>(initialTab);
-  const [activitySort, setActivitySort] = useState<'rating' | 'date'>(initialSort);
+  const [activeTab, setActiveTab] = useState<'doubles' | 'singles'>('doubles');
+  const [activitySort, setActivitySort] = useState<'rating' | 'date'>('rating');
+  const [now, setNow] = useState(renderedAt);
+  const [urlRead, setUrlRead] = useState(false);
+
+  // Read URL state after mount instead of useSearchParams so the
+  // server-rendered feed isn't replaced by a CSR bailout.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get('tab');
+    const sort = params.get('sort');
+    if (tab === 'singles' || tab === 'doubles') setActiveTab(tab);
+    if (sort === 'rating' || sort === 'date') setActivitySort(sort);
+    setNow(Date.now());
+    setUrlRead(true);
+  }, []);
 
   // History is lazy-loaded; request it when the feed mounts
   useEffect(() => {
@@ -24,15 +38,18 @@ export function ActivityClient() {
 
   // Update URL when state changes
   useEffect(() => {
-    const params = new URLSearchParams(searchParams.toString());
+    if (!urlRead) return;
+    const params = new URLSearchParams(window.location.search);
     params.set('tab', activeTab);
     params.set('sort', activitySort);
-    router.replace(`/activity?${params.toString()}`, { scroll: false });
-  }, [activeTab, activitySort, router, searchParams]);
+    window.history.replaceState(window.history.state, '', `/activity?${params.toString()}${window.location.hash}`);
+  }, [activeTab, activitySort, urlRead]);
+
+  const history = activeTab === 'doubles'
+    ? (doublesHistory.length > 0 ? doublesHistory : initialDoubles)
+    : singlesHistory;
 
   const activityFeed = useMemo(() => {
-    const history = activeTab === 'doubles' ? doublesHistory : singlesHistory;
-    
     const groupedByPlayer = history.reduce((acc, curr) => {
       if (!acc[curr.player_name]) acc[curr.player_name] = [];
       acc[curr.player_name].push(curr);
@@ -74,9 +91,8 @@ export function ActivityClient() {
       }
     });
 
-    const now = new Date();
-    const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-    const twoWeeksAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
+    const oneWeekAgo = new Date(now - 7 * 24 * 60 * 60 * 1000);
+    const twoWeeksAgo = new Date(now - 14 * 24 * 60 * 60 * 1000);
 
     const tiers: ActivityTier[] = [
       { title: 'THIS WEEK', items: [] },
@@ -96,7 +112,7 @@ export function ActivityClient() {
     });
 
     return tiers.filter(tier => tier.items.length > 0);
-  }, [activeTab, singlesHistory, doublesHistory, activitySort]);
+  }, [history, activitySort, now]);
 
   const pulseStats = useMemo(() => {
     const thisWeekTier = activityFeed.find(tier => tier.title === 'THIS WEEK');
@@ -120,7 +136,7 @@ export function ActivityClient() {
       activitySort={activitySort}
       onSortChange={setActivitySort}
       pulseStats={pulseStats}
-      loading={loading || historyLoading}
+      loading={history.length === 0 && (loading || historyLoading)}
     />
   );
 }

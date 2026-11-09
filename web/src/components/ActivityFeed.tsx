@@ -24,7 +24,7 @@ interface ActivityFeedProps {
   loading: boolean;
 }
 
-const shortDate = (iso: string) => new Date(iso).toLocaleDateString(LOCALE, { day: 'numeric', month: 'short' });
+const shortDate = (iso: string) => new Date(iso).toLocaleDateString(LOCALE, { timeZone: 'UTC', day: 'numeric', month: 'short' });
 
 function MoverTile({ item, href }: { item: ActivityItem; href: string }) {
   const up = item.ratingDiff > 0;
