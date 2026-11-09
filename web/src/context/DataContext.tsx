@@ -71,8 +71,8 @@ export function DataProvider({
     if (isManual) setRefreshing(true);
     try {
       const [singlesRes, doublesRes] = await Promise.all([
-        supabase.schema('pickleball_ratings').from('singles_ratings_deltas').select('*').eq('is_current', true).order('rank_position', { ascending: true }),
-        supabase.schema('pickleball_ratings').from('doubles_ratings_deltas').select('*').eq('is_current', true).order('rank_position', { ascending: true })
+        supabase.schema('pickleball_ratings').from('singles_ratings_deltas').select('*').eq('is_current', true).eq('is_active', true).order('rank_position', { ascending: true }),
+        supabase.schema('pickleball_ratings').from('doubles_ratings_deltas').select('*').eq('is_current', true).eq('is_active', true).order('rank_position', { ascending: true })
       ]);
 
       if (singlesRes.data) setSingles(singlesRes.data);

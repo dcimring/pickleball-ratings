@@ -8,6 +8,7 @@ export type Ranking = {
   rounds_played: number;
   valid_from: string;
   is_current: boolean;
+  is_active: boolean;
 };
 
 export type ActivityItem = {

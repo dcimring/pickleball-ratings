@@ -27,12 +27,14 @@ export const getCurrentRankings = cache(async (): Promise<CurrentRankings | null
         .from('singles_ratings_deltas')
         .select('*')
         .eq('is_current', true)
+        .eq('is_active', true)
         .order('rank_position', { ascending: true }),
       supabase
         .schema('pickleball_ratings')
         .from('doubles_ratings_deltas')
         .select('*')
         .eq('is_current', true)
+        .eq('is_active', true)
         .order('rank_position', { ascending: true }),
     ]);
 

@@ -102,7 +102,7 @@ export function PlayerProfile({
     <div className="min-h-full bg-background pb-24">
       <PageHero
         topSlot={backLink}
-        eyebrow={current ? ['Player', `${activeTab} No. ${current.rank_position}`, `${current.rounds_played} rounds`] : ['Player', `Unranked in ${activeTab}`]}
+        eyebrow={current ? ['Player', current.is_active ? `${activeTab} No. ${current.rank_position}` : `Not currently listed in ${activeTab}`, `${current.rounds_played} rounds`] : ['Player', `Unranked in ${activeTab}`]}
         title={playerName}
         titleClassName="text-[56px] md:text-[104px] break-words"
       >
@@ -126,7 +126,7 @@ export function PlayerProfile({
                 No rated {activeTab} games yet.
                 {otherCurrent && (
                   <>
-                    {' '}Rated {otherCurrent.rating.toFixed(3)} in {otherMode}, No. {otherCurrent.rank_position}.{' '}
+                    {' '}Rated {otherCurrent.rating.toFixed(3)} in {otherMode}{otherCurrent.is_active ? `, No. ${otherCurrent.rank_position}` : ''}.{' '}
                     <button onClick={() => onTabChange(otherMode)} className="text-primary underline underline-offset-4">Show {otherMode}</button>
                   </>
                 )}
@@ -160,7 +160,7 @@ export function PlayerProfile({
                   <div className="grid grid-cols-4 gap-1.5 md:gap-2">
                     <Tile
                       label="Rank"
-                      value={
+                      value={!current.is_active ? '—' : (
                         <>
                           {current.rank_position}
                           {rankDiff !== 0 && (
@@ -169,7 +169,7 @@ export function PlayerProfile({
                             </span>
                           )}
                         </>
-                      }
+                      )}
                     />
                     <Tile label="Peak" value={peak?.rating.toFixed(3)} sub={peak && shortDate(peak.valid_from)} accent={!!peak && peak.rating === current.rating && history.length > 1} />
                     <Tile label="Best rank" value={bestRank?.rank_position} sub={bestRank && shortDate(bestRank.valid_from)} />
