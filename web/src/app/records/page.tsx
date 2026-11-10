@@ -8,7 +8,7 @@ import {
   MIN_ROUNDS_FOR_PEAK,
   RecordEntry,
 } from '@/lib/records';
-import { LOCALE, OWNER_NAME, OWNER_URL, SITE_NAME, SITE_URL } from '@/lib/site-config';
+import { LOCALE, OWNER_NAME, OWNER_URL, SITE_NAME, SITE_URL, toSchemaDateTime } from '@/lib/site-config';
 
 export const revalidate = 3600;
 
@@ -82,7 +82,7 @@ export default async function RecordsPage() {
     name: TITLE,
     description: DESCRIPTION,
     url: `${SITE_URL}/records`,
-    dateModified: records.lastRecorded,
+    dateModified: toSchemaDateTime(records.lastRecorded),
     author: { '@type': 'Person', name: OWNER_NAME, url: OWNER_URL, sameAs: [OWNER_URL] },
     isPartOf: { '@type': 'WebSite', name: SITE_NAME, url: SITE_URL },
     mainEntity: {

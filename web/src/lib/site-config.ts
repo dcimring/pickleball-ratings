@@ -16,6 +16,14 @@ export const HIDDEN_PLAYER_SLUGS: readonly string[] = [];
 export const OWNER_NAME = 'Daniel Cimring';
 export const OWNER_URL = 'https://danielcimring.com';
 
+/**
+ * Schema.org dates must be full ISO 8601 datetimes for Google. Snapshot dates
+ * are stored as plain YYYY-MM-DD, so pin them to midnight UTC.
+ */
+export function toSchemaDateTime(date: string) {
+  return /^\d{4}-\d{2}-\d{2}$/.test(date) ? `${date}T00:00:00Z` : new Date(date).toISOString();
+}
+
 /** Locale used for date formatting throughout the app */
 export const LOCALE = 'en-KY';
 

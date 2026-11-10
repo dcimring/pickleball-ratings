@@ -5,7 +5,7 @@ import { getPlayerData, PlayerMetadata } from '@/lib/metadata-api';
 import { getCurrentRankings, getPlayerHistory, PlayerHistory } from '@/lib/rankings-api';
 import type { Ranking } from '@/lib/types';
 import { NearbyPlayer, PlayerProfileClient } from './PlayerProfileClient';
-import { SITE_URL as BASE_URL } from '@/lib/site-config';
+import { SITE_URL as BASE_URL, toSchemaDateTime } from '@/lib/site-config';
 import { slugify } from '@/lib/slugify';
 
 // Cache rendered player pages for an hour (data updates once daily)
@@ -130,7 +130,7 @@ export default async function PlayerProfilePage({ params }: Props) {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'ProfilePage',
-    dateModified: lastChange,
+    dateModified: lastChange ? toSchemaDateTime(lastChange) : undefined,
     mainEntity: {
       '@type': 'Person',
       name: history.name,
