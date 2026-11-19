@@ -6,6 +6,7 @@ import { Users, Copy, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { TourneyResult } from '@/lib/types';
 import { slugify } from '@/lib/slugify';
+import { parseRoster } from '@/lib/parse-roster';
 import { PageHero } from '@/components/PageHero';
 import { Spinner } from '@/components/Spinner';
 
@@ -31,7 +32,7 @@ function RatingCell({ value, accent }: { value: { rank: number; rating: number }
 
 export function TourneyCheck({ input, onInputChange, onCheck, results, loading }: TourneyCheckProps) {
   const [copied, setCopied] = useState(false);
-  const nameCount = input.split('\n').map((n) => n.trim()).filter(Boolean).length;
+  const nameCount = parseRoster(input).length;
   const matched = results.filter((r) => r.singles || r.doubles).length;
 
   const copyTable = async () => {
@@ -64,7 +65,7 @@ export function TourneyCheck({ input, onInputChange, onCheck, results, loading }
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-3.5 md:gap-6 md:items-start">
           {/* Input */}
           <div className="bg-secondary rounded-lg p-3.5 md:p-5 flex flex-col gap-2.5 md:flex-[1_1_360px] md:sticky md:top-24">
-            <label htmlFor="roster" className="kicker text-[13px]">Paste your roster, one name per line</label>
+            <label htmlFor="roster" className="kicker text-[13px]">Paste names, one per line, or a player list copied from a tournament site</label>
             <textarea
               id="roster"
               value={input}

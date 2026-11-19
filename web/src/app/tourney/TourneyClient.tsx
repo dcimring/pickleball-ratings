@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useData } from '@/context/DataContext';
 import { TourneyCheck } from '@/components/TourneyCheck';
 import { TourneyResult } from '@/lib/types';
+import { parseRoster } from '@/lib/parse-roster';
 
 export function TourneyClient() {
   const { singles, doubles, loading } = useData();
@@ -11,7 +12,7 @@ export function TourneyClient() {
   const [tourneyResults, setTourneyResults] = useState<TourneyResult[]>([]);
 
   const handleTourneyCheck = () => {
-    const names = tourneyInput.split('\n').map(n => n.trim()).filter(n => n.length > 0);
+    const names = parseRoster(tourneyInput);
     const results = names.map(name => {
       const sMatch = singles.find(p => p.player_name.toLowerCase() === name.toLowerCase());
       const dMatch = doubles.find(p => p.player_name.toLowerCase() === name.toLowerCase());
