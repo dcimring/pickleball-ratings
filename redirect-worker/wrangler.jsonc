@@ -1,0 +1,14 @@
+{
+  "$schema": "../web/node_modules/wrangler/config-schema.json",
+  "name": "caymandink-legacy-redirect",
+  "main": "index.js",
+  "compatibility_date": "2026-11-01",
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [
+    { "pattern": "dinkdata.xyz/*", "zone_name": "dinkdata.xyz" },
+    { "pattern": "www.dinkdata.xyz/*", "zone_name": "dinkdata.xyz" },
+    { "pattern": "dinkdash.xyz/*", "zone_name": "dinkdash.xyz" },
+    { "pattern": "www.dinkdash.xyz/*", "zone_name": "dinkdash.xyz" }
+  ]
+}
