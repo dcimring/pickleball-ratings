@@ -117,10 +117,10 @@ export function ActivityFeed({
                   className="bg-primary text-primary-foreground rounded-lg p-4 md:p-6 flex flex-col md:flex-row md:items-end md:justify-between gap-3 md:gap-6 hover:opacity-95 transition-opacity"
                 >
                   <span className="flex flex-col gap-1.5 min-w-0">
-                    <span className="font-display font-bold text-[13px] md:text-[15px] uppercase tracking-[0.2em] text-[#2f3a1a]">Gainer of the week</span>
+                    <span className="font-display font-bold text-[13px] md:text-[15px] uppercase tracking-[0.2em] text-primary-foreground/75">Gainer of the week</span>
                     <span className="font-sans font-semibold text-2xl md:text-[28px] leading-tight tracking-tight">{pulseStats.topGainerName}</span>
                     {gainer && (
-                      <span className="text-[13px] md:text-[15px] text-[#2f3a1a]">
+                      <span className="text-[13px] md:text-[15px] text-primary-foreground/75">
                         Rank {gainer.previous.rank_position} → {gainer.current.rank_position} · now {gainer.current.rating.toFixed(3)} · {gainer.current.rounds_played} rounds · {shortDate(gainer.date)}
                       </span>
                     )}

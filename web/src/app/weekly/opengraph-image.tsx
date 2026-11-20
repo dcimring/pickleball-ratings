@@ -57,7 +57,7 @@ export default async function Image() {
                   height: '36px',
                   borderRadius: '5px',
                   backgroundColor: OG_COLORS.volt,
-                  color: OG_COLORS.ground,
+                  color: OG_COLORS.ink,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -87,7 +87,7 @@ export default async function Image() {
                 justifyContent: 'space-between',
                 gap: '20px',
                 backgroundColor: OG_COLORS.volt,
-                color: OG_COLORS.ground,
+                color: OG_COLORS.ink,
                 borderRadius: '10px',
                 padding: '20px 24px',
               }}

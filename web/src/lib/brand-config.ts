@@ -70,7 +70,9 @@ export const OG_COLORS = {
   text: BRAND_COLORS.foreground.hex,
   muted: "#cde1f5",
   volt: BRAND_COLORS.primary.hex,
-  voltInk: "#2f3a1a",
+  /** Text on Volt fills. */
+  ink: "#092142",
+  voltInk: "#2c4a73",
   coral: BRAND_COLORS.destructive.hex,
   hairline: "rgba(255,255,255,0.14)",
 };

@@ -25,14 +25,6 @@ export const metadata: Metadata = {
     description: "Cayman Islands pickleball rankings with every rating change recorded daily. Doubles and singles boards, player trajectories and weekly movers.",
     url: SITE_URL,
     siteName: "CAYMANDINK",
-    images: [
-      {
-        url: "/og-image.jpg",
-        width: 2760,
-        height: 1504,
-        alt: "CAYMANDINK Cayman Islands Pickleball Rankings",
-      },
-    ],
     locale: "en_US",
     type: "website",
   },
@@ -40,7 +32,6 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "CAYMANDINK | Cayman Islands Pickleball Rankings",
     description: "Cayman Islands pickleball rankings with every rating change recorded daily. Doubles and singles boards, player trajectories and weekly movers.",
-    images: ["/og-image.jpg"],
   },
 };
 

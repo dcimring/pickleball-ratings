@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: '/records' },
-  openGraph: { title: TITLE, description: DESCRIPTION, url: `${SITE_URL}/records`, images: ['/og-image.jpg'] },
+  openGraph: { title: TITLE, description: DESCRIPTION, url: `${SITE_URL}/records`, images: ['/opengraph-image'] },
 };
 
 const shortDate = (iso: string) =>

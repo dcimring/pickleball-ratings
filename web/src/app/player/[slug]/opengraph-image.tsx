@@ -100,7 +100,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
 
   const up = ratingDiff > 0;
   const moveColor = up ? OG_COLORS.volt : OG_COLORS.coral;
-  const moveBg = up ? 'rgba(204,255,0,0.14)' : 'rgba(255,122,92,0.14)';
+  const moveBg = up ? 'rgba(204,255,0,0.14)' : 'rgba(255,168,139,0.16)';
 
   // Font-safe arrows: inline SVG (the bundled OG font has no ▲/▼ glyphs)
   const triangle = (dir: 'up' | 'down', color: string) => (
@@ -136,7 +136,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
             fontWeight: 800,
             letterSpacing: '-0.05em',
             lineHeight: 1,
-            color: '#121916',
+            color: OG_COLORS.surface,
             display: 'flex',
           }}
         >
@@ -152,7 +152,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
                 height: '36px',
                 borderRadius: '5px',
                 backgroundColor: OG_COLORS.volt,
-                color: OG_COLORS.ground,
+                color: OG_COLORS.ink,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',

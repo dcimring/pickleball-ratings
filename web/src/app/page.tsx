@@ -16,7 +16,7 @@ const siteJsonLd = {
       '@id': `${BASE_URL}/#organization`,
       name: SITE_NAME,
       url: BASE_URL,
-      image: `${BASE_URL}/og-image.jpg`,
+      image: `${BASE_URL}/opengraph-image`,
       description: 'Independent tracker of Cayman Islands pickleball ratings and rating history.',
       areaServed: { '@type': 'Country', name: 'Cayman Islands' },
       founder: { '@type': 'Person', name: OWNER_NAME, url: OWNER_URL, sameAs: [OWNER_URL] },
