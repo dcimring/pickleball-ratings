@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "Suggest a Feature | CAYMANDINK",
   description: "Have an idea to improve the Cayman Islands pickleball dashboard? Let us know what features or data you'd like to see next.",
   openGraph: {
+    images: ['/opengraph-image'],
     title: "Suggest a Feature | CAYMANDINK",
     description: "Help us shape the future of Cayman pickleball analytics.",
   }

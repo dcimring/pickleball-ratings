@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Live Activity | CAYMANDINK",
   description: "Track the latest ranking changes, rating gains, and match activity across the Cayman Islands pickleball community.",
   openGraph: {
+    images: ['/opengraph-image'],
     title: "Live Activity | CAYMANDINK",
     description: "Real-time updates on rating changes and player activity in the Cayman Islands.",
   }

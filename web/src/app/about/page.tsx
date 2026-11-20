@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: '/about' },
-  openGraph: { title: TITLE, description: DESCRIPTION, url: `${SITE_URL}/about` },
+  openGraph: { title: TITLE, description: DESCRIPTION, url: `${SITE_URL}/about`, images: ['/opengraph-image'] },
 };
 
 const longDate = (iso: string) =>

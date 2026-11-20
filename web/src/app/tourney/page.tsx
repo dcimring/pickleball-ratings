@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "Tournament Bracket Check | CAYMANDINK",
   description: "Instantly check ratings and rankings for entire tournament brackets or player lists in the Cayman Islands.",
   openGraph: {
+    images: ['/opengraph-image'],
     title: "Tournament Bracket Check | CAYMANDINK",
     description: "Bulk rating lookup for pickleball tournaments in the Cayman Islands.",
   }
