@@ -19,7 +19,13 @@ const CONFIG = {
   DOUBLES_API_URL: 'https://rankings.pickleball.ky/api/players?limit=1000&isApproved=true&isHide=false',
   SINGLES_URL: 'https://www.pickleball.ky/singles-rankings/',
   SUPABASE_RPC_NAME: 'upsert_ranking_delta_bulk',
-  SUPABASE_SCHEMA: 'pickleball_ratings'
+  SUPABASE_SCHEMA: 'pickleball_ratings',
+  // The site menu (Club → Rankings …) is watched so a moved page gets noticed.
+  HOME_URL: 'https://www.pickleball.ky/',
+  // Alert when no rating has changed for this many days. Doubles has never gone
+  // more than ~4 days without a change except when its page moved (Nov 2026).
+  // Singles is left out: it legitimately goes months without a change.
+  STALE_AFTER_DAYS: { doubles_ratings_deltas: 7 }
 };
 
 // Source spelling -> name already used in our history. Doubles players are matched
@@ -52,8 +58,18 @@ function runScraper() {
   console.log('Starting Singles scrape...');
   scrapeAndSync(CONFIG.SINGLES_URL, 'singles_ratings_deltas', parseTablePress, supabase, failures, notices);
 
+  // Catch a source that moves or goes stale while still "working".
+  const warnings = [];
+  Object.keys(CONFIG.STALE_AFTER_DAYS).forEach(tableName => {
+    checkStaleness(supabase, tableName, CONFIG.STALE_AFTER_DAYS[tableName], warnings);
+  });
+  checkRankingsMenu(warnings);
+
   if (failures.length > 0) {
     sendAlert('🚨 CAYMANDINK scraper failure', failures.concat(['Check the Apps Script execution log at https://script.google.com']));
+  }
+  if (warnings.length > 0) {
+    sendAlert('⚠️ CAYMANDINK source check', warnings);
   }
   if (notices.length > 0) {
     sendAlert('👀 CAYMANDINK player name check', notices.concat([
@@ -276,6 +292,111 @@ function levenshtein(a, b) {
 }
 
 /**
+ * Warns when no rating in `tableName` has changed for `maxDays` — the sign of a
+ * source page that still loads but stopped updating. Warns once per quiet spell:
+ * the date warned about is remembered, and a new change resets it.
+ */
+function checkStaleness(supabase, tableName, maxDays, warnings) {
+  try {
+    const url = `${supabase.url}/rest/v1/${tableName}?select=valid_from&order=valid_from.desc&limit=1`;
+    const response = UrlFetchApp.fetch(url, {
+      headers: {
+        'apikey': supabase.key,
+        'Authorization': `Bearer ${supabase.key}`,
+        'Accept-Profile': CONFIG.SUPABASE_SCHEMA
+      },
+      muteHttpExceptions: true
+    });
+    if (response.getResponseCode() !== 200) {
+      throw new Error(`HTTP ${response.getResponseCode()}: ${response.getContentText()}`);
+    }
+    const rows = JSON.parse(response.getContentText());
+    if (rows.length === 0) return;
+
+    const lastChange = rows[0].valid_from; // YYYY-MM-DD
+    const days = Math.floor((Date.now() - new Date(`${lastChange}T00:00:00Z`).getTime()) / 86400000);
+    if (days < maxDays) return;
+
+    const props = PropertiesService.getScriptProperties();
+    const key = `STALE_WARNED_${tableName}`;
+    if (props.getProperty(key) === lastChange) return;
+
+    const label = tableName.replace('_ratings_deltas', '');
+    warnings.push(`No ${label} rating has changed since ${lastChange} (${days} days). pickleball.ky may have moved or stopped updating the ${label} page. Check the Club menu on ${CONFIG.HOME_URL}`);
+    props.setProperty(key, lastChange);
+  } catch (error) {
+    warnings.push(`Couldn't run the staleness check for ${tableName}: ${error.message}`);
+  }
+}
+
+/**
+ * Watches the Rankings links in the pickleball.ky site menu (Club → Rankings – …).
+ * The first run saves them; later runs warn once when a link is added, removed or
+ * pointed somewhere else, then save the new set.
+ */
+function checkRankingsMenu(warnings) {
+  try {
+    const response = UrlFetchApp.fetch(CONFIG.HOME_URL, { muteHttpExceptions: true });
+    if (response.getResponseCode() !== 200) {
+      warnings.push(`Couldn't load ${CONFIG.HOME_URL} to check the Rankings menu links (HTTP ${response.getResponseCode()}).`);
+      return;
+    }
+
+    const current = extractRankingsMenuLinks(response.getContentText());
+    if (current.length === 0) {
+      warnings.push(`No Rankings links found in the pickleball.ky menu. The menu or site may have changed: check the Club menu on ${CONFIG.HOME_URL}`);
+      return; // keep the saved set so the next good run still compares against it
+    }
+
+    const props = PropertiesService.getScriptProperties();
+    const KEY = 'RANKINGS_MENU_LINKS';
+    const saved = props.getProperty(KEY);
+    props.setProperty(KEY, JSON.stringify(current));
+    if (!saved) {
+      console.log(`Saved Rankings menu links: ${current.join('; ')}`);
+      return;
+    }
+
+    const previous = JSON.parse(saved);
+    const added = current.filter(link => previous.indexOf(link) === -1);
+    const removed = previous.filter(link => current.indexOf(link) === -1);
+    if (added.length === 0 && removed.length === 0) return;
+
+    warnings.push(`The Rankings links in the pickleball.ky menu changed. Check the scraper still reads the right pages (doubles: ${CONFIG.DOUBLES_API_URL}, singles: ${CONFIG.SINGLES_URL}).`);
+    removed.forEach(link => warnings.push(`Removed: ${link}`));
+    added.forEach(link => warnings.push(`Added: ${link}`));
+  } catch (error) {
+    warnings.push(`Couldn't check the Rankings menu links: ${error.message}`);
+  }
+}
+
+/**
+ * Returns sorted, unique "Label → URL" strings for site-menu links whose label
+ * mentions rankings or ratings.
+ */
+function extractRankingsMenuLinks(html) {
+  const itemRegex = /<li[^>]*class="[^"]*menu-item[^"]*"[^>]*>\s*<a\b[^>]*href="([^"]*)"[^>]*>([\s\S]*?)<\/a>/gi;
+  const links = {};
+  let match;
+  while ((match = itemRegex.exec(html)) !== null) {
+    const label = decodeEntities(match[2].replace(/<[^>]+>/g, '')).replace(/\s+/g, ' ').trim();
+    if (/rank|rating/i.test(label)) links[`${label} → ${decodeEntities(match[1])}`] = true;
+  }
+  return Object.keys(links).sort();
+}
+
+function decodeEntities(text) {
+  return text
+    .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(parseInt(n, 10)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCharCode(parseInt(n, 16)))
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&');
+}
+
+/**
  * Calls the Supabase Bulk RPC.
  * Returns null on success, or a description of the failure.
  */
@@ -348,7 +469,8 @@ function postToDiscord(webhook, title, lines) {
       const response = UrlFetchApp.fetch(webhook, {
         method: 'post',
         contentType: 'application/json',
-        payload: JSON.stringify({ content: content, allowed_mentions: { parse: [] } }),
+        // flags 4 = SUPPRESS_EMBEDS: no link-preview cards for the URLs in alerts.
+        payload: JSON.stringify({ content: content, allowed_mentions: { parse: [] }, flags: 4 }),
         muteHttpExceptions: true
       });
       const code = response.getResponseCode();
