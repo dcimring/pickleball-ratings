@@ -7,7 +7,7 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { Ranking, RatingMode } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { LOCALE, OWNER_NAME } from '@/lib/site-config';
-import { BRAND_COLORS } from '@/lib/brand-config';
+import { BRAND_COLORS, OG_COLORS } from '@/lib/brand-config';
 import { ShareButton } from './ShareButton';
 import { RankingHistoryTable } from './RankingHistoryTable';
 import { ModeSwitcher } from './ModeSwitcher';
@@ -213,11 +213,11 @@ export function PlayerProfile({
                               <stop offset="100%" stopColor={BRAND_COLORS.primary.hex} stopOpacity={0} />
                             </linearGradient>
                           </defs>
-                          <CartesianGrid stroke="rgba(255,255,255,0.08)" vertical={false} />
+                          <CartesianGrid stroke={OG_COLORS.hairline} vertical={false} />
                           <XAxis
                             dataKey="valid_from"
                             stroke="transparent"
-                            tick={{ fill: '#9fb0a8', fontSize: 11, fontWeight: 600 }}
+                            tick={{ fill: OG_COLORS.muted, fontSize: 11, fontWeight: 600 }}
                             tickFormatter={(str) => new Date(str).toLocaleDateString(LOCALE, { timeZone: 'UTC', month: 'short' })}
                             axisLine={false}
                             tickLine={false}
@@ -226,7 +226,7 @@ export function PlayerProfile({
                           />
                           <YAxis
                             stroke="transparent"
-                            tick={{ fill: '#9fb0a8', fontSize: 11, fontWeight: 600 }}
+                            tick={{ fill: OG_COLORS.muted, fontSize: 11, fontWeight: 600 }}
                             domain={['auto', 'auto']}
                             axisLine={false}
                             tickLine={false}
@@ -237,14 +237,14 @@ export function PlayerProfile({
                             cursor={{ stroke: 'rgba(255,255,255,0.2)' }}
                             contentStyle={{
                               backgroundColor: BRAND_COLORS.muted.hex,
-                              border: '1px solid rgba(255,255,255,0.08)',
+                              border: `1px solid ${OG_COLORS.hairline}`,
                               borderRadius: '6px',
                               fontSize: '12px',
                               fontWeight: 600,
                               color: BRAND_COLORS.foreground.hex,
                             }}
                             itemStyle={{ color: BRAND_COLORS.primary.hex }}
-                            labelStyle={{ color: '#9fb0a8', marginBottom: '4px' }}
+                            labelStyle={{ color: OG_COLORS.muted, marginBottom: '4px' }}
                             labelFormatter={(label) => longDate(String(label))}
                             formatter={(value) => [Number(value).toFixed(3), 'Rating']}
                           />

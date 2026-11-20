@@ -3,14 +3,14 @@
  * Single source of truth for all brand colors, including OKLCH for web
  * and HEX for OpenGraph images and legacy compatibility.
  *
- * Dark board, condensed numerals, Volt for live/up moves, coral for down moves.
+ * Court-blue board, condensed numerals, Volt for live/up moves, coral for down moves.
  * The Tailwind plugin injects every `oklch` value as a CSS variable.
  */
 
 export const BRAND_COLORS = {
   background: {
-    oklch: "0.167 0.009 169", // #0b100e (Ground)
-    hex: "#0b100e",
+    oklch: "0.49 0.125 255", // #2861a5 (Court — ground)
+    hex: "#2861a5",
   },
   foreground: {
     oklch: "0.967 0.004 157", // #f2f5f3 (Text)
@@ -19,43 +19,43 @@ export const BRAND_COLORS = {
   primary: {
     oklch: "0.931 0.229 123", // #ccff00 (Volt) — primary action + live accent
     hex: "#ccff00",
-    foreground: "0.167 0.009 169", // Ground
+    foreground: "0.25 0.07 258", // Navy ink
   },
   secondary: {
-    oklch: "0.214 0.012 167", // #141b18 (Surface — cards, boards)
-    hex: "#141b18",
+    oklch: "0.415 0.115 257", // #1d4b89 (Surface — cards, boards)
+    hex: "#1d4b89",
     foreground: "0.967 0.004 157",
   },
   tertiary: {
     oklch: "0.931 0.229 123", // #ccff00 (Volt)
     hex: "#ccff00",
-    foreground: "0.167 0.009 169",
+    foreground: "0.25 0.07 258",
   },
   muted: {
-    oklch: "0.250 0.015 166", // #1b2420 (Surface 2 — nested tiles)
-    hex: "#1b2420",
-    foreground: "0.742 0.022 166", // #9fb0a8 (Muted text, 7:1 on ground)
+    oklch: "0.455 0.12 256", // #235698 (Surface 2 — nested tiles)
+    hex: "#235698",
+    foreground: "0.9 0.035 248", // #cde1f5 (Muted text)
   },
   accent: {
     oklch: "0.931 0.229 123", // Volt
     hex: "#ccff00",
-    foreground: "0.167 0.009 169",
+    foreground: "0.25 0.07 258",
   },
   destructive: {
-    oklch: "0.729 0.169 34", // #ff7a5c (Coral — down moves)
-    hex: "#ff7a5c",
-    foreground: "0.167 0.009 169",
+    oklch: "0.82 0.12 38", // #ffa88b (Coral — down moves, lightened for blue)
+    hex: "#ffa88b",
+    foreground: "0.25 0.07 258",
   },
   ghost: {
-    oklch: "0.214 0.012 167",
-    hex: "#141b18",
+    oklch: "0.415 0.115 257",
+    hex: "#1d4b89",
   },
   border: {
-    oklch: "0.967 0.004 157 / 0.08",
-    hex: "rgba(242, 245, 243, 0.08)",
+    oklch: "0.967 0.004 157 / 0.14",
+    hex: "rgba(242, 245, 243, 0.14)",
   },
   input: {
-    oklch: "0.167 0.009 169",
+    oklch: "0.415 0.115 257",
   },
   ring: {
     oklch: "0.931 0.229 123",
@@ -68,9 +68,9 @@ export const OG_COLORS = {
   surface: BRAND_COLORS.secondary.hex,
   surface2: BRAND_COLORS.muted.hex,
   text: BRAND_COLORS.foreground.hex,
-  muted: "#9fb0a8",
+  muted: "#cde1f5",
   volt: BRAND_COLORS.primary.hex,
   voltInk: "#2f3a1a",
   coral: BRAND_COLORS.destructive.hex,
-  hairline: "rgba(255,255,255,0.08)",
+  hairline: "rgba(255,255,255,0.14)",
 };

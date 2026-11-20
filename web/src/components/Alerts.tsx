@@ -24,7 +24,7 @@ const PERKS = [
 ];
 
 export function Alerts() {
-  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=224x224&bgcolor=141b18&color=f2f5f3&data=${encodeURIComponent(WHATSAPP_GROUP_URL)}`;
+  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=224x224&bgcolor=1d4b89&color=f2f5f3&data=${encodeURIComponent(WHATSAPP_GROUP_URL)}`;
 
   return (
     <div className="pb-24 min-h-full bg-background">
