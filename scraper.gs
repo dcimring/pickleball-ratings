@@ -20,6 +20,12 @@ const CONFIG = {
   SUPABASE_RPC_NAME: 'upsert_ranking_delta_bulk'
 };
 
+// Source spelling -> name already used in our history. Keeps a player's history
+// continuous when pickleball.ky changes how a name is written.
+const NAME_ALIASES = {
+  'Tj Hucker': 'TJ Hucker' // new doubles API (Nov 2026)
+};
+
 /**
  * Main entry point for the scraper.
  */
@@ -128,12 +134,13 @@ function parseTablePress(html) {
 }
 
 /**
- * Drops invalid rows and keeps only the first (best-ranked) entry per name.
+ * Applies NAME_ALIASES, drops invalid rows and keeps only the first (best-ranked) entry per name.
  */
 function dedupePlayers(rows) {
   const players = [];
   const seenNames = {};
   rows
+    .map(r => Object.assign({}, r, { player_name: NAME_ALIASES[r.player_name] || r.player_name }))
     .filter(r => r.player_name && !isNaN(r.rank_position) && !isNaN(r.rating) && !isNaN(r.rounds_played))
     .sort((a, b) => a.rank_position - b.rank_position)
     .forEach(r => {
