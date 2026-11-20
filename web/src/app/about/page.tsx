@@ -113,7 +113,7 @@ export default async function AboutPage() {
           <Question title="Where does the data come from?">
             <p>
               Ratings and rankings come from{' '}
-              <a href="https://www.pickleball.ky/rankings/" className={inlineLink} rel="noopener">
+              <a href="https://www.pickleball.ky/pbratings/" className={inlineLink} rel="noopener">
                 pickleball.ky
               </a>
               , the Pickleball Cayman website.

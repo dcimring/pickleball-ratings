@@ -12,7 +12,10 @@
  */
 
 const CONFIG = {
-  DOUBLES_URL: 'https://www.pickleball.ky/rankings/',
+  // Doubles moved (Nov 2026) from a TablePress table at pickleball.ky/rankings/ to
+  // pickleball.ky/pbratings/, which iframes a Next.js app at rankings.pickleball.ky.
+  // That app loads its table from this JSON endpoint (same query the page makes).
+  DOUBLES_API_URL: 'https://rankings.pickleball.ky/api/players?limit=1000&isApproved=true&isHide=false',
   SINGLES_URL: 'https://www.pickleball.ky/singles-rankings/',
   SUPABASE_RPC_NAME: 'upsert_ranking_delta_bulk'
 };
@@ -33,12 +36,12 @@ function runScraper() {
 
   // 1. Scrape Doubles
   console.log('Starting Doubles scrape...');
-  const doublesError = scrapeAndSync(CONFIG.DOUBLES_URL, 'doubles_ratings_deltas', supabaseUrl, supabaseKey);
+  const doublesError = scrapeAndSync(CONFIG.DOUBLES_API_URL, 'doubles_ratings_deltas', parseDoublesApi, supabaseUrl, supabaseKey);
   if (doublesError) failures.push(doublesError);
 
   // 2. Scrape Singles
   console.log('Starting Singles scrape...');
-  const singlesError = scrapeAndSync(CONFIG.SINGLES_URL, 'singles_ratings_deltas', supabaseUrl, supabaseKey);
+  const singlesError = scrapeAndSync(CONFIG.SINGLES_URL, 'singles_ratings_deltas', parseTablePress, supabaseUrl, supabaseKey);
   if (singlesError) failures.push(singlesError);
 
   if (failures.length > 0) {
@@ -49,42 +52,20 @@ function runScraper() {
 }
 
 /**
- * Fetches the URL, parses the table, and sends a bulk update to Supabase.
+ * Fetches the URL, parses it with `parser`, and sends a bulk update to Supabase.
  * Returns null on success, or a description of the failure.
  */
-function scrapeAndSync(url, tableName, supabaseUrl, supabaseKey) {
+function scrapeAndSync(url, tableName, parser, supabaseUrl, supabaseKey) {
   try {
-    const response = UrlFetchApp.fetch(url);
-    const html = response.getContentText();
-
-    // Regex targets TablePress row structure with 4 columns:
-    // <td class="column-1">RANK</td><td class="column-2">NAME</td><td class="column-3">RATING</td><td class="column-4">ROUNDS</td>
-    const rowRegex = /<tr class="row-\d+">[\s\S]*?<td class="column-1">(\d+)<\/td>[\s\S]*?<td class="column-2">([^<]+)<\/td>[\s\S]*?<td class="column-3">([\d\.]+)<\/td>[\s\S]*?<td class="column-4">(\d+)<\/td>/gi;
-
-    let match;
-    let players = [];
-    let seenNames = {}; // Track names already processed in this table
-
-    while ((match = rowRegex.exec(html)) !== null) {
-      const rank = parseInt(match[1]);
-      const name = match[2].trim();
-      const rating = parseFloat(match[3]);
-      const rounds = parseInt(match[4]);
-
-      if (!isNaN(rank) && name && !isNaN(rating) && !isNaN(rounds)) {
-        if (!seenNames[name]) {
-          seenNames[name] = true;
-          players.push({
-            player_name: name,
-            rank_position: rank,
-            rating: rating,
-            rounds_played: rounds
-          });
-        } else {
-          console.warn(`Skipping duplicate entry for ${name} at rank ${rank}`);
-        }
-      }
+    const response = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
+    const code = response.getResponseCode();
+    if (code !== 200) {
+      const msg = `HTTP ${code} fetching ${url} for ${tableName}.`;
+      console.error(msg);
+      return msg;
     }
+
+    const players = dedupePlayers(parser(response.getContentText()));
 
     if (players.length === 0) {
       const msg = `No players found for ${tableName} at ${url}. The website structure may have changed.`;
@@ -103,6 +84,67 @@ function scrapeAndSync(url, tableName, supabaseUrl, supabaseKey) {
     console.error(msg);
     return msg;
   }
+}
+
+/**
+ * Parses the rankings.pickleball.ky players API (doubles).
+ * Response shape: { players: [{ playerName, rank, currentRank: "4.186", RRPlayed, ... }], total, ... }
+ */
+function parseDoublesApi(body) {
+  const data = JSON.parse(body);
+  if (!data || !Array.isArray(data.players)) {
+    throw new Error('Unexpected API response: missing players array');
+  }
+  if (data.hasMore) {
+    console.warn(`API reports more pages (total ${data.total}); only the first page was read.`);
+  }
+  return data.players
+    .filter(p => p.currentRank) // the site hides players without a rating
+    .map(p => ({
+      player_name: String(p.playerName || '').trim(),
+      rank_position: parseInt(p.rank),
+      rating: parseFloat(p.currentRank),
+      rounds_played: parseInt(p.RRPlayed)
+    }));
+}
+
+/**
+ * Parses a TablePress table (singles page) with 4 columns:
+ * <td class="column-1">RANK</td><td class="column-2">NAME</td><td class="column-3">RATING</td><td class="column-4">ROUNDS</td>
+ */
+function parseTablePress(html) {
+  const rowRegex = /<tr class="row-\d+">[\s\S]*?<td class="column-1">(\d+)<\/td>[\s\S]*?<td class="column-2">([^<]+)<\/td>[\s\S]*?<td class="column-3">([\d\.]+)<\/td>[\s\S]*?<td class="column-4">(\d+)<\/td>/gi;
+  const rows = [];
+  let match;
+  while ((match = rowRegex.exec(html)) !== null) {
+    rows.push({
+      player_name: match[2].trim(),
+      rank_position: parseInt(match[1]),
+      rating: parseFloat(match[3]),
+      rounds_played: parseInt(match[4])
+    });
+  }
+  return rows;
+}
+
+/**
+ * Drops invalid rows and keeps only the first (best-ranked) entry per name.
+ */
+function dedupePlayers(rows) {
+  const players = [];
+  const seenNames = {};
+  rows
+    .filter(r => r.player_name && !isNaN(r.rank_position) && !isNaN(r.rating) && !isNaN(r.rounds_played))
+    .sort((a, b) => a.rank_position - b.rank_position)
+    .forEach(r => {
+      if (seenNames[r.player_name]) {
+        console.warn(`Skipping duplicate entry for ${r.player_name} at rank ${r.rank_position}`);
+        return;
+      }
+      seenNames[r.player_name] = true;
+      players.push(r);
+    });
+  return players;
 }
 
 /**
